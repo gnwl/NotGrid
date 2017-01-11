@@ -14,7 +14,7 @@ end
 
 function NotGrid:CreateUnitFrame(index)
 	local f = CreateFrame("Button","$parentunitframe"..index,self.Container) -- it will be a child of container but the positioning will be relative to the group frames
-	f:RegisterForClicks("LeftButtonDown", "RightButtonDown", "MiddleButtonDown") -- somehow I recall this not matterign?
+	f:RegisterForClicks("LeftButtonDown", "RightButtonDown", "MiddleButtonDown", "Button4Down", "Button5Down") -- somehow I recall this not matterign?
 	f:RegisterForDrag("LeftButton")
 	f:SetScript("OnClick", function()
 		if Clique then
