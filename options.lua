@@ -43,6 +43,9 @@ local DefaultOptions = {
 	["trackmana"] = true,
 	["manawarningcolor"] = {42/255,69/255,117/255,0.8},
 
+	["tracktarget"] = false,
+	["targetcolor"] = {1,1,1,0.8},
+
 	["containerpoint"] = "CENTER",
 	["containeroffx"] = 0,
 	["containeroffy"] = 0,

@@ -84,6 +84,21 @@ local menuarray = {
 			key = "unithealthbarcolor",
 		},
 	},
+
+	{text = "Highlight Target", -- (Toggle for Class)
+	toggle = "tracktarget",
+	color = {
+			key = "targetcolor",
+		},
+	},
+
+	{text = "Aggro Warning",
+	toggle = "trackaggro",
+	color = {
+			key = "aggrowarningcolor",
+		},
+	},
+
 	{text = "Mana Warning", -- (Toggle for Class)
 	toggle = "trackmana",
 	slider = {
@@ -96,12 +111,6 @@ local menuarray = {
 		},
 	},
 
-	{text = "Aggro Warning",
-	toggle = "trackaggro",
-	color = {
-			key = "aggrowarningcolor",
-		},
-	},
 	{text = "Healcomm",
 	color = {
 			key = "unithealcommbarcolor",
