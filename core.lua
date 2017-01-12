@@ -10,6 +10,7 @@ function NotGrid:OnInitialize()
 	self.NRL = AceLibrary("NotRosterLib-1.0")
 	self.UnitFrames = {}
 	self.Container = self:CreateContainerFrame()
+	self.PrevTarget = nil -- for target highlighting
 end
 
 function NotGrid:OnEnable()
@@ -20,17 +21,21 @@ function NotGrid:OnEnable()
 	self:RegisterEvent("NotRosterLib_RosterChanged")
     self:RegisterEvent("UNIT_HEALTH")
     self:RegisterEvent("HealComm_Healupdate")
+    self:RegisterEvent("HealComm_Ressupdate")
     self:RegisterEvent("SpecialEvents_UnitBuffLost")
 	self:RegisterEvent("SpecialEvents_UnitBuffGained")
 	self:RegisterEvent("SpecialEvents_UnitDebuffLost")
 	self:RegisterEvent("SpecialEvents_UnitDebuffGained")
-    if self.o.trackaggro then
+	--if self.o.tracktarget then
+		self:RegisterEvent("PLAYER_TARGET_CHANGED")
+	--end
+    --if self.o.trackaggro then
 		self:RegisterEvent("Banzai_UnitGainedAggro") -- "player" unit aggro? it has an event trigger but I don't know if I need it for the scope of this proj. I suppose ti would be necessary when just in party. But I don't really care then
 		self:RegisterEvent("Banzai_UnitLostAggro")
-	end
-	if self.o.trackmana then
+	--end
+	--if self.o.trackmana then
 		self:RegisterEvent("UNIT_MANA")
-	end
+	--end
 	if 1==1 then
 		self:RegisterEvent("NotProximityLib_RangeUpdate", "RangeHandle")
 		self:RegisterEvent("NotProximityLib_WorldRangeUpdate", "RangeHandle")
@@ -147,20 +152,74 @@ function NotGrid:HealComm_Healupdate(unitname)
 	end
 end
 
+function NotGrid:HealComm_Ressupdate(unitname)
+	local unitobj = self.NRL:GetUnitObjectFromName(unitname)
+	if unitobj and unitobj.ngframe then
+		if self.HealComm:UnitisResurrecting(unitname) then
+			unitobj.ngframe.incres:Show()
+		else
+			unitobj.ngframe.incres:Hide()
+		end
+	end
+	--DEFAULT_CHAT_FRAME:AddMessage(unitname.." "..resstime)
+end
+
+----------------------
+-- Target Highlight --
+----------------------
+
+function NotGrid:PLAYER_TARGET_CHANGED()
+	if not self.o.tracktarget then return end
+	local name = UnitName("Target")
+	local unitobj = self.NRL:GetUnitObjectFromName(name)
+
+	if self.PrevTarget then
+		self:PrevTargetHandle()
+	end
+
+	if unitobj and unitobj.ngframe then
+		self.PrevTarget = name
+		unitobj.ngframe.borderstate = "target"
+		unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.targetcolor))
+	end
+end
+
+function NotGrid:PrevTargetHandle()
+	local unitobj = self.NRL:GetUnitObjectFromName(self.PrevTarget)
+	if unitobj and unitobj.ngframe then -- if the frame hasn't been cleared by a clear function
+		local currmana = UnitMana(unitobj.unitid)
+		local maxmana = UnitManaMax(unitobj.unitid)
+		if self.o.trackaggro and self.Banzai:GetUnitAggroByUnitName(self.PrevTarget) then
+			unitobj.ngframe.borderstate = "aggro"
+			unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.aggrowarningcolor))
+		elseif self.o.trackmana and currmana/maxmana*100 < self.o.manathreshhold then
+			unitobj.ngframe.borderstate = "mana"
+			unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.manawarningcolor))
+		else
+			unitobj.ngframe.borderstate = nil
+			unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.unitbordercolor))
+		end
+	end
+end
+
 ------------
 -- Banzai --
 ------------
 
 function NotGrid:Banzai_UnitGainedAggro(unitid) -- this also gets sent banzaitarget(a table). Don't know whats in it. Don't care haha
+	if not self.o.trackaggro then return end
 	local unitobj = self.NRL:GetUnitObjectFromUnit(unitid)
-	if unitobj and unitobj.ngframe then
+	if unitobj and unitobj.ngframe and not (unitobj.ngframe.borderstate == "target") then
+		unitobj.ngframe.borderstate = "aggro"
 		unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.aggrowarningcolor))
 	end
 end
 
 function NotGrid:Banzai_UnitLostAggro(unitid)
+	if not self.o.trackaggro then return end
 	local unitobj = self.NRL:GetUnitObjectFromUnit(unitid)
-	if unitobj and unitobj.ngframe then
+	if unitobj and unitobj.ngframe and not (unitobj.ngframe.borderstate == "target") then
+		unitobj.ngframe.borderstate = nil
 		unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.unitbordercolor))
 	end
 end
@@ -170,13 +229,16 @@ end
 ---------------
 
 function NotGrid:UNIT_MANA(unitid)
+	if not self.o.trackmana then return end
 	local unitobj = self.NRL:GetUnitObjectFromUnit(unitid)
-	if unitobj and unitobj.ngframe and not self.Banzai:GetUnitAggroByUnitId(unitid) then
+	if unitobj and unitobj.ngframe and not (unitobj.ngframe.borderstate == "aggro" or unitobj.ngframe.borderstate == "target") then
 		local currmana = UnitMana(unitid)
 		local maxmana = UnitManaMax(unitid)
 		if currmana/maxmana*100 < self.o.manathreshhold then
+			unitobj.ngframe.borderstate = "mana"
 			unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.manawarningcolor))
 		else
+			unitobj.ngframe.borderstate = nil
 			unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.unitbordercolor))
 		end
 	end

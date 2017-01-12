@@ -52,6 +52,9 @@ function NotGrid:CreateUnitFrame(index)
 	f.healthbar = CreateFrame("StatusBar","$parenthealthbar",f)
 	f.healthbar.bgtex = f.healthbar:CreateTexture("$parentbgtex","BACKGROUND")
 
+	f.incres = CreateFrame("Frame","$parentresicon",f.healthbar)
+	f.incres.bgtex = f.incres:CreateTexture("$parentbgtex","BACKGROUND")
+
 	f.incheal = CreateFrame("Frame","$parenthealcommbar",f.healthbar) -- Was using a statusbar behind the health frame but when the frame's alpha is low this would be seen through it
 	
 	-- I was having problems with incheal covering up these fontstrings. My soluction is to parent them to the incheal, but set the relative point to the healthbar. And instead of hide/show the incheal I just lower/higher its color opacity
@@ -91,6 +94,15 @@ function NotGrid:ConfigUnitFrame(f)
 	f.healthbar.bgtex:SetTexture(o.unithealthbartexture)
 	f.healthbar.bgtex:SetVertexColor(unpack(o.unithealthbarbgcolor))
 	f.healthbar.bgtex:SetAllPoints()
+
+	f.incres:SetWidth(o.unitheight) -- yep, so it stays square under most common sizes. Think of a mathematical way in the future
+	f.incres:SetHeight(o.unitheight)
+	f.incres:ClearAllPoints()
+	f.incres:SetPoint("CENTER",0,0)
+	f.incres.bgtex:SetTexture("Interface\\AddOns\\NotGrid\\media\\res")
+	f.incres.bgtex:SetAllPoints()
+	f.incres:Hide()
+
 
 	f.incheal:SetBackdrop({bgFile = "Interface\\Buttons\\WHITE8X8", edgeFile = "Interface\\Buttons\\WHITE8X8", tile = true, tileSize = 16, edgeSize = 1, insets = { left = 0, right = 0, top = 0, bottom = 0 }})
 	f.incheal:SetBackdropColor(0,0,0,0)
@@ -181,6 +193,7 @@ function NotGrid:ClearUnitFrame(unitobj)
 			f.healthbar["trackingicon"..i].active = nil
 			f.healthbar["trackingicon"..i]:Hide()
 		end
+		f.borderstate = nil
 		f:SetBackdropBorderColor(unpack(self.o.unitbordercolor)) -- to correct mana or aggro warning sticking.. mostly mana
 		f.healcommtext:Hide()
 		f:Hide()
