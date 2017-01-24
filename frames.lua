@@ -273,7 +273,7 @@ function NotGrid:SetIncHealFrame(f, healamount, currhealth, maxhealth) -- well t
 		f.incheal:ClearAllPoints()
 		f.incheal:SetPoint("BOTTOM",0,currheight)
 	elseif o.unithealthorientation == "HORIZONTAL" then
-		local modifier = maxhealth/o.width
+		local modifier = maxhealth/o.unitwidth
 		local healwidth = healamount/modifier
 		local currwidth = currhealth/modifier
 		local maxwidth = o.unitwidth-currwidth
