@@ -212,11 +212,15 @@ function NotGrid:PositionFrames() -- I'm not going for efficiency on this. I'm g
 	local TotalGroups = 0
 	local o = self.o
 
-	for i=1,10 do -- for every subgroup
+	for i=1,10 do -- for every subgroup.. why did I make this 10 subgroups again? Probably pets and maybe showpartyinraid?
 		for key,f in self.UnitFrames do -- loop through every unitframe and try to match it up with the subgorup
 			if f.subgroup == i then
 				f:ClearAllPoints()
-				f:SetPoint("CENTER",(o.unitwidth+o.unitborder*2+o.unitpadding)*TotalGroups,-(o.unitheight+o.unitborder*2+o.unitpadding)*SubGroupCounts[i]) -- i do subgroup -1 so group 1 will be 0 and be at 0 offset
+				if o.growrighttoleft then
+					f:SetPoint("CENTER",-(o.unitwidth+o.unitborder*2+o.unitpadding)*TotalGroups,-(o.unitheight+o.unitborder*2+o.unitpadding)*SubGroupCounts[i]) -- i do subgroup -1 so group 1 will be 0 and be at 0 offset
+				else
+					f:SetPoint("CENTER",(o.unitwidth+o.unitborder*2+o.unitpadding)*TotalGroups,-(o.unitheight+o.unitborder*2+o.unitpadding)*SubGroupCounts[i])
+				end
 				f:Show()
 				SubGroupCounts[i] = SubGroupCounts[i]+1 -- add it after to the first member is treated as 0, same with the frist group being treated as 0
 			end
@@ -228,7 +232,11 @@ function NotGrid:PositionFrames() -- I'm not going for efficiency on this. I'm g
 
 	self.Container:ClearAllPoints()
 	if o.smartcenter == true then
-		self.Container:SetPoint(o.containerpoint,o.containeroffx-(o.unitwidth+o.unitborder*2+o.unitpadding)/2*(TotalGroups-1),o.containeroffy)
+		if o.growrighttoleft then
+			self.Container:SetPoint(o.containerpoint,o.containeroffx+(o.unitwidth+o.unitborder*2+o.unitpadding)/2*(TotalGroups-1),o.containeroffy)
+		else
+			self.Container:SetPoint(o.containerpoint,o.containeroffx-(o.unitwidth+o.unitborder*2+o.unitpadding)/2*(TotalGroups-1),o.containeroffy)
+		end
 	else
 		self.Container:SetPoint(o.containerpoint,o.containeroffx,o.containeroffy)
 	end
@@ -237,6 +245,15 @@ function NotGrid:PositionFrames() -- I'm not going for efficiency on this. I'm g
 		self.Container:Hide()
 	else
 		self.Container:Show()
+	end
+
+	--hide blizz frames or not
+	for i=1,partycount do -- this isn't perfect because, for example, if partycount were at 0 it just wouldn't run and wouldn't hide any remaining frames. But blizz's code handles hiding it natively on member leave so I won't worry about it.
+		if o.showblizzframes then
+			getglobal("PartyMemberFrame"..i):Show();
+		else
+			getglobal("PartyMemberFrame"..i):Hide();
+		end
 	end
 
 end
