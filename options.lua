@@ -62,11 +62,13 @@ local DefaultOptions = {
 	["colorunithealthbarbyclass"] = true,
 	["colorunithealthbarbgbyclass"] = false, -- think I'm deprecating this?
 	["smartcenter"] = false,
+	["growrighttoleft"] = true,
 	["showhealcommtext"] = true,
 	["usemapdistances"] = true,
 
 	["showwhilesolo"] = true,
 	["showinparty"] = true,
+	["showblizzframes"] = true,
 	["locked"] = true,
 }
 
