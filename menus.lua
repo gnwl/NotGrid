@@ -52,6 +52,11 @@ local menuarray = {
 		key = "unithealthbartexture",
 		},
 	},
+	{text = "Orientation",
+	editbox = {
+		key = "unithealthorientation",
+		},
+	},
 
 	--unitnamehealthtextsize
 	{text = "Name", -- (Toggle for Class)
@@ -211,11 +216,17 @@ local menuarray = {
 	{text = "Smart Center", 
 	toggle = "smartcenter",
 	},
+	{text = "Right To Left", 
+	toggle = "growrighttoleft",
+	},
 	{text = "Show While Solo", 
 	toggle = "showwhilesolo",
 	},
 	{text = "Show In Party", 
 	toggle = "showinparty",
+	},
+	{text = "Show Blizz Frames", 
+	toggle = "showblizzframes",
 	},
 	{text = "Locked", 
 	toggle = "locked",
