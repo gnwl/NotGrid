@@ -1,7 +1,7 @@
 ## Interface: 11200
 ## Title: NotGrid
 ## Notes: It's Not Grid
-## SavedVariables: NotGridOptions
+## SavedVariablesPerCharacter: NotGridOptions
 
 Libs\AceLibrary\AceLibrary.lua
 Libs\AceOO-2.0\AceOO-2.0.lua
