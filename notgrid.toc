@@ -1,9 +1,11 @@
 ## Interface: 11200
-## Title: NotGrid
+## Title: NotGrid |cff7fff7f -Ace2-|r
 ## Notes: It's Not Grid
+## Notes-ruRU: Это не Grid
 ## SavedVariablesPerCharacter: NotGridOptions
 
 Libs\AceLibrary\AceLibrary.lua
+Libs\AceLocale-2.2\AceLocale-2.2.lua
 Libs\AceOO-2.0\AceOO-2.0.lua
 Libs\AceAddon-2.0\AceAddon-2.0.lua
 Libs\AceConsole-2.0\AceConsole-2.0.lua
@@ -19,6 +21,7 @@ Libs\HealComm-1.0\HealComm-1.0.lua
 Libs\Banzai-1.0\Banzai-1.0.lua
 Libs\NotProximityLib-1.0\NotProximityLib-1.0.lua
 
+localization.lua
 core.lua
 frames.lua
 options.lua
