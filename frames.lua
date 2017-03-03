@@ -41,11 +41,14 @@ function NotGrid:CreateUnitFrame(index)
 	end)
 	f:SetScript("OnEnter", function()
 		if not UnitAffectingCombat("player") then
-			UnitFrame_OnEnter()
+			UnitFrame_OnEnter() -- a blizzard function that handles the tooltip for the unit
 		end
 	end)
 	f:SetScript("OnLeave", function() 
-		UnitFrame_OnLeave()
+		UnitFrame_OnLeave() -- blizz function that handles tooltip for units
+	end)
+	f:SetScript("OnUpdate", function()
+		self:UNIT_HEALTH(this.unit)
 	end)
 
 
