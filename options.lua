@@ -1,3 +1,5 @@
+local L = AceLibrary("AceLocale-2.2"):new("NotGrid")
+
 local DefaultOptions = {
 	["version"] = 1, -- set this so I can check against it after saved variables are loaded and potentially tell the user to reset to defaults if things have changed too much
 	["unitwidth"] = 36, -- for best results use a multiple of 5
@@ -21,19 +23,19 @@ local DefaultOptions = {
 	["unittrackingiconborder"] = 1,
 	["unittrackingiconbordercolor"] = {0,0,0,1},
 
-	["trackingicon1"] = "Rejuvenation",
+	["trackingicon1"] = L["Rejuvenation"],
 	["trackingicon1color"] = {0.20,0.60,1.00},
 	["trackingicon2"] = "",
 	["trackingicon2color"] = {0.20,0.60,1.00},
-	["trackingicon3"] = "Magic",
+	["trackingicon3"] = L["Magic"],
 	["trackingicon3color"] = {0.20,0.60,1.00},
-	["trackingicon4"] = "Poison",
+	["trackingicon4"] = L["Poison"],
 	["trackingicon4color"] = {0.00,0.60,0},
-	["trackingicon5"] = "Curse",
+	["trackingicon5"] = L["Curse"],
 	["trackingicon5color"] = {0.60,0.00,1.00},
-	["trackingicon6"] = "Disease",
+	["trackingicon6"] = L["Disease"],
 	["trackingicon6color"] = {0.60,0.40,0},
-	["trackingicon7"] = "Mortal Strike",
+	["trackingicon7"] = L["Mortal Strike"],
 	["trackingicon7color"] = {0.80,0,0},
 	["trackingicon8"] = "",
 	["trackingicon8color"] = {0.20,0.60,1.00},
