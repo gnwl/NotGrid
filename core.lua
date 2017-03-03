@@ -1,3 +1,4 @@
+local L = AceLibrary("AceLocale-2.2"):new("NotGrid")
 NotGrid = AceLibrary("AceAddon-2.0"):new("AceEvent-2.0")
 NotGridOptions = {} -- After the addon is fully initialized WoW will fill this up with its saved variables if any
 
@@ -19,29 +20,23 @@ function NotGrid:OnEnable()
 	self:DoDropDown()
 	self:RegisterEvent("NotRosterLib_UnitChanged")
 	self:RegisterEvent("NotRosterLib_RosterChanged")
-    self:RegisterEvent("UNIT_HEALTH")
+    --self:RegisterEvent("UNIT_HEALTH")
     self:RegisterEvent("HealComm_Healupdate")
     self:RegisterEvent("HealComm_Ressupdate")
     self:RegisterEvent("SpecialEvents_UnitBuffLost")
 	self:RegisterEvent("SpecialEvents_UnitBuffGained")
 	self:RegisterEvent("SpecialEvents_UnitDebuffLost")
 	self:RegisterEvent("SpecialEvents_UnitDebuffGained")
-	--if self.o.tracktarget then
-		self:RegisterEvent("PLAYER_TARGET_CHANGED")
-	--end
-    --if self.o.trackaggro then
-		self:RegisterEvent("Banzai_UnitGainedAggro") -- "player" unit aggro? it has an event trigger but I don't know if I need it for the scope of this proj. I suppose ti would be necessary when just in party. But I don't really care then
-		self:RegisterEvent("Banzai_UnitLostAggro")
-	--end
-	--if self.o.trackmana then
-		self:RegisterEvent("UNIT_MANA")
-	--end
+	self:RegisterEvent("PLAYER_TARGET_CHANGED")
+	self:RegisterEvent("Banzai_UnitGainedAggro") -- "player" unit aggro? it has an event trigger but I don't know if I need it for the scope of this proj. I suppose ti would be necessary when just in party. But I don't really care then
+	self:RegisterEvent("Banzai_UnitLostAggro")
+	self:RegisterEvent("UNIT_MANA")
 	if 1==1 then
 		self:RegisterEvent("NotProximityLib_RangeUpdate", "RangeHandle")
 		self:RegisterEvent("NotProximityLib_WorldRangeUpdate", "RangeHandle")
 	end
 	if Clique then
-		self.CliqueProfile = string.format("%s of %s",GetUnitName("player"),GetRealmName())
+		self.CliqueProfile = string.format(L["%s of %s"],GetUnitName("player"),GetRealmName())
 	end
 end
 
@@ -82,9 +77,9 @@ function NotGrid:UNIT_HEALTH(unitid)
 			f.healthbar:SetMinMaxValues(0, maxhealth)
 			f.healthbar:SetValue(currhealth)
 			if UnitIsDead(unitid) then
-				self:UnitHealthZero(f, "Dead")
-			elseif UnitIsGhost(unitid) or (deficit >= maxhealth) or self.SEA:UnitHasBuff(unitid,"Spirit of Redemption") then -- we can't detect unitisghost if he's not in range so we do the additional conditional. It won't false report for "dead" because that's checked first. Still a lot of false reports. In BGs.
-				self:UnitHealthZero(f, "Ghost")
+				self:UnitHealthZero(f, L["Dead"])
+			elseif UnitIsGhost(unitid) or (deficit >= maxhealth) or self.SEA:UnitHasBuff(unitid,L["Spirit of Redemption"]) then -- we can't detect unitisghost if he's not in range so we do the additional conditional. It won't false report for "dead" because that's checked first. Still a lot of false reports. In BGs.
+				self:UnitHealthZero(f, L["Ghost"])
 			elseif currhealth/maxhealth*100 <= self.o.healththreshhold then
 				local deficittext
 				if deficit > 999 then
@@ -368,10 +363,10 @@ function NotGrid:CliqueHandle(button) -- if/else for Clique handling is done in 
 	local a,c,s = IsAltKeyDown() or 0, IsControlKeyDown() or 0, IsShiftKeyDown() or 0
 	local modifiers = a*1+c*2+s*4
 	local foundspell = nil
-	for _,value in CliqueDB["chars"][self.CliqueProfile]["Default Friendly"] do
+	for _,value in CliqueDB["chars"][self.CliqueProfile][L["Default Friendly"]] do
 		if value["button"] == button and value["modifiers"] == modifiers then
 			if value["rank"] then
-				foundspell = value["name"].."(Rank "..value["rank"]..")" -- wew
+				foundspell = value["name"]..L["(Rank "]..value["rank"]..")" -- wew
 			else
 				foundspell = value["name"]
 			end
