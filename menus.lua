@@ -1,3 +1,5 @@
+local L = AceLibrary("AceLocale-2.2"):new("NotGrid")
+
 --------------------
 -- Unit Drop Down --
 --------------------
@@ -11,21 +13,21 @@ end
 
 local menuarray = {
 	--flavortext, booleantoggle, currvalueforslider, currecntvalueforeditbox, currvalueforcolor
-	{text = "Unit Width", 
+	{text = L["Unit Width"], 
 	slider = {
 		key = "unitwidth",
 		minval = 1,
 		maxval = 100,
 		},
 	},
-	{text = "Unit Height", 
+	{text = L["Unit Height"], 
 	slider = {
 		key = "unitheight",
 		minval = 1,
 		maxval = 100,
 		},
 	},
-	{text = "Unit Border", 
+	{text = L["Unit Border"], 
 	slider = {
 		key = "unitborder",
 		minval = 1,
@@ -35,31 +37,31 @@ local menuarray = {
 			key = "unitbordercolor",
 		},
 	},
-	{text = "Unit Padding", 
+	{text = L["Unit Padding"], 
 	slider = {
 		key = "unitpadding",
 		minval = -10,
 		maxval = 50,
 		},
 	},
-	{text = "Font",
+	{text = L["Font"],
 	editbox = {
 		key = "unitfont",
 		},
 	},
-	{text = "Texture",
+	{text = L["Texture"],
 	editbox = {
 		key = "unithealthbartexture",
 		},
 	},
-	{text = "Orientation",
+	{text = L["Orientation"],
 	editbox = {
 		key = "unithealthorientation",
 		},
 	},
 
 	--unitnamehealthtextsize
-	{text = "Name", -- (Toggle for Class)
+	{text = L["Name"], -- (Toggle for Class)
 	toggle = "colorunitnamehealthbyclass",
 	slider = {
 		key = "unitnamehealthtextsize",
@@ -70,7 +72,7 @@ local menuarray = {
 			key = "unitnamehealthtextcolor",
 		},
 	},
-	{text = "Name Length", -- (Toggle for Class)
+	{text = L["Name Length"], -- (Toggle for Class)
 	slider = {
 		key = "namelength",
 		minval = 1,
@@ -78,7 +80,7 @@ local menuarray = {
 		},
 	},
 
-	{text = "Health", -- (Toggle for Class)
+	{text = L["Health"], -- (Toggle for Class)
 	toggle = "colorunithealthbarbyclass",
 	slider = {
 		key = "healththreshhold",
@@ -90,21 +92,21 @@ local menuarray = {
 		},
 	},
 
-	{text = "Highlight Target", -- (Toggle for Class)
+	{text = L["Highlight Target"], -- (Toggle for Class)
 	toggle = "tracktarget",
 	color = {
 			key = "targetcolor",
 		},
 	},
 
-	{text = "Aggro Warning",
+	{text = L["Aggro Warning"],
 	toggle = "trackaggro",
 	color = {
 			key = "aggrowarningcolor",
 		},
 	},
 
-	{text = "Mana Warning", -- (Toggle for Class)
+	{text = L["Mana Warning"], -- (Toggle for Class)
 	toggle = "trackmana",
 	slider = {
 		key = "manathreshhold",
@@ -116,12 +118,12 @@ local menuarray = {
 		},
 	},
 
-	{text = "Healcomm",
+	{text = L["Healcomm"],
 	color = {
 			key = "unithealcommbarcolor",
 		},
 	},
-	{text = "Healcomm Text",
+	{text = L["Healcomm Text"],
 	toggle = "showhealcommtext",
 	slider = {
 		key = "unithealcommtextsize",
@@ -137,7 +139,7 @@ local menuarray = {
 
 	-- Icons --
 
-	{text = "Top Left Icon",
+	{text = L["Top Left Icon"],
 	editbox = {
 		key = "trackingicon1",
 		},
@@ -145,7 +147,7 @@ local menuarray = {
 		key = "trackingicon1color",
 		},
 	},
-	{text = "Top Icon",
+	{text = L["Top Icon"],
 	editbox = {
 		key = "trackingicon2",
 		},
@@ -153,7 +155,7 @@ local menuarray = {
 		key = "trackingicon2color",
 		},
 	},
-	{text = "Top Right Icon",
+	{text = L["Top Right Icon"],
 	editbox = {
 		key = "trackingicon3",
 		},
@@ -161,7 +163,7 @@ local menuarray = {
 		key = "trackingicon3color",
 		},
 	},
-	{text = "Right Icon",
+	{text = L["Right Icon"],
 	editbox = {
 		key = "trackingicon4",
 		},
@@ -169,7 +171,7 @@ local menuarray = {
 		key = "trackingicon4color",
 		},
 	},
-	{text = "Bottom Right Icon",
+	{text = L["Bottom Right Icon"],
 	editbox = {
 		key = "trackingicon5",
 		},
@@ -177,7 +179,7 @@ local menuarray = {
 		key = "trackingicon5color",
 		},
 	},
-	{text = "Bottom Icon",
+	{text = L["Bottom Icon"],
 	editbox = {
 		key = "trackingicon6",
 		},
@@ -185,7 +187,7 @@ local menuarray = {
 		key = "trackingicon6color",
 		},
 	},
-	{text = "Bottom Left Icon",
+	{text = L["Bottom Left Icon"],
 	editbox = {
 		key = "trackingicon7",
 		},
@@ -193,7 +195,7 @@ local menuarray = {
 		key = "trackingicon7color",
 		},
 	},
-	{text = "Left Icon",
+	{text = L["Left Icon"],
 	editbox = {
 		key = "trackingicon8",
 		},
@@ -203,32 +205,32 @@ local menuarray = {
 	},
 
 	-- end of icons --
-	{text = "Proximity Leeway", 
+	{text = L["Proximity Leeway"], 
 	slider = {
 		key = "proximityleeway",
 		minval = 0,
 		maxval = 30,
 		},
 	},
-	{text = "Use Map Proximity", 
+	{text = L["Use Map Proximity"], 
 	toggle = "usemapdistances",
 	},
-	{text = "Smart Center", 
+	{text = L["Smart Center"], 
 	toggle = "smartcenter",
 	},
-	{text = "Right To Left", 
+	{text = L["Right To Left"], 
 	toggle = "growrighttoleft",
 	},
-	{text = "Show While Solo", 
+	{text = L["Show While Solo"], 
 	toggle = "showwhilesolo",
 	},
-	{text = "Show In Party", 
+	{text = L["Show In Party"], 
 	toggle = "showinparty",
 	},
-	{text = "Show Blizz Frames", 
+	{text = L["Show Blizz Frames"], 
 	toggle = "showblizzframes",
 	},
-	{text = "Locked", 
+	{text = L["Locked"], 
 	toggle = "locked",
 	},
 }
@@ -241,7 +243,7 @@ function NotGrid:InitializeMenu()
 	local f = CreateFrame("Button","NotGridOptionsMenu",UIParent)
 	f:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 4, right = 4, top = 4, bottom = 4 }})
 	f:SetBackdropColor(0,0,0)
-	f:SetWidth(150)
+	f:SetWidth(190)
 	f:SetHeight(22*getn(menuarray)) -- because of things.. this isn't prefect
 	f:SetPoint("CENTER",UIParent,"CENTER",0,200)
 	f:SetMovable(true)
@@ -258,7 +260,7 @@ function NotGrid:InitializeMenu()
 
 	for key,val in menuarray do
 		local fb = CreateFrame("Button", "$parentbutton"..key, f)
-		fb:SetWidth(100)
+		fb:SetWidth(140)
 		fb:SetHeight(14)
 		--fb:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 4, right = 4, top = 4, bottom = 4 }})
 		--fb:SetNormalTexture("Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Up")
