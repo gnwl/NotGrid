@@ -7,9 +7,9 @@ Here's why: Combat events are limited to the likes of "(%a+) hits". There's no "
 
 Player -- 0 yards
 Ragnaros -- 40 yards
-RaidMember --80 yards
+RaidMember -- 80 yards
 
-When Ragnaros hits the RaidMember the player will get the combat message "Ragnaros hits RaidMember". That's great, our assumption is now that because we see "Ragnaros hits RaidMember" that we can capture the first name of such a string and determine that Ragnaros is in range. However, when the RaidMember hits Ragnaros, the player will get the event "RaidMember hits Ragnaros". Even though the RaidMember is 80 yards away, because he hit a unit that was within 40 yards the player still gets the message "RaidMember hits Ragnaros".
+When Ragnaros hits the RaidMember the Player will get the combat message "Ragnaros hits RaidMember". That's great, our assumption is now that because we see "Ragnaros hits RaidMember" that we can capture the first name of such a string and determine that Ragnaros is in range. However, when the RaidMember hits Ragnaros, the player will get the event "RaidMember hits Ragnaros". Even though the RaidMember is 80 yards away, because he hit a unit that was within 40 yards the Player still gets the message "RaidMember hits Ragnaros".
 
 And it's not like you're getting any special arguments(in 1.12) sent along with these events telling you who is responsible for sending said combat message. All you know is you got a CREATURE_HITS_PARTY_MEMBER and PARTY_MEMBER_HITS_CREATURE. There's no way to parse out whether one is further away than the other. Almost all combat messages are made useless by this fact.
 
