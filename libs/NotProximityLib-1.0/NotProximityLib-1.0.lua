@@ -65,7 +65,27 @@ elseif locale == "ruRU" then
     }
     L["Alterac Valley"] = "Альтеракская долина"
     L["Arathi Basin"] = "Низина Арати"
-    L["Warsong Gulch"] = "Ущелье Песни Войны"  
+    L["Warsong Gulch"] = "Ущелье Песни Войны"
+elseif locale == "frFR" then
+    L.events = {
+        ["CHAT_MSG_SPELL_PERIODIC_PARTY_BUFFS"] = "(%a+) gagne %a.+",
+        ["CHAT_MSG_SPELL_PERIODIC_PARTY_DAMAGE"] = "(%a+) subit les effets de .+",
+        ["CHAT_MSG_SPELL_PERIODIC_FRIENDLYPLAYER_BUFFS"] = "(%a+) gagne %a.+",
+        ["CHAT_MSG_SPELL_PERIODIC_FRIENDLYPLAYER_DAMAGE"] = "(%a+) subit les effets de .+",
+
+        ["CHAT_MSG_SPELL_PARTY_BUFF"] = "(%a+) lance .+",
+        ["CHAT_MSG_SPELL_FRIENDLYPLAYER_BUFF"] = "(%a+) lance .+",
+        ["CHAT_MSG_SPELL_PARTY_DAMAGE"] = "(%a+) lance .+",
+        ["CHAT_MSG_SPELL_FRIENDLYPLAYER_DAMAGE"] = "(%a+) lance .+",
+
+        ["CHAT_MSG_SPELL_AURA_GONE_PARTY"] = ".+ sur (%a+) vient de se dissiper%.",
+        ["CHAT_MSG_SPELL_AURA_GONE_OTHER"] = ".+ sur (%a+) vient de se dissiper%.",
+    
+        ["CHAT_MSG_SPELL_SELF_BUFF"] = "Votre .+ soigne (%a+) pour .+"
+    }
+    L["Alterac Valley"] = "Vall\195\169e d\'Alterac"
+    L["Arathi Basin"] = "Bassin d\'Àrathi"
+    L["Warsong Gulch"] = "Goulet des Chanteguerres" 
 end
 
 local spells40yd = { -- Macros are forced to have text associated with them so we can safely just check the textures as well as check against the presence of text. No need for Gratuity or Babble overhead. Though if they have an item in their bar that matches the texture then GG haha
