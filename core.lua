@@ -376,6 +376,13 @@ function NotGrid:CliqueHandle(button) -- if/else for Clique handling is done in 
 	if foundspell then
 		local LastTarget = UnitName("target") -- I use this as a boolean because targetting by name can be erronous
 		ClearTarget()
+		if LazySpell then --_LazySpell quick and dirty fix
+			local lsSpell,lsRank = LazySpell:ExtractSpell(foundspell)
+			if s and self.HealComm.Spells[lsSpell] and lsRank == 1 then
+				local lsRank = LazySpell:CalculateRank(lsSpell, this.unit)
+				foundspell = lsSpell.."(Rank "..lsRank..")"
+			end
+		end
 		CastSpellByName(foundspell) -- then cast it, but note that because we've cleared target to cast it we're just "spelltargeting"
 		self.NPL:UpdateSpellCanTarget() -- Send ourselves off to NPL to run through the roster and check/update ranges
 		if SpellIsTargeting() and SpellCanTargetUnit(this.unit) then -- then come back to our own func and see if they can cast on the unit they wanted to cast on
