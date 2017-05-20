@@ -24,7 +24,7 @@ local DefaultOptions = {
 	["unittrackingiconbordercolor"] = {0,0,0,1},
 
 	["trackingicon1"] = L["Rejuvenation"],
-	["trackingicon1color"] = {0.20,0.60,1.00},
+	["trackingicon1color"] = {0.37,0.83,0.38},
 	["trackingicon2"] = "",
 	["trackingicon2color"] = {0.20,0.60,1.00},
 	["trackingicon3"] = L["Magic"],
@@ -64,7 +64,7 @@ local DefaultOptions = {
 	["colorunithealthbarbyclass"] = true,
 	["colorunithealthbarbgbyclass"] = false, -- think I'm deprecating this?
 	["smartcenter"] = false,
-	["growrighttoleft"] = true,
+	["growrighttoleft"] = false,
 	["showhealcommtext"] = true,
 	["usemapdistances"] = true,
 
