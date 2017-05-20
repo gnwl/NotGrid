@@ -378,7 +378,7 @@ function NotGrid:CliqueHandle(button) -- if/else for Clique handling is done in 
 		ClearTarget()
 		if LazySpell then --_LazySpell quick and dirty fix
 			local lsSpell,lsRank = LazySpell:ExtractSpell(foundspell)
-			if s and self.HealComm.Spells[lsSpell] and lsRank == 1 then
+			if self.HealComm.Spells[lsSpell] and lsRank == 1 then
 				local lsRank = LazySpell:CalculateRank(lsSpell, this.unit)
 				foundspell = lsSpell.."(Rank "..lsRank..")"
 			end
