@@ -219,10 +219,14 @@ function NotGrid:PositionFrames() -- I'm not going for efficiency on this. I'm g
 		for key,f in self.UnitFrames do -- loop through every unitframe and try to match it up with the subgorup
 			if f.subgroup == i then
 				f:ClearAllPoints()
-				if o.growrighttoleft then
-					f:SetPoint("CENTER",-(o.unitwidth+o.unitborder*2+o.unitpadding)*TotalGroups,-(o.unitheight+o.unitborder*2+o.unitpadding)*SubGroupCounts[i]) -- i do subgroup -1 so group 1 will be 0 and be at 0 offset
-				else
+				if o.growthdirection == 1 then
 					f:SetPoint("CENTER",(o.unitwidth+o.unitborder*2+o.unitpadding)*TotalGroups,-(o.unitheight+o.unitborder*2+o.unitpadding)*SubGroupCounts[i])
+				elseif o.growthdirection == 2 then
+					f:SetPoint("CENTER",-(o.unitwidth+o.unitborder*2+o.unitpadding)*TotalGroups,-(o.unitheight+o.unitborder*2+o.unitpadding)*SubGroupCounts[i]) -- i do subgroup -1 so group 1 will be 0 and be at 0 offset
+				elseif o.growthdirection == 3 then
+					f:SetPoint("CENTER",(o.unitwidth+o.unitborder*2+o.unitpadding)*SubGroupCounts[i],-(o.unitheight+o.unitborder*2+o.unitpadding)*TotalGroups)
+				elseif o.growthdirection == 4 then
+					f:SetPoint("CENTER",(o.unitwidth+o.unitborder*2+o.unitpadding)*SubGroupCounts[i],(o.unitheight+o.unitborder*2+o.unitpadding)*TotalGroups)
 				end
 				f:Show()
 				SubGroupCounts[i] = SubGroupCounts[i]+1 -- add it after to the first member is treated as 0, same with the frist group being treated as 0
@@ -234,12 +238,10 @@ function NotGrid:PositionFrames() -- I'm not going for efficiency on this. I'm g
 	end
 
 	self.Container:ClearAllPoints()
-	if o.smartcenter == true then
-		if o.growrighttoleft then
-			self.Container:SetPoint(o.containerpoint,o.containeroffx+(o.unitwidth+o.unitborder*2+o.unitpadding)/2*(TotalGroups-1),o.containeroffy)
-		else
+	if o.smartcenter == true and o.growthdirection == 1 then
 			self.Container:SetPoint(o.containerpoint,o.containeroffx-(o.unitwidth+o.unitborder*2+o.unitpadding)/2*(TotalGroups-1),o.containeroffy)
-		end
+	elseif o.smartcenter == true and o.growthdirection == 2 then
+			self.Container:SetPoint(o.containerpoint,o.containeroffx+(o.unitwidth+o.unitborder*2+o.unitpadding)/2*(TotalGroups-1),o.containeroffy)
 	else
 		self.Container:SetPoint(o.containerpoint,o.containeroffx,o.containeroffy)
 	end

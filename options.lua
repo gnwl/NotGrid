@@ -64,7 +64,6 @@ local DefaultOptions = {
 	["colorunithealthbarbyclass"] = true,
 	["colorunithealthbarbgbyclass"] = false, -- think I'm deprecating this?
 	["smartcenter"] = false,
-	["growrighttoleft"] = false,
 	["showhealcommtext"] = true,
 	["usemapdistances"] = true,
 
@@ -72,6 +71,8 @@ local DefaultOptions = {
 	["showinparty"] = true,
 	["showblizzframes"] = true,
 	["locked"] = true,
+
+	["growthdirection"] = 1, -- 1: Group Left to Right, 2: Group Right to Left, 3: Group Top to Bottom, 4: Group Bottom to Top, 5: Unit Top to Bottom.. etc
 }
 
 function NotGrid:SetDefaultOptions() -- this will run on initialization and make sure everything is set. We can also use it if we wipe the NotGridOptions table and wnant to load it up with defaults

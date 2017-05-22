@@ -45,8 +45,8 @@ L:RegisterTranslations("enUS", function() return {
 ["Locked"] = true,
 
 ["Orientation"] = true,
-["Right To Left"] = true,
 ["Show Blizz Frames"] = true,
+["Growth Direction"] = true,
 } end)
 
 L:RegisterTranslations("ruRU", function() return {
@@ -94,6 +94,6 @@ L:RegisterTranslations("ruRU", function() return {
 ["Locked"] = "Заблокировать",
 
 ["Orientation"] = true,
-["Right To Left"] = true,
 ["Show Blizz Frames"] = true,
+["Growth Direction"] = true,
 } end)
