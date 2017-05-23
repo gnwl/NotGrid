@@ -146,11 +146,16 @@ function NotGrid:UNIT_BORDER(unitid) -- because of the way this is written its p
 		end
 		--mana
 		if self.o.trackmana and not (unitobj.ngframe.borderstate == "aggro" or unitobj.ngframe.borderstate == "target") and not (unitobj.class == "WARRIOR" or unitobj.class == "ROGUE") then
-			local currmana = UnitMana(unitid)
-			local maxmana = UnitManaMax(unitid)
-			if currmana/maxmana*100 < self.o.manathreshhold then
-				unitobj.ngframe.borderstate = "mana"
-				unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.manawarningcolor))
+			if UnitPowerType(unitid) == 0 then -- fix for druids changing forms
+				local currmana = UnitMana(unitid)
+				local maxmana = UnitManaMax(unitid)
+				if currmana/maxmana*100 < self.o.manathreshhold then
+					unitobj.ngframe.borderstate = "mana"
+					unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.manawarningcolor))
+				else
+					unitobj.ngframe.borderstate = nil
+					unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.unitbordercolor))
+				end
 			else
 				unitobj.ngframe.borderstate = nil
 				unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.unitbordercolor))
