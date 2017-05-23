@@ -145,7 +145,7 @@ function NotGrid:UNIT_BORDER(unitid) -- because of the way this is written its p
 			end
 		end
 		--mana
-		if self.o.trackmana and not (unitobj.ngframe.borderstate == "aggro" or unitobj.ngframe.borderstate == "target") then
+		if self.o.trackmana and not (unitobj.ngframe.borderstate == "aggro" or unitobj.ngframe.borderstate == "target") and not (unitobj.class == "WARRIOR" or unitobj.class == "ROGUE") then
 			local currmana = UnitMana(unitid)
 			local maxmana = UnitManaMax(unitid)
 			if currmana/maxmana*100 < self.o.manathreshhold then
