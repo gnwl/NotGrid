@@ -120,26 +120,26 @@ end
 -- UNIT_BORDER --
 -----------------
 
-function NotGrid:UNIT_BORDER(unitid) -- because of the way this is written its prone to minor flickering. I don't think its a big deal, but its something to address at some point
+function NotGrid:UNIT_BORDER(unitid) -- because of the way this is written its prone to minor(or major, but I don't notice it at all so I dunno) flickering. I don't think its a big deal, but its something to address at some point
 	local unitobj = self.NRL:GetUnitObjectFromUnit(unitid)
 	if unitobj and unitobj.ngframe then
 		--targethighlighting
 		if self.o.tracktarget then
 			local name = UnitName("Target") -- could get erronous with pets
-			if name and name == unitobj.ngframe.name and unitobj.ngframe.borderstate ~= "target" then
+			if name and name == unitobj.ngframe.name then
 				unitobj.ngframe.borderstate = "target"
 				unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.targetcolor))
-			elseif unitobj.ngframe.borderstate ~= nil then
+			else
 				unitobj.ngframe.borderstate = nil
 				unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.unitbordercolor))
 			end
 		end
 		--banzai/aggro
 		if self.o.trackaggro and not (unitobj.ngframe.borderstate == "target") then
-			if self.Banzai:GetUnitAggroByUnitId(unitid) and unitobj.ngframe.borderstate ~= "aggro" then -- if agg is true/not nil then the unit has aggro, else its nil and no aggro
+			if self.Banzai:GetUnitAggroByUnitId(unitid) then -- if agg is true/not nil then the unit has aggro, else its nil and no aggro
 				unitobj.ngframe.borderstate = "aggro"
 				unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.aggrowarningcolor))
-			elseif unitobj.ngframe.borderstate ~= nil then
+			else
 				unitobj.ngframe.borderstate = nil
 				unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.unitbordercolor))
 			end
@@ -149,14 +149,14 @@ function NotGrid:UNIT_BORDER(unitid) -- because of the way this is written its p
 			if UnitPowerType(unitid) == 0 then -- fix for druids changing forms
 				local currmana = UnitMana(unitid)
 				local maxmana = UnitManaMax(unitid)
-				if not UnitIsDeadOrGhost(unitid) and currmana/maxmana*100 < self.o.manathreshhold and unitobj.ngframe.borderstate ~= "mana" then
+				if currmana/maxmana*100 < self.o.manathreshhold and not UnitIsDeadOrGhost(unitid) then
 					unitobj.ngframe.borderstate = "mana"
 					unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.manawarningcolor))
-				elseif unitobj.ngframe.borderstate ~= nil then
+				else
 					unitobj.ngframe.borderstate = nil
 					unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.unitbordercolor))
 				end
-			elseif unitobj.ngframe.borderstate ~= nil then
+			else
 				unitobj.ngframe.borderstate = nil
 				unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.unitbordercolor))
 			end
