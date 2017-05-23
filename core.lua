@@ -20,17 +20,17 @@ function NotGrid:OnEnable()
 	self:DoDropDown()
 	self:RegisterEvent("NotRosterLib_UnitChanged")
 	self:RegisterEvent("NotRosterLib_RosterChanged")
-    --self:RegisterEvent("UNIT_HEALTH")
     self:RegisterEvent("HealComm_Healupdate")
     self:RegisterEvent("HealComm_Ressupdate")
     self:RegisterEvent("SpecialEvents_UnitBuffLost")
 	self:RegisterEvent("SpecialEvents_UnitBuffGained")
 	self:RegisterEvent("SpecialEvents_UnitDebuffLost")
 	self:RegisterEvent("SpecialEvents_UnitDebuffGained")
-	self:RegisterEvent("PLAYER_TARGET_CHANGED")
-	self:RegisterEvent("Banzai_UnitGainedAggro") -- "player" unit aggro? it has an event trigger but I don't know if I need it for the scope of this proj. I suppose ti would be necessary when just in party. But I don't really care then
-	self:RegisterEvent("Banzai_UnitLostAggro")
-	self:RegisterEvent("UNIT_MANA")
+	--self:RegisterEvent("UNIT_HEALTH") -- handled with frame OnUpdate
+	--self:RegisterEvent("PLAYER_TARGET_CHANGED") -- handled with frame OnUpdate
+	--self:RegisterEvent("Banzai_UnitGainedAggro") -- handled with frame OnUpdate
+	--self:RegisterEvent("Banzai_UnitLostAggro") -- handled with frame OnUpdate
+	--self:RegisterEvent("UNIT_MANA") -- handled with frame OnUpdate
 	if 1==1 then
 		self:RegisterEvent("NotProximityLib_RangeUpdate", "RangeHandle")
 		self:RegisterEvent("NotProximityLib_WorldRangeUpdate", "RangeHandle")
@@ -116,6 +116,49 @@ function NotGrid:UnitHealthZero(f, state)
 	-- end
 end
 
+-----------------
+-- UNIT_BORDER --
+-----------------
+
+function NotGrid:UNIT_BORDER(unitid) -- because of the way this is written its prone to minor flickering. I don't think its a big deal, but its something to address at some point
+	local unitobj = self.NRL:GetUnitObjectFromUnit(unitid)
+	if unitobj and unitobj.ngframe then
+		--targethighlighting
+		if self.o.tracktarget then
+			local name = UnitName("Target") -- could get erronous with pets
+			if name and name == unitobj.ngframe.name then
+				unitobj.ngframe.borderstate = "target"
+				unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.targetcolor))
+			else
+				unitobj.ngframe.borderstate = nil
+				unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.unitbordercolor))
+			end
+		end
+		--banzai/aggro
+		if self.o.trackaggro and not (unitobj.ngframe.borderstate == "target") then
+			if self.Banzai:GetUnitAggroByUnitId(unitid) then -- if agg is true/not nil then the unit has aggro, else its nil and no aggro
+				unitobj.ngframe.borderstate = "aggro"
+				unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.aggrowarningcolor))
+			else
+				unitobj.ngframe.borderstate = nil
+				unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.unitbordercolor))
+			end
+		end
+		--mana
+		if self.o.trackmana and not (unitobj.ngframe.borderstate == "aggro" or unitobj.ngframe.borderstate == "target") then
+			local currmana = UnitMana(unitid)
+			local maxmana = UnitManaMax(unitid)
+			if currmana/maxmana*100 < self.o.manathreshhold then
+				unitobj.ngframe.borderstate = "mana"
+				unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.manawarningcolor))
+			else
+				unitobj.ngframe.borderstate = nil
+				unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.unitbordercolor))
+			end
+		end
+	end
+end
+
 --------------
 -- HealComm --
 --------------
@@ -157,86 +200,6 @@ function NotGrid:HealComm_Ressupdate(unitname)
 		end
 	end
 	--DEFAULT_CHAT_FRAME:AddMessage(unitname.." "..resstime)
-end
-
-----------------------
--- Target Highlight --
-----------------------
-
-function NotGrid:PLAYER_TARGET_CHANGED()
-	if not self.o.tracktarget then return end
-	local name = UnitName("Target")
-	local unitobj = self.NRL:GetUnitObjectFromName(name)
-
-	if self.PrevTarget then
-		self:PrevTargetHandle()
-	end
-
-	if unitobj and unitobj.ngframe then
-		self.PrevTarget = name
-		unitobj.ngframe.borderstate = "target"
-		unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.targetcolor))
-	end
-end
-
-function NotGrid:PrevTargetHandle()
-	local unitobj = self.NRL:GetUnitObjectFromName(self.PrevTarget)
-	if unitobj and unitobj.ngframe then -- if the frame hasn't been cleared by a clear function
-		local currmana = UnitMana(unitobj.unitid)
-		local maxmana = UnitManaMax(unitobj.unitid)
-		if self.o.trackaggro and self.Banzai:GetUnitAggroByUnitName(self.PrevTarget) then
-			unitobj.ngframe.borderstate = "aggro"
-			unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.aggrowarningcolor))
-		elseif self.o.trackmana and currmana/maxmana*100 < self.o.manathreshhold then
-			unitobj.ngframe.borderstate = "mana"
-			unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.manawarningcolor))
-		else
-			unitobj.ngframe.borderstate = nil
-			unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.unitbordercolor))
-		end
-	end
-end
-
-------------
--- Banzai --
-------------
-
-function NotGrid:Banzai_UnitGainedAggro(unitid) -- this also gets sent banzaitarget(a table). Don't know whats in it. Don't care haha
-	if not self.o.trackaggro then return end
-	local unitobj = self.NRL:GetUnitObjectFromUnit(unitid)
-	if unitobj and unitobj.ngframe and not (unitobj.ngframe.borderstate == "target") then
-		unitobj.ngframe.borderstate = "aggro"
-		unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.aggrowarningcolor))
-	end
-end
-
-function NotGrid:Banzai_UnitLostAggro(unitid)
-	if not self.o.trackaggro then return end
-	local unitobj = self.NRL:GetUnitObjectFromUnit(unitid)
-	if unitobj and unitobj.ngframe and not (unitobj.ngframe.borderstate == "target") then
-		unitobj.ngframe.borderstate = nil
-		unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.unitbordercolor))
-	end
-end
-
----------------
--- UNIT_MANA --
----------------
-
-function NotGrid:UNIT_MANA(unitid)
-	if not self.o.trackmana then return end
-	local unitobj = self.NRL:GetUnitObjectFromUnit(unitid)
-	if unitobj and unitobj.ngframe and not (unitobj.ngframe.borderstate == "aggro" or unitobj.ngframe.borderstate == "target") then
-		local currmana = UnitMana(unitid)
-		local maxmana = UnitManaMax(unitid)
-		if currmana/maxmana*100 < self.o.manathreshhold then
-			unitobj.ngframe.borderstate = "mana"
-			unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.manawarningcolor))
-		else
-			unitobj.ngframe.borderstate = nil
-			unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.unitbordercolor))
-		end
-	end
 end
 
 -------------------------

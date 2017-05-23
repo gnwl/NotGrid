@@ -49,6 +49,7 @@ function NotGrid:CreateUnitFrame(index)
 	end)
 	f:SetScript("OnUpdate", function()
 		self:UNIT_HEALTH(this.unit)
+		self:UNIT_BORDER(this.unit)
 	end)
 
 
