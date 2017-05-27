@@ -9,6 +9,7 @@ function NotGrid:OnInitialize()
 	self.NPL = AceLibrary("NotProximityLib-1.0")
 	self.SEA = AceLibrary("SpecialEvents-Aura-2.0") -- auras are the most difficult thing to deal with
 	self.NRL = AceLibrary("NotRosterLib-1.0")
+	self.Gratuity = AceLibrary("Gratuity-2.0")
 	self.UnitFrames = {}
 	self.Container = self:CreateContainerFrame()
 	self.PrevTarget = nil -- for target highlighting
@@ -22,10 +23,7 @@ function NotGrid:OnEnable()
 	self:RegisterEvent("NotRosterLib_RosterChanged")
     self:RegisterEvent("HealComm_Healupdate")
     self:RegisterEvent("HealComm_Ressupdate")
-    self:RegisterEvent("SpecialEvents_UnitBuffLost")
-	self:RegisterEvent("SpecialEvents_UnitBuffGained")
-	self:RegisterEvent("SpecialEvents_UnitDebuffLost")
-	self:RegisterEvent("SpecialEvents_UnitDebuffGained")
+    self:ScheduleRepeatingEvent("UnitBuffs", self.UnitBuffs, 0.2, self)
 	--self:RegisterEvent("UNIT_HEALTH") -- handled with frame OnUpdate
 	--self:RegisterEvent("PLAYER_TARGET_CHANGED") -- handled with frame OnUpdate
 	--self:RegisterEvent("Banzai_UnitGainedAggro") -- handled with frame OnUpdate
@@ -123,42 +121,87 @@ end
 function NotGrid:UNIT_BORDER(unitid) -- because of the way this is written its prone to minor(or major, but I don't notice it at all so I dunno) flickering. I don't think its a big deal, but its something to address at some point
 	local unitobj = self.NRL:GetUnitObjectFromUnit(unitid)
 	if unitobj and unitobj.ngframe then
-		--targethighlighting
-		if self.o.tracktarget then
-			local name = UnitName("Target") -- could get erronous with pets
-			if name and name == unitobj.ngframe.name then
-				unitobj.ngframe.borderstate = "target"
-				unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.targetcolor))
-			else
-				unitobj.ngframe.borderstate = nil
-				unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.unitbordercolor))
-			end
+		local name = UnitName("Target") -- could get erronous with pets
+		local currmana = UnitMana(unitid)
+		local maxmana = UnitManaMax(unitid)
+		if self.o.tracktarget and name and name == unitobj.ngframe.name then
+			--unitobj.ngframe.borderstate = "target"
+			unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.targetcolor))
+		elseif self.o.trackaggro and self.Banzai:GetUnitAggroByUnitId(unitid) then
+			--unitobj.ngframe.borderstate = "aggro"
+			unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.aggrowarningcolor))
+		elseif self.o.trackmana and UnitPowerType(unitid) == 0 and currmana/maxmana*100 < self.o.manathreshhold and not UnitIsDeadOrGhost(unitid) then
+			--unitobj.ngframe.borderstate = "mana"
+			unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.manawarningcolor))
+		else
+			--unitobj.ngframe.borderstate = nil
+			unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.unitbordercolor))
 		end
-		--banzai/aggro
-		if self.o.trackaggro and not (unitobj.ngframe.borderstate == "target") then
-			if self.Banzai:GetUnitAggroByUnitId(unitid) then -- if agg is true/not nil then the unit has aggro, else its nil and no aggro
-				unitobj.ngframe.borderstate = "aggro"
-				unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.aggrowarningcolor))
-			else
-				unitobj.ngframe.borderstate = nil
-				unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.unitbordercolor))
-			end
-		end
-		--mana
-		if self.o.trackmana and not (unitobj.ngframe.borderstate == "aggro" or unitobj.ngframe.borderstate == "target") and not (unitobj.class == "WARRIOR" or unitobj.class == "ROGUE") then
-			if UnitPowerType(unitid) == 0 then -- fix for druids changing forms
-				local currmana = UnitMana(unitid)
-				local maxmana = UnitManaMax(unitid)
-				if currmana/maxmana*100 < self.o.manathreshhold and not UnitIsDeadOrGhost(unitid) then
-					unitobj.ngframe.borderstate = "mana"
-					unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.manawarningcolor))
-				else
-					unitobj.ngframe.borderstate = nil
-					unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.unitbordercolor))
+	end
+end
+
+function NotGrid:UnitBuffs()
+	for _,f in self.UnitFrames do
+		if f.unit then -- if the frame has unit info and thus is active then
+			local unitid = f.unit
+
+			--activate buffs -- loop through every buff and match them against every option, if I find a match then activate the frame
+			local bi = 1
+			while (UnitBuff(unitid,bi) ~= nil) do
+				self.Gratuity:SetUnitBuff(unitid,bi)
+				local buffname = self.Gratuity:GetLine(1)
+				for i=1,8 do
+					if buffname == self.o["trackingicon"..i] then
+						self:SetIconFrame(f.healthbar["trackingicon"..i], buffname, nil, i)
+					end
 				end
-			else
-				unitobj.ngframe.borderstate = nil
-				unitobj.ngframe:SetBackdropBorderColor(unpack(self.o.unitbordercolor))
+				bi = bi + 1;
+			end
+
+			--activate debuffs -- same as above
+			local di = 1
+			while (UnitDebuff(unitid,di) ~= nil) do
+				self.Gratuity:SetUnitDebuff(unitid,di)
+				local debuffname = self.Gratuity:GetLine(1)
+				local _, _, spelltype =  UnitDebuff(unitid,di) -- texture, applications, type
+				for i=1,8 do
+					if self.o["trackingicon"..i] == debuffname then
+						self:SetIconFrame(f.healthbar["trackingicon"..i], debuffname, nil, i)
+					elseif spelltype and self.o["trackingicon"..i] == spelltype then
+						self:SetIconFrame(f.healthbar["trackingicon"..i], spelltype, spelltype, i)
+					end
+				end
+				di = di + 1;
+			end
+
+			--clear buffs&debuffs -- loop through every option and match them against every buff, if its never found then clear the frame
+			for i=1,8 do
+				local fi = f.healthbar["trackingicon"..i]
+				if fi.active then
+					local found = false
+					local bi = 1
+					while (UnitBuff(unitid,bi) ~= nil) do
+						self.Gratuity:SetUnitBuff(unitid,bi)
+						local buffname = self.Gratuity:GetLine(1)
+						if self.o["trackingicon"..i] == buffname then
+							found = true
+						end
+						bi = bi + 1;
+					end
+					local di = 1
+					while (UnitDebuff(unitid,di) ~= nil) do
+						self.Gratuity:SetUnitDebuff(unitid,di)
+						local debuffname = self.Gratuity:GetLine(1)
+						local _, _, spelltype =  UnitDebuff(unitid,di) -- texture, applications, type
+						if self.o["trackingicon"..i] == debuffname or (spelltype and self.o["trackingicon"..i] == spelltype) then
+							found = true
+						end
+						di = di + 1
+					end
+					if found == false then
+						self:ClearIconFrame(fi)
+					end
+				end
 			end
 		end
 	end
@@ -205,75 +248,6 @@ function NotGrid:HealComm_Ressupdate(unitname)
 		end
 	end
 	--DEFAULT_CHAT_FRAME:AddMessage(unitname.." "..resstime)
-end
-
--------------------------
--- SpecialEvents Auras --
--------------------------
-
-function NotGrid:SpecialEvents_UnitDebuffGained(unitid, buffname, apps, spelltype, texture)
-	if not texture then spelltype = "none" end -- need to do this to be applicable with blizz's aura colors
-	local unitobj = self.NRL:GetUnitObjectFromUnit(unitid)
-	if unitobj and unitobj.ngframe then
-		local f = unitobj.ngframe
-		for i=1,8 do -- loop through all my tracking icon settings icons and check their values against the incoming debuff
-			local oi = self.o["trackingicon"..i]
-			local fi = f.healthbar["trackingicon"..i]
-			if oi == spelltype then
-				self:SetIconFrame(fi, spelltype, spelltype, i)
-			end
-			if oi == buffname then
-				self:SetIconFrame(fi, buffname, spelltype, i)
-			end
-			-- if oi == "ReducedHealingDebuffs" and self.ReducedHealingDebuffs[buffname] then -- if a corner icon is set to track reducedhealingdebuffs and it has a key in the array
-			-- 	self:SetIconFrame(fi, buffname, spelltype, i) -- send it the buffname instead of spelltype in this case
-			-- end
-		end
-	end
-end
-
-function NotGrid:SpecialEvents_UnitDebuffLost(unitid, buffname, apps, spelltype, texture)
-	if not texture then spelltype = "none" end 
-	local unitobj = self.NRL:GetUnitObjectFromUnit(unitid)
-	if unitobj and unitobj.ngframe then
-		local f = unitobj.ngframe
-		for i=1,8 do
-			local fi = f.healthbar["trackingicon"..i]
-			if fi.active then -- why even check if its active? I suppose to reduce checking whats likely to a majority not active frames. So this is good
-				if fi.active == spelltype and not self.SEA:UnitHasDebuffType(unitid, spelltype) then -- if he lost the relative spelltype and he has no other buffs on him of that spelltype
-					self:ClearIconFrame(fi)
-				end
-				if fi.active == buffname then -- for clearing icons that track specific names, not spelltypes
-					self:ClearIconFrame(fi)
-				end
-			end
-		end
-	end
-end
-
-function NotGrid:SpecialEvents_UnitBuffGained(unitid, buffname) -- why doesn't it seend me the texture or spelltype or anything? I don't want to loop throguh it myself or I wouldn't use the lib
-	local unitobj = self.NRL:GetUnitObjectFromUnit(unitid)
-	if unitobj and unitobj.ngframe then
-		local f = unitobj.ngframe
-		for i=1,8 do -- for each corner frame setting
-			if self.o["trackingicon"..i] == buffname then -- if its a buff they're tracking
-				self:SetIconFrame(f.healthbar["trackingicon"..i], buffname, nil, i)
-			end
-		end
-	end
-end
-
-function NotGrid:SpecialEvents_UnitBuffLost(unitid, buffname)
-	local unitobj = self.NRL:GetUnitObjectFromUnit(unitid)
-	if unitobj and unitobj.ngframe then
-		local f = unitobj.ngframe
-		for i=1,8 do
-			local fi = f.healthbar["trackingicon"..i]
-			if fi.active and fi.active == buffname then
-				self:ClearIconFrame(fi)
-			end
-		end
-	end
 end
 
 ---------------------
