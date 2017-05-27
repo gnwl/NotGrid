@@ -7,7 +7,6 @@ function NotGrid:OnInitialize()
 	self.HealComm = AceLibrary("HealComm-1.0")
 	self.Banzai = AceLibrary("Banzai-1.0") -- only reports as having aggro if someone with this library is targetting the mob and reporting that the mob is targeting said unit
 	self.NPL = AceLibrary("NotProximityLib-1.0")
-	self.SEA = AceLibrary("SpecialEvents-Aura-2.0") -- auras are the most difficult thing to deal with
 	self.NRL = AceLibrary("NotRosterLib-1.0")
 	self.Gratuity = AceLibrary("Gratuity-2.0")
 	self.UnitFrames = {}
@@ -76,7 +75,7 @@ function NotGrid:UNIT_HEALTH(unitid)
 			f.healthbar:SetValue(currhealth)
 			if UnitIsDead(unitid) then
 				self:UnitHealthZero(f, L["Dead"])
-			elseif UnitIsGhost(unitid) or (deficit >= maxhealth) or self.SEA:UnitHasBuff(unitid,L["Spirit of Redemption"]) then -- we can't detect unitisghost if he's not in range so we do the additional conditional. It won't false report for "dead" because that's checked first. Still a lot of false reports. In BGs.
+			elseif UnitIsGhost(unitid) or (deficit >= maxhealth) then -- we can't detect unitisghost if he's not in range so we do the additional conditional. It won't false report for "dead" because that's checked first. Still a lot of false reports. In BGs.
 				self:UnitHealthZero(f, L["Ghost"])
 			elseif currhealth/maxhealth*100 <= self.o.healththreshhold then
 				local deficittext
