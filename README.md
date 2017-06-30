@@ -3,13 +3,13 @@ NotGrid is a party and raid frame addon for Vanilla World of Warcraft (1.12.1). 
 
 ## Usage
 Use */notgrid* or */ng* to show the config menu.  
-use */notgrid reset* to restore the default settings.
+Use */notgrid reset* to restore the default settings.
 
 ## Optional Dependencies
-BonusScanner: Required for Healcomm to factor in your bonus healing from gear. https://wow.curseforge.com/projects/project-1352  
-Clique: Enables click-casting and hover-casting on your unit frames.  
-LazySpell: Enables auto healing spell rank scale for Clique depending on unit health deficit. https://github.com/satan666/LazySpell  
+[BonusScanner](https://wow.curseforge.com/projects/project-1352): Enables Healcomm to factor in your bonus healing from gear.  
+Clique: Enables click-casting on your unit frames.  
+[LazySpell](https://github.com/satan666/LazySpell): Enables Clique auto spell rank scaling depending on unit health deficit.
 
-### Additional Note
-If you're having issues with the frame borders/edges being un-uniformly sized or appearing clipped by the healthbar make sure to have a proper UI scale set: http://wow.gamepedia.com/UI_Scale  
+## Additional Note
+If you're having issues with the frame borders/edges being un-uniformly sized or appearing clipped by the healthbar make sure to have a proper [UI scale](http://wow.gamepedia.com/UI_Scale) set.  
 TLDR: If you play with a 1920x1080 resolution, the correct UI scale would be 768/1080 = 0.7111..., and you would set that by typing */console UIScale 0.7111111111* in the chat.
