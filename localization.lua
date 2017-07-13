@@ -93,7 +93,7 @@ L:RegisterTranslations("ruRU", function() return {
 ["Show In Party"] = "Показать в группе",
 ["Locked"] = "Заблокировать",
 
-["Orientation"] = true,
-["Show Blizz Frames"] = true,
-["Growth Direction"] = true,
+["Orientation"] = "Ориентация",
+["Show Blizz Frames"] = "Показать окна Blizzard",
+["Growth Direction"] = "Направление роста",
 } end)
