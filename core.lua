@@ -139,6 +139,10 @@ function NotGrid:UNIT_BORDER(unitid) -- because of the way this is written its p
 	end
 end
 
+-------------------
+-- Buffs/Debuffs --
+-------------------
+
 function NotGrid:UnitBuffs()
 	for _,f in self.UnitFrames do
 		if f.unit then -- if the frame has unit info and thus is active then
@@ -150,7 +154,7 @@ function NotGrid:UnitBuffs()
 				self.Gratuity:SetUnitBuff(unitid,bi)
 				local buffname = self.Gratuity:GetLine(1)
 				for i=1,8 do
-					if buffname == self.o["trackingicon"..i] then
+					if self:CheckAura(self.o["trackingicon"..i], buffname) then
 						self:SetIconFrame(f.healthbar["trackingicon"..i], buffname, nil, i)
 					end
 				end
@@ -164,9 +168,9 @@ function NotGrid:UnitBuffs()
 				local debuffname = self.Gratuity:GetLine(1)
 				local _, _, spelltype =  UnitDebuff(unitid,di) -- texture, applications, type
 				for i=1,8 do
-					if self.o["trackingicon"..i] == debuffname then
+					if self:CheckAura(self.o["trackingicon"..i], debuffname) then
 						self:SetIconFrame(f.healthbar["trackingicon"..i], debuffname, nil, i)
-					elseif spelltype and self.o["trackingicon"..i] == spelltype then
+					elseif spelltype and self:CheckAura(self.o["trackingicon"..i], spelltype) then
 						self:SetIconFrame(f.healthbar["trackingicon"..i], spelltype, spelltype, i)
 					end
 				end
@@ -182,7 +186,7 @@ function NotGrid:UnitBuffs()
 					while (UnitBuff(unitid,bi) ~= nil) do
 						self.Gratuity:SetUnitBuff(unitid,bi)
 						local buffname = self.Gratuity:GetLine(1)
-						if self.o["trackingicon"..i] == buffname then
+						if self:CheckAura(self.o["trackingicon"..i], buffname) then -- i can probably reduce this, but its workign for now
 							found = true
 						end
 						bi = bi + 1;
@@ -192,7 +196,7 @@ function NotGrid:UnitBuffs()
 						self.Gratuity:SetUnitDebuff(unitid,di)
 						local debuffname = self.Gratuity:GetLine(1)
 						local _, _, spelltype =  UnitDebuff(unitid,di) -- texture, applications, type
-						if self.o["trackingicon"..i] == debuffname or (spelltype and self.o["trackingicon"..i] == spelltype) then
+						if self:CheckAura(self.o["trackingicon"..i], buffname) or (spelltype and self:CheckAura(self.o["trackingicon"..i], spelltype)) then
 							found = true
 						end
 						di = di + 1
@@ -203,6 +207,12 @@ function NotGrid:UnitBuffs()
 				end
 			end
 		end
+	end
+end
+
+function NotGrid:CheckAura(str, aura)
+	if str and aura and string.find(str, aura) then
+		return true
 	end
 end
 
