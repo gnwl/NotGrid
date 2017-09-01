@@ -211,8 +211,12 @@ function NotGrid:UnitBuffs()
 end
 
 function NotGrid:CheckAura(str, aura)
-	if str and aura and string.find(str, aura) then
-		return true
+	if str and aura then
+		for text in string.gfind(str, "([^|]+)") do
+			if text == aura then
+				return true
+			end
+		end
 	end
 end
 
