@@ -196,7 +196,7 @@ function NotGrid:UnitBuffs()
 						self.Gratuity:SetUnitDebuff(unitid,di)
 						local debuffname = self.Gratuity:GetLine(1)
 						local _, _, spelltype =  UnitDebuff(unitid,di) -- texture, applications, type
-						if self:CheckAura(self.o["trackingicon"..i], buffname) or (spelltype and self:CheckAura(self.o["trackingicon"..i], spelltype)) then
+						if self:CheckAura(self.o["trackingicon"..i], debuffname) or (spelltype and self:CheckAura(self.o["trackingicon"..i], spelltype)) then
 							found = true
 						end
 						di = di + 1
