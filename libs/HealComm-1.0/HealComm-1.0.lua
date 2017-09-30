@@ -1,6 +1,6 @@
 --[[
 Name: HealComm-1.0
-Revision: $Rev: 11430 $
+Revision: $Rev: 11640 $
 Author(s): aviana
 Website: https://github.com/Aviana
 Description: A library to provide communication of heals and resurrections.
@@ -8,7 +8,7 @@ Dependencies: AceLibrary, AceEvent-2.0, RosterLib-2.0
 ]]
 
 local MAJOR_VERSION = "HealComm-1.0"
-local MINOR_VERSION = "$Revision: 11430 $"
+local MINOR_VERSION = "$Revision: 11640 $"
 
 if not AceLibrary then error(MAJOR_VERSION .. " requires AceLibrary") end
 if not AceLibrary:IsNewVersion(MAJOR_VERSION, MINOR_VERSION) then return end
@@ -146,9 +146,26 @@ elseif GetLocale() == "zhCN" then
 			return table.BZ[key]
 		end
 	end})
+	L["Curse of the Deadwood"] = "死木诅咒"
+	L["Veil of Shadow"] = "暗影之雾"
+	L["Gehennas' Curse"] = "基赫纳斯的诅咒"
+	L["Mortal Wound"] = "重伤"
+	L["Necrotic Poison"] = "死灵之毒"
+	L["Necrotic Aura"] = "死灵光环"
+	L["The Furious Storm"] = "狂野风暴"
+	L["Holy Power"] = "神圣能量"
+	L["Prayer Beads Blessing"] = "祈祷之珠"
+	L["Chromatic Infusion"] = "多彩能量"
+	L["Ascendance"] = "优越"
+	L["Ephemeral Power"] = "短暂强力"
+	L["Unstable Power"] = "能量无常"
+	L["Healing of the Ages"] = "远古治疗	"
+	L["Essence of Sapphiron"] = "萨菲隆的精华"
+	L["The Eye of the Dead"] = "亡者之眼"
+	L["Crusader's Wrath"] = "十字军之怒"
+	L["Nature Aligned"] = "自然之盟"
 	L["Libram of Divinity"] = "神性圣契"
 	L["Libram of Light"] = "光明圣契"
-	L["Necrotic Aura"] = "死灵光环"  -- 这个技能不知道是否存在
 	L["Set: Increases the duration of your Rejuvenation spell by 3 sec."] = "套装：使你的回春术的持续时间延长3秒。" -- T2
 	L["Set: Increases the duration of your Renew spell by 3 sec."] = "套装：使你的恢复术的持续时间延长3秒。" -- T2.5
 	L["Totem of Life"] = "生命图腾"
@@ -980,7 +997,13 @@ HealComm.Debuffs = {
 	
 local function getSetBonus()
 	healcommTip:SetInventoryItem("player", 1)
-	local text = getglobal("healcommTipTextLeft"..healcommTip:NumLines()):GetText()
+	local text = "healcommTipTextLeft"..(healcommTip:NumLines() or 1)
+	local text = getglobal(text)
+	if text then
+		text = text:GetText()
+	else
+		return nil
+	end
 	if text == L["Set: Increases the duration of your Rejuvenation spell by 3 sec."] or text == L["Set: Increases the duration of your Renew spell by 3 sec."] then
 		return true
 	else
@@ -991,7 +1014,7 @@ end
 function HealComm:GetBuffSpellPower()
 	local Spellpower = 0
 	local healmod = 1
-	for i=1, 16 do
+	for i=1, 32 do
 		local buffTexture, buffApplications = UnitBuff("player", i)
 		if not buffTexture then
 			return Spellpower, healmod
@@ -1006,15 +1029,16 @@ function HealComm:GetBuffSpellPower()
 	return Spellpower, healmod
 end
 
-function HealComm:GetTargetSpellPower(spell)
+function HealComm:GetUnitSpellPower(unit, spell)
 	local targetpower = 0
 	local targetmod = 1
 	local buffTexture, buffApplications
 	local debuffTexture, debuffApplications
-	for i=1, 16 do
-		if UnitIsVisible("target") and UnitIsConnected("target") and UnitReaction("target", "player") > 4 then
-			buffTexture, buffApplications = UnitBuff("target", i)
-			healcommTip:SetUnitBuff("target", i)
+	local buffName
+	for i=1, 32 do
+		if UnitIsVisible(unit) and UnitIsConnected(unit) and UnitCanAssist("player", unit) then
+			buffTexture, buffApplications = UnitBuff(unit, i)
+			healcommTip:SetUnitBuff(unit, i)
 		else
 			buffTexture, buffApplications = UnitBuff("player", i)
 			healcommTip:SetUnitBuff("player", i)
@@ -1022,7 +1046,7 @@ function HealComm:GetTargetSpellPower(spell)
 		if not buffTexture then
 			break
 		end
-		local buffName = healcommTipTextLeft1:GetText()
+		buffName = healcommTipTextLeft1:GetText()
 		if buffName == L["Blessing of Light"] then
 			local HLBonus, FoLBonus = strmatch(healcommTipTextLeft2:GetText(),"(%d+).-(%d+)")
 			if (spell == L["Flash of Light"]) then
@@ -1036,9 +1060,9 @@ function HealComm:GetTargetSpellPower(spell)
 		end
 	end
 	for i=1, 16 do
-		if UnitIsVisible("target") and UnitIsConnected("target") and UnitReaction("target", "player") > 4 then
-			debuffTexture, debuffApplications = UnitDebuff("target", i)
-			healcommTip:SetUnitDebuff("target", i)
+		if UnitIsVisible(unit) and UnitIsConnected(unit) and UnitCanAssist("player", unit) then
+			debuffTexture, debuffApplications = UnitDebuff(unit, i)
+			healcommTip:SetUnitDebuff(unit, i)
 		else
 			debuffTexture, debuffApplications = UnitDebuff("player", i)
 			healcommTip:SetUnitDebuff("player", i)
@@ -1195,7 +1219,6 @@ function HealComm:SPELLCAST_START()
 end
 
 function HealComm:SPELLCAST_FAILED()
-	
 	if self:IsEventScheduled("TriggerRegrowthHot") then
 		self:CancelScheduledEvent("TriggerRegrowthHot")
 	end
@@ -1462,73 +1485,84 @@ end
 
 function HealComm:CastSpell(spellId, spellbookTabNum)
 	self.hooks.CastSpell(spellId, spellbookTabNum)
+	
+	if self.CurrentSpellName and not SpellIsTargeting() then return end
+	
 	local spellName, rank = GetSpellName(spellId, spellbookTabNum)
 	_,_,rank = string.find(rank,"(%d+)")
-	if ( SpellIsTargeting() ) then 
-       -- Spell is waiting for a target
-       self.CurrentSpellName = spellName
-	   self.CurrentSpellRank = rank
-	elseif ( UnitIsVisible("target") and UnitIsConnected("target") and UnitCanAssist("player", "target") ) then
-       -- Spell is being cast on the current target.  
-       -- If ClearTarget() had been called, we'd be waiting target
-		if UnitIsPlayer("target") then
-			self:ProcessSpellCast(spellName, rank, UnitName("target"))
+	
+	self.CurrentSpellName = spellName
+	self.CurrentSpellRank = rank
+	if not SpellIsTargeting() then
+		if ( UnitIsVisible("target") and UnitIsConnected("target") and UnitCanAssist("player", "target") ) then
+			-- Spell is being cast on the current target.  
+			if UnitIsPlayer("target") then
+				self:ProcessSpellCast("target")
+			end
+		else
+			self:ProcessSpellCast("player")
 		end
-	else
-		self:ProcessSpellCast(spellName, rank, UnitName("player"))
 	end
 end
 
 function HealComm:CastSpellByName(spellName, onSelf)
 	self.hooks.CastSpellByName(spellName, onSelf)
+	
+	if self.CurrentSpellName and not SpellIsTargeting() then return end
+	
 	local _,_,rank = string.find(spellName,"(%d+)")
 	local _, _, spellName = string.find(spellName, "^([^%(]+)")
-	if not rank then
-		local i = 1
-		while GetSpellName(i, BOOKTYPE_SPELL) do
-			local s, r = GetSpellName(i, BOOKTYPE_SPELL)
-			if s == spellName then
-				rank = r
+	spellName = string.lower(spellName)
+	local i = 1
+	while GetSpellName(i, BOOKTYPE_SPELL) do
+		local s, r = GetSpellName(i, BOOKTYPE_SPELL)
+		if string.lower(s) == spellName then
+			spellName = s
+			if rank then
+				break
+			else
+				while s == spellName do
+					rank = r
+					i = i+1
+					s, r = GetSpellName(i, BOOKTYPE_SPELL)
+				end
+				break
 			end
-			i = i+1
 		end
-		if rank then
-			_,_,rank = string.find(rank,"(%d+)")
-		end
+		i = i+1
 	end
-	if ( spellName ) then
-		if ( SpellIsTargeting() ) then
-			self.CurrentSpellName = spellName
-			self.CurrentSpellRank = rank
-		else
+	if rank then
+		_,_,rank = string.find(rank,"(%d+)")
+	end
+	if spellName then
+		self.CurrentSpellName = spellName
+		self.CurrentSpellRank = rank
+		
+		if not SpellIsTargeting() then
 			if UnitIsVisible("target") and UnitIsConnected("target") and UnitCanAssist("player", "target") and onSelf ~= 1 then
 				if UnitIsPlayer("target") then
-					self:ProcessSpellCast(spellName, rank, UnitName("target"))
+					self:ProcessSpellCast("target")
 				end
 			else
-				self:ProcessSpellCast(spellName, rank, UnitName("player"))
+				self:ProcessSpellCast("player")
 			end
 		end
 	end
 end
 
 function HealComm:OnMouseDown(object)
-	-- If we're waiting to target
-	local targetName
-	
-	if ( self.CurrentSpellName and UnitExists("mouseover") ) then
-		targetName = UnitName("mouseover")
-	elseif ( self.CurrentSpellName and GameTooltipTextLeft1:IsVisible() ) then
+	local unit = "mouseover"
+	if ( self.CurrentSpellName and GameTooltipTextLeft1:IsVisible() ) then
 		local _, _, name = string.find(GameTooltipTextLeft1:GetText(), L["^Corpse of (.+)$"])
 		if ( name ) then
-			targetName = name
+			unit = roster:GetUnitIDFromName(name)
 		end
+	end
+	if ( self.CurrentSpellName and SpellIsTargeting() and UnitExists(unit) ) then
+		self:ProcessSpellCast(unit)
 	end
 	if ( self.hooks[object]["OnMouseDown"] ) then
 		self.hooks[object]["OnMouseDown"]()
-	end
-	if ( self.CurrentSpellName and targetName ) then
-		self:ProcessSpellCast(self.CurrentSpellName, self.CurrentSpellRank, targetName)
 	end
 end
 
@@ -1537,36 +1571,30 @@ function HealComm:UseAction(slot, checkCursor, onSelf)
 	healcommTip:SetAction(slot)
 	local spellName = healcommTipTextLeft1:GetText()
 	
-	-- Test to see if this is a macro
-	if not GetActionText(slot) then
-		self.CurrentSpellName = spellName
-	end
-	
 	self.hooks.UseAction(slot, checkCursor, onSelf)
 	
 	-- Test to see if this is a macro
-	if ( not self.CurrentSpellName ) then
+	if GetActionText(slot) or (self.CurrentSpellName and not SpellIsTargeting()) then
 		return
 	end
+	
+	self.CurrentSpellName = spellName
 	local rank = healcommTipTextRight1:GetText()
 	if rank then
 		_,_,rank = string.find(rank,"(%d+)")
 	end
-	if not rank then
-		rank = 1
-	end
-	self.CurrentSpellRank = rank
-	if ( SpellIsTargeting() ) then
-		-- Spell is waiting for a target
-		return
-	elseif ( UnitIsVisible("target") and UnitIsConnected("target") and UnitCanAssist("player", "target") and onSelf ~= 1) then
-		-- Spell is being cast on the current target
-		if UnitIsPlayer("target") then
-			self:ProcessSpellCast(spellName, rank, UnitName("target"))
+	self.CurrentSpellRank = rank or 1
+	
+	if not SpellIsTargeting() then
+		if ( UnitIsVisible("target") and UnitIsConnected("target") and UnitCanAssist("player", "target") and onSelf ~= 1) then
+			-- Spell is being cast on the current target
+			if UnitIsPlayer("target") then
+				self:ProcessSpellCast("target")
+			end
+		else
+			-- Spell is being cast on the player
+			self:ProcessSpellCast("player")
 		end
-	else
-		-- Spell is being cast on the player
-		self:ProcessSpellCast(spellName, rank, UnitName("player"))
 	end
 end
 
@@ -1578,7 +1606,7 @@ function HealComm:SpellTargetUnit(unit)
 	self.hooks.SpellTargetUnit(unit)
 	if ( shallTargetUnit and self.CurrentSpellName and not SpellIsTargeting() ) then
 		if UnitIsPlayer(unit) then
-			self:ProcessSpellCast(self.CurrentSpellName, self.CurrentSpellRank, UnitName(unit))
+			self:ProcessSpellCast(unit)
 		end
 		self.CurrentSpellName = nil
 		self.CurrentSpellRank = nil
@@ -1595,16 +1623,16 @@ function HealComm:TargetUnit(unit)
 	-- Look to see if we're currently waiting for a target internally
 	-- If we are, then well glean the target info here.
 	if ( self.CurrentSpellName and UnitExists(unit) ) and UnitIsPlayer(unit) then
-		self:ProcessSpellCast(self.CurrentSpellName, self.CurrentSpellRank, UnitName(unit))
+		self:ProcessSpellCast(unit)
 	end
 	self.hooks.TargetUnit(unit)
 end
 
-function HealComm:ProcessSpellCast(spellName, rank, targetName)
-	local power, mod = self:GetTargetSpellPower(spellName)
-	self.SpellCastInfo[1] = self.SpellCastInfo[1] or spellName
-	self.SpellCastInfo[2] = self.SpellCastInfo[2] or rank
-	self.SpellCastInfo[3] = self.SpellCastInfo[3] or targetName
+function HealComm:ProcessSpellCast(unit)
+	local power, mod = self:GetUnitSpellPower(unit, self.CurrentSpellName)
+	self.SpellCastInfo[1] = self.CurrentSpellName
+	self.SpellCastInfo[2] = self.CurrentSpellRank
+	self.SpellCastInfo[3] = UnitName(unit)
 	self.SpellCastInfo[4] = power
 	self.SpellCastInfo[5] = mod
 end
