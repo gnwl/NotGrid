@@ -211,7 +211,7 @@ function NotGrid:CliqueHandle(button) -- if/else for Clique handling is done in 
 			end
 		end
 		CastSpellByName(foundspell) -- then cast it, but note that because we've cleared target to cast it we're just "spelltargeting"
-		self:CliqueCanTarget()
+		self:SpellCanTarget() -- run through a proximitycheck on all units using this spell before continueing on
 		if SpellIsTargeting() and SpellCanTargetUnit(this.unit) then -- then come back to our own func and see if they can cast on the unit they wanted to cast on
 			SpellTargetUnit(this.unit) -- if they can, cast on them
 		elseif SpellIsTargeting() then
@@ -222,5 +222,28 @@ function NotGrid:CliqueHandle(button) -- if/else for Clique handling is done in 
 		end
 	else
 		self:ClickHandle(button) -- if it failed to find anything in clique then we send it to the regular handler
+	end
+end
+
+---------------------
+-- Mousover Mimick --
+---------------------
+
+SLASH_NOTGRIDCAST1 = "/ngcast"
+function SlashCmdList.NOTGRIDCAST(spell, editbox) -- this is all pretty much identical to clique handling. So redundant code, clean up sometime.
+	local unitid = GetMouseFocus().unit
+	if unitid and UnitExists(unitid) then
+		local LastTarget = UnitName("target")
+		ClearTarget()
+		CastSpellByName(spell)
+		NotGrid:SpellCanTarget()
+		if SpellIsTargeting() and SpellCanTargetUnit(unitid) then -- then come back to our own func and see if they can cast on the unit they wanted to cast on
+			SpellTargetUnit(unitid) -- if they can, cast on them
+		elseif SpellIsTargeting() then
+			SpellStopTargeting() -- otherwise stop targetting
+		end
+		if LastTarget then -- remember, use it as a boolean.
+			TargetLastTarget() -- and finally, if they actually had an old target, then target it
+		end
 	end
 end

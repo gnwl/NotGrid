@@ -224,7 +224,7 @@ end
 --  Clique Helper  --
 ---------------------
 
-function NotGrid:CliqueCanTarget()
+function NotGrid:SpellCanTarget()
 	for _,f in self.UnitFrames do
 		local unitid = f.unit
 		if UnitExists(unitid) and UnitIsVisible(unitid) and SpellIsTargeting() then -- mimick the checks of the main checker and then pass results directly to RangeToggle
