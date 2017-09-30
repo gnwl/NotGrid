@@ -203,8 +203,24 @@ local menuarray = {
 		key = "trackingicon8color",
 		},
 	},
-
 	-- end of icons --
+	{text = L["Show Power Bar"], 
+	toggle = "showpowerbar",
+	},
+	{text = L["Power Position"], 
+	slider = {
+		key = "powerposition",
+		minval = 1,
+		maxval = 4,
+		},
+	},
+	{text = L["Power Size"], 
+	slider = {
+		key = "powersize",
+		minval = 1,
+		maxval = 50,
+		},
+	},
 	{text = L["Proximity Leeway"], 
 	slider = {
 		key = "proximityleeway",
@@ -230,6 +246,9 @@ local menuarray = {
 	},
 	{text = L["Show In Party"], 
 	toggle = "showinparty",
+	},
+	{text = L["Show Party In Raid"], 
+	toggle = "showpartyinraid",
 	},
 	{text = L["Show Blizz Frames"], 
 	toggle = "showblizzframes",
@@ -459,12 +478,6 @@ end
 -------------------------
 
 function NotGridOptionChange()
-	for _,f in NotGrid.UnitFrames do
-		NotGrid:ConfigUnitFrame(f)
-		if f.unit then
-			NotGrid:UpdateUnitFrame(nil, f.name)
-			f:Show()
-		end
-		NotGrid:PositionFrames()
-	end
+	NotGrid:ConfigUnitFrames()
+	NotGrid:PositionFrames()
 end

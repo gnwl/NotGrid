@@ -6,7 +6,7 @@ local DefaultOptions = {
 	["unitheight"] = 36,
 	["unitborder"] = 2,
 	["unitpadding"] = 2,
-	["unitbgcolor"] = {0,0,0,0}, -- you'll want to keep this at 0 opacity and use the healthbar bg as your bg
+	["unitbgcolor"] = {0,0,0,0.5}, -- you'll want to keep this at 0 opacity and use the healthbar bg as your bg.. except in the rewrite :^)
 	["unitbordercolor"] = {0,0,0,0.8},
 	["unithealthorientation"] = "VERTICAL",
 	["unithealthbartexture"] = "Interface\\AddOns\\NotGrid\\media\\Striped",
@@ -22,6 +22,10 @@ local DefaultOptions = {
 	["unittrackingiconsize"] = 6,
 	["unittrackingiconborder"] = 1,
 	["unittrackingiconbordercolor"] = {0,0,0,1},
+
+	["showpowerbar"] = false,
+	["powersize"] = 10, -- this will be width if the player chooses to make it Verical, or height if they make it Horizontal
+	["powerposition"] = 3, -- 1=top,2=bottom,3=left,4=right
 
 	["trackingicon1"] = "Rejuvenation",
 	["trackingicon1color"] = {0.37,0.83,0.38},
@@ -69,6 +73,7 @@ local DefaultOptions = {
 
 	["showwhilesolo"] = true,
 	["showinparty"] = true,
+	["showpartyinraid"] = false,
 	["showblizzframes"] = true,
 	["locked"] = true,
 
@@ -83,7 +88,6 @@ function NotGrid:SetDefaultOptions() -- this will run on initialization and make
 	end
 end
 
-
 --------------------
 -- Slash Commands --
 --------------------
@@ -95,6 +99,8 @@ function SlashCmdList.NOTGRID(msg, editbox)
 		for key,value in DefaultOptions do
 			NotGridOptions[key] = value
 		end
+		NotGrid:ConfigUnitFrames()
+		NotGrid:PositionFrames()
 	else
 		NotGridOptionsMenu:Show()
 	end
