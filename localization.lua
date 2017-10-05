@@ -74,6 +74,8 @@ L:RegisterTranslations("enUS", function() return {
 ["Power Position"] = true,
 ["Power Size"] = true,
 
+["Config Mode"] = true,
+
 } end)
 
 L:RegisterTranslations("ruRU", function() return {
@@ -149,5 +151,7 @@ L:RegisterTranslations("ruRU", function() return {
 ["Show Power Bar"] = true,
 ["Power Position"] = true,
 ["Power Size"] = true,
+
+["Config Mode"] = true,
 
 } end)

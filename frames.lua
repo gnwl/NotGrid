@@ -234,11 +234,15 @@ function NotGrid:PositionFrames()
 	--handle all the unitframes and subgroups
 	for i=1,10 do -- 1-8 is raid, 9 is party, 10 is partypet
 		for key,f in self.UnitFrames do
-			if UnitExists(f.unit) then
+			if UnitExists(f.unit) or o.configmode then
 				-- first get the subgroup
 				local subgroup = nil
 				if f.raidindex then -- if a frame with raid unitid
-					_,_,subgroup = GetRaidRosterInfo(f.raidindex)
+					if o.configmode then
+						subgroup = (math.ceil(math.abs(f.raidindex/5))) -- doing it like this does mean it loops and calcs this 10 times for all the unitframes, though
+					else
+						_,_,subgroup = GetRaidRosterInfo(f.raidindex)
+					end
 				elseif (raidcount > 0 and o.showpartyinraid) or (raidcount == 0 and partycount > 0 and o.showinparty) or (raidcount == 0 and partycount == 0 and o.showwhilesolo) then -- else a party.. I could hide it now?
 					subgroup = 9
 				else

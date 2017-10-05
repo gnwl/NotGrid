@@ -42,6 +42,9 @@ end
 function NotGrid:UNIT_MAIN(f)
 	local o = self.o
 	local unitid = f.unit
+	if o.configmode then
+		unitid = "player"
+	end
 
 	if UnitExists(unitid) then
 		local name = UnitName(unitid)
