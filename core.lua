@@ -5,7 +5,7 @@ NotGridOptions = {} -- After the addon is fully initialized WoW will fill this u
 function NotGrid:OnInitialize()
 	self.HealComm = AceLibrary("HealComm-1.0")
 	self.Banzai = AceLibrary("Banzai-1.0") -- only reports as having aggro if someone with this library is targetting the mob and reporting that the mob is targeting said unit
-	self.Gratuity = AceLibrary("Gratuity-2.0") -- for proximity checks using spells on player's hotbar
+	self.Gratuity = AceLibrary("Gratuity-2.0") -- for aura handling
 	self.UnitFrames = {}
 	--proximity stuff
 	self.ProximityVars = {} -- will hold vars related to proximity handling. Mostly world map stuff
@@ -116,7 +116,7 @@ function NotGrid:UNIT_MAIN(f)
 				f.healcommtext:Hide()
 			end
 
-			if self.HealComm:UnitisResurrecting(unitname) then
+			if self.HealComm:UnitisResurrecting(name) then
 				f.incres:Show()
 			else
 				f.incres:Hide()
