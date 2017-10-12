@@ -87,7 +87,7 @@ function NotGrid:CreateUnitFrame(unitid,raidindex)
 	f:SetScript("OnUpdate", function()
 		self:UNIT_MAIN(this)
 		self:UNIT_BORDER(this)
-		self:UNIT_AURA(this)
+		--self:UNIT_AURA(this)
 		self:UNIT_PROXIMITY(this)
 	end)
 

@@ -33,6 +33,7 @@ function NotGrid:OnEnable()
 	if Clique then
 		self.CliqueProfile = string.format(L["%s of %s"],GetUnitName("player"),GetRealmName())
 	end
+	self:ScheduleRepeatingEvent("UNIT_AURA", self.UNIT_AURA, 0.2, self)
 end
 
 ---------------
