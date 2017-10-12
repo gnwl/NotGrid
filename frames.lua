@@ -5,12 +5,12 @@
 function NotGrid:CreateFrames()
 	self.Container = self:CreateContainerFrame()
 	for i=1,40 do
-		self.UnitFrames[i] = self:CreateUnitFrame("raid"..i,i)
+		self.UnitFrames["raid"..i] = self:CreateUnitFrame("raid"..i,i)
 	end
 	for i=1,4 do
-		self.UnitFrames[i+40] = self:CreateUnitFrame("party"..i)
+		self.UnitFrames["party"..i] = self:CreateUnitFrame("party"..i)
 	end
-	self.UnitFrames[45] = self:CreateUnitFrame("player") -- we'll consider the player partymem5
+	self.UnitFrames["player"] = self:CreateUnitFrame("player")
 end
 
 function NotGrid:CreateContainerFrame()

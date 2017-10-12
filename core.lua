@@ -20,9 +20,9 @@ function NotGrid:OnEnable()
 	self:SetDefaultOptions() -- if NotGridOptions is empty(no saved varoables) this will fill it up with defaults
 	self:DoDropDown()
 	self:ConfigUnitFrames()
-	self:RegisterEvent("PLAYER_ENTERING_WORLD","PositionFrames")
-	self:RegisterEvent("RAID_ROSTER_UPDATE","PositionFrames")
-	self:RegisterEvent("PARTY_MEMBERS_CHANGED","PositionFrames")
+	self:RegisterEvent("PLAYER_ENTERING_WORLD","RosterChange")
+	self:RegisterEvent("RAID_ROSTER_UPDATE","RosterChange")
+	self:RegisterEvent("PARTY_MEMBERS_CHANGED","RosterChange")
 	--proximity stuff
 	self:RegisterEvent("ZONE_CHANGED_NEW_AREA","UpdateProximityMapVars")
 	self:RegisterEvent("ACTIONBAR_SLOT_CHANGED", "GetFortyYardSpell")
@@ -33,7 +33,17 @@ function NotGrid:OnEnable()
 	if Clique then
 		self.CliqueProfile = string.format(L["%s of %s"],GetUnitName("player"),GetRealmName())
 	end
-	self:ScheduleRepeatingEvent("UNIT_AURA", self.UNIT_AURA, 0.2, self)
+	--
+	self:RegisterEvent("UNIT_AURA")
+end
+
+------------
+
+function NotGrid:RosterChange() -- so we can make sure all auras are shown in the event of a reloadui,config, or even just new players joining the raid as they won't send UNIT_AURA on join.
+	for unitid,_ in self.UnitFrames do
+		self:UNIT_AURA(unitid)
+	end
+	self:PositionFrames()
 end
 
 ---------------

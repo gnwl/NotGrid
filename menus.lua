@@ -482,5 +482,5 @@ end
 
 function NotGridOptionChange()
 	NotGrid:ConfigUnitFrames()
-	NotGrid:PositionFrames()
+	NotGrid:RosterChange()
 end
