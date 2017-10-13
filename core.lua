@@ -21,8 +21,8 @@ function NotGrid:OnEnable()
 	self:DoDropDown()
 	self:ConfigUnitFrames()
 	self:RegisterEvent("PLAYER_ENTERING_WORLD","RosterChange")
-	self:RegisterEvent("RAID_ROSTER_UPDATE","RosterChange")
 	self:RegisterEvent("PARTY_MEMBERS_CHANGED","RosterChange")
+	self:RegisterEvent("RAID_ROSTER_UPDATE","RosterChange")
 	--proximity stuff
 	self:RegisterEvent("ZONE_CHANGED_NEW_AREA","UpdateProximityMapVars")
 	self:RegisterEvent("ACTIONBAR_SLOT_CHANGED", "GetFortyYardSpell")
@@ -37,11 +37,23 @@ function NotGrid:OnEnable()
 	self:RegisterEvent("UNIT_AURA")
 end
 
-------------
+--------------------
+-- Roster Changes -- So we can can handle auras and positioning in events of reloadui,config,or just new players joining raid and not sending UNIT_AURA events.
+--------------------
 
-function NotGrid:RosterChange() -- so we can make sure all auras are shown in the event of a reloadui,config, or even just new players joining the raid as they won't send UNIT_AURA on join.
-	for unitid,_ in self.UnitFrames do
-		self:UNIT_AURA(unitid)
+function NotGrid:RosterChange(event) -- Separate them out for better performance in mass joining/disbanding of raids. Though it doesn't help much.
+	if event == "PARTY_MEMBERS_CHANGED" then
+		for i=1,4 do
+			self:UNIT_AURA("party"..i)
+		end
+	elseif event == "RAID_ROSTER_UPDATE" then
+		for i=1,40 do
+			self:UNIT_AURA("raid"..i)
+		end
+	else
+		for unitid,_ in self.UnitFrames do
+			self:UNIT_AURA(unitid)
+		end
 	end
 	self:PositionFrames()
 end
