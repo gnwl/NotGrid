@@ -76,6 +76,8 @@ L:RegisterTranslations("enUS", function() return {
 
 ["Config Mode"] = true,
 
+["Background"] = true,
+
 } end)
 
 L:RegisterTranslations("ruRU", function() return {
@@ -153,5 +155,6 @@ L:RegisterTranslations("ruRU", function() return {
 ["Power Size"] = true,
 
 ["Config Mode"] = true,
+["Background"] = true,
 
 } end)

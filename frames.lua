@@ -114,7 +114,7 @@ function NotGrid:ConfigUnitFrames() -- this can get called on every setting chan
 			f:SetHeight(o.unitheight+o.unitborder*2)
 		end
 		f:SetBackdrop({bgFile = "Interface\\Buttons\\WHITE8X8", edgeFile = "Interface\\Buttons\\WHITE8X8", tile = true, tileSize = 16, edgeSize = o.unitborder})
-		f:SetBackdropColor(unpack(o.unitbgcolor))
+		f:SetBackdropColor(unpack(o.unitbgcolor)) -- remember this is only here to be set at 0 opacity, the healthbar functions as the background as this clips into the border
 		f:SetBackdropBorderColor(unpack(o.unitbordercolor))
 		--f:SetPoint("CENTER",40,tonumber(dicks)*40)
 
@@ -123,9 +123,9 @@ function NotGrid:ConfigUnitFrames() -- this can get called on every setting chan
 		f.healthbar:SetOrientation(o.unithealthorientation)
 		f.healthbar:SetStatusBarTexture(o.unithealthbartexture)
 		f.healthbar:SetStatusBarColor(unpack(o.unithealthbarcolor))
-		--f.healthbar.bgtex:SetTexture(o.unithealthbartexture)
-		--f.healthbar.bgtex:SetVertexColor(unpack(o.unithealthbarbgcolor))
-		--f.healthbar.bgtex:SetAllPoints()
+		f.healthbar.bgtex:SetTexture(o.unithealthbarbgtexture)
+		f.healthbar.bgtex:SetVertexColor(unpack(o.unithealthbarbgcolor))
+		f.healthbar.bgtex:SetAllPoints()
 
 		--position health and powerbar
 		f.healthbar:ClearAllPoints()
@@ -219,6 +219,7 @@ function NotGrid:PositionFrames()
 
 	local SubGroupCounts = {0,0,0,0,0,0,0,0,0,0} -- reset it every time
 	local TotalGroups = 0
+	local TotalUnits = 0
 	local o = self.o
 
 	local powermodx = 0 -- so I can interject the width of the powerbar into the positioning calcs without doing a million more conditionals
@@ -260,8 +261,17 @@ function NotGrid:PositionFrames()
 						f:SetPoint("CENTER",(o.unitwidth+powermodx+o.unitborder*2+o.unitpadding)*SubGroupCounts[i],-(o.unitheight+powermody+o.unitborder*2+o.unitpadding)*TotalGroups)
 					elseif o.growthdirection == 4 then
 						f:SetPoint("CENTER",(o.unitwidth+powermodx+o.unitborder*2+o.unitpadding)*SubGroupCounts[i],(o.unitheight+powermody+o.unitborder*2+o.unitpadding)*TotalGroups)
+					elseif o.growthdirection == 5 then -- single top to bottom
+						f:SetPoint("CENTER",0,-(o.unitheight+powermody+o.unitborder*2+o.unitpadding)*TotalUnits)
+					elseif o.growthdirection == 6 then -- single bottom to top
+						f:SetPoint("CENTER",0,(o.unitheight+powermody+o.unitborder*2+o.unitpadding)*TotalUnits)
+					elseif o.growthdirection == 7 then -- single left to right
+						f:SetPoint("CENTER",(o.unitwidth+powermody+o.unitborder*2+o.unitpadding)*TotalUnits,0)
+					elseif o.growthdirection == 8 then -- single right to left
+						f:SetPoint("CENTER",-(o.unitwidth+powermody+o.unitborder*2+o.unitpadding)*TotalUnits,0)
 					end
 					f:Show()
+					TotalUnits = TotalUnits+1
 					SubGroupCounts[i] = SubGroupCounts[i]+1
 					--DEFAULT_CHAT_FRAME:AddMessage(f.unit .. " positioned")
 				end

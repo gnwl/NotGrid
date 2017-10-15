@@ -6,12 +6,13 @@ local DefaultOptions = {
 	["unitheight"] = 36,
 	["unitborder"] = 2,
 	["unitpadding"] = 2,
-	["unitbgcolor"] = {0,0,0,0.5}, -- you'll want to keep this at 0 opacity and use the healthbar bg as your bg.. except in the rewrite :^)
+	["unitbgcolor"] = {0,0,0,0}, -- you'll want to keep this at 0 opacity and use the healthbar bg as your bg, as this will clip into the border making transparent borders not right
 	["unitbordercolor"] = {0,0,0,0.8},
 	["unithealthorientation"] = "VERTICAL",
 	["unithealthbartexture"] = "Interface\\AddOns\\NotGrid\\media\\Striped",
 	["unithealthbarcolor"] = {39/255,186/255,42/255},
 	["unithealthbarbgcolor"] = {0,0,0,0.5},
+	["unithealthbarbgtexture"] = "Interface\\Buttons\\WHITE8X8",
 	["unitfont"] = "Fonts\\ARIALN.TTF",
 	["unitnamehealthtextcolor"] = {1,1,1},
 	["unitnamehealthtextsize"] = 12,
@@ -75,7 +76,7 @@ local DefaultOptions = {
 	["showinparty"] = true,
 	["showpartyinraid"] = false,
 	["showblizzframes"] = true,
-	["locked"] = true,
+	["locked"] = false,
 
 	["growthdirection"] = 1, -- 1: Group Left to Right, 2: Group Right to Left, 3: Group Top to Bottom, 4: Group Bottom to Top, 5: Unit Top to Bottom.. etc
 
@@ -103,6 +104,14 @@ function SlashCmdList.NOTGRID(msg, editbox)
 		end
 		NotGrid:ConfigUnitFrames()
 		NotGrid:PositionFrames()
+	elseif msg == "grid" then
+		NotGrid.o.unithealthbartexture = "Interface\\AddOns\\NotGrid\\media\\GridGradient"
+		NotGrid.o.unithealthbarbgtexture = "Interface\\AddOns\\NotGrid\\media\\GridGradient"
+		NotGrid.o.unithealthbarcolor = {0,0,0,0.65}
+		NotGrid.o.unithealthbarbgcolor = {0,0,0,1}
+		NotGrid.o.colorunithealthbarbyclass = false
+		NotGrid.o.colorunithealthbarbgbyclass = true
+		NotGridOptionChange()
 	else
 		NotGridOptionsMenu:Show()
 	end

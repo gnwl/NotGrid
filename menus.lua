@@ -59,6 +59,15 @@ local menuarray = {
 		key = "unithealthorientation",
 		},
 	},
+	{text = L["Background"], -- (Toggle for Class)
+	editbox = {
+		key = "unithealthbarbgtexture",
+		},
+	toggle = "colorunithealthbarbgbyclass",
+	color = {
+			key = "unithealthbarbgcolor",
+		},
+	},
 
 	--unitnamehealthtextsize
 	{text = L["Name"], -- (Toggle for Class)
@@ -238,7 +247,7 @@ local menuarray = {
 	slider = {
 		key = "growthdirection",
 		minval = 1,
-		maxval = 4,
+		maxval = 8,
 		},
 	},
 	{text = L["Show While Solo"], 

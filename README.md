@@ -3,9 +3,10 @@ NotGrid is a party and raid frame addon for Vanilla World of Warcraft (1.12.1). 
 
 ## Usage
 Use */notgrid* or */ng* to show the config menu.  
+Use */notgrid grid* to generate a style similar to the original grid.  
 Use */notgrid reset* to restore the default settings.  
 Use | for separating multiple Buffs/Debuffs to track on one icon.  
-Use */ngcast spellname* for mouseover casting.
+Use */ngcast spellname* in macros for mouseover casting.  
 
 ## Optional Dependencies
 [BonusScanner](https://wow.curseforge.com/projects/project-1352): Enables Healcomm to factor in your bonus healing from gear.  

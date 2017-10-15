@@ -85,8 +85,8 @@ function NotGrid:UNIT_MAIN(f)
 		if o.colorunitnamehealthbyclass then
 			f.namehealthtext:SetTextColor(color.r, color.g, color.b)
 		end
-		if o.colorunithealthbarbgbyclass then -- is this even a real option?
-			f.healcommbar.bgtex:SetVertexColor(color.r-0.5,color.g-0.5,color.b-0.5,0.5)
+		if o.colorunithealthbarbgbyclass then
+			f.healthbar.bgtex:SetVertexColor(color.r, color.g, color.b)
 		end
 
 		f.powerbar:SetStatusBarColor(pcolor.r, pcolor.g, pcolor.b)
