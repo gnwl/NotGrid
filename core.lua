@@ -129,8 +129,10 @@ function NotGrid:UNIT_MAIN(f)
 			end
 
 			if healamount > 0 then
-				self:SetIncHealFrame(f, healamount, currhealth, maxhealth)
-				if self.o.showhealcommtext then
+				if o.showhealcommbar then
+					self:SetIncHealFrame(f, healamount, currhealth, maxhealth)
+				end
+				if o.showhealcommtext then
 					f.healcommtext:SetText(healtext)
 					f.healcommtext:Show()
 				end

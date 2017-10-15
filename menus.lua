@@ -128,6 +128,7 @@ local menuarray = {
 	},
 
 	{text = L["Healcomm"],
+	toggle = "showhealcommbar",
 	color = {
 			key = "unithealcommbarcolor",
 		},

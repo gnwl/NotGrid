@@ -70,6 +70,7 @@ local DefaultOptions = {
 	["colorunithealthbarbgbyclass"] = false, -- think I'm deprecating this?
 	["smartcenter"] = false,
 	["showhealcommtext"] = true,
+	["showhealcommbar"] = true,
 	["usemapdistances"] = true,
 
 	["showwhilesolo"] = true,
