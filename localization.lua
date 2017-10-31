@@ -43,6 +43,7 @@ L:RegisterTranslations("enUS", function() return {
 ["Show While Solo"] = true,
 ["Show In Party"] = true,
 ["Show Party In Raid"] = true,
+["Disable Mouseover In Combat"] = true,
 ["Locked"] = true,
 
 ["Orientation"] = true,

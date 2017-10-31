@@ -82,6 +82,7 @@ local DefaultOptions = {
 	["growthdirection"] = 1, -- 1: Group Left to Right, 2: Group Right to Left, 3: Group Top to Bottom, 4: Group Bottom to Top, 5: Unit Top to Bottom.. etc
 
 	["configmode"] = false,
+	["disablemouseoverincombat"] = false,
 }
 
 function NotGrid:SetDefaultOptions() -- this will run on initialization and make sure everything is set. We can also use it if we wipe the NotGridOptions table and wnant to load it up with defaults

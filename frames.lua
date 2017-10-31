@@ -77,9 +77,11 @@ function NotGrid:CreateUnitFrame(unitid,raidindex)
 		end
 	end)
 	f:SetScript("OnEnter", function()
-		if not UnitAffectingCombat("player") then
-			UnitFrame_OnEnter() -- a blizzard function that handles the tooltip for the unit
+		if UnitAffectingCombat("player") and self.o.disablemouseoverincombat then
+			return
 		end
+
+		UnitFrame_OnEnter() -- a blizzard function that handles the tooltip for the unit
 	end)
 	f:SetScript("OnLeave", function() 
 		UnitFrame_OnLeave() -- blizz function that handles tooltip for units
