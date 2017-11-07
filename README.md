@@ -1,5 +1,7 @@
 # NotGrid
-NotGrid is a party and raid frame addon for Vanilla World of Warcraft (1.12.1). While heavily based off of the original addon Grid, it both lacks some Grid features as well as adds new ones. It supports the default Clique keybinds (no unitdead/advanced macros), Lazyspell, healcomm, eight buff/debuff icons around the unit frame, low mana & aggro warning, proximity checking, and a simple config menu for general resizing/coloring options.
+NotGrid is a party and raid frame addon for Vanilla World of Warcraft (1.12.1). While heavily based off of the original addon Grid, it both lacks some Grid features as well as adds new ones. It supports the default Clique keybinds (no unitdead/advanced macros), Lazyspell, healcomm, eight buff/debuff icons around the unit frame, low mana & aggro warning, proximity checking, and a simple config menu for general resizing/coloring options.  
+
+![Screenshot](media/screenshot.jpg)
 
 ## Usage
 Use */notgrid* or */ng* to show the config menu.  

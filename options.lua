@@ -63,7 +63,7 @@ local DefaultOptions = {
 
 	["ooralpha"] = 0.5,
 
-	["proximityleeway"] = 2,
+	["proximityleeway"] = 4,
 
 	["colorunitnamehealthbyclass"] = true,
 	["colorunithealthbarbyclass"] = true,

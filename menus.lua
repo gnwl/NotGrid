@@ -284,7 +284,7 @@ function NotGrid:InitializeMenu()
 	f:SetBackdropColor(0,0,0)
 	f:SetWidth(190)
 	f:SetHeight(22*getn(menuarray)) -- because of things.. this isn't prefect
-	f:SetPoint("CENTER",UIParent,"CENTER",0,200)
+	f:SetPoint("RIGHT",UIParent,"RIGHT",-20,0)
 	f:SetMovable(true)
 	f:RegisterForDrag("LeftButton")
 	f:SetScript("OnDragStart", function()
