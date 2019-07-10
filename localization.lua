@@ -123,7 +123,7 @@ L:RegisterTranslations("ruRU", function() return {
 ["Smart Center"] = "Smart Center", --
 ["Show While Solo"] = "Показать вне группы",
 ["Show In Party"] = "Показать в группе",
-["Show Party In Raid"] = true,
+["Show Party In Raid"] = "Показать группы в рейде",
 ["Locked"] = "Заблокировать",
 
 ["Orientation"] = "Ориентация",
@@ -151,11 +151,11 @@ L:RegisterTranslations("ruRU", function() return {
 ["Arathi Basin"] = "Низина Арати",
 ["Warsong Gulch"] = "Ущелье Песни Войны",
 
-["Show Power Bar"] = true,
-["Power Position"] = true,
-["Power Size"] = true,
+["Show Power Bar"] = "Показать Power Bar", -- Power bar ??
+["Power Position"] = "Позиция Power Bar", -- 
+["Power Size"] = "Размер Power Bar", --
 
-["Config Mode"] = true,
-["Background"] = true,
+["Config Mode"] = "Режим настройки",
+["Background"] = "Задний фон",
 
 } end)
