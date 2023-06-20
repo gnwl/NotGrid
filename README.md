@@ -13,7 +13,7 @@ Use */ngcast spellname* in macros for mouseover casting.
 ## Optional Dependencies
 [BonusScanner](https://wow.curseforge.com/projects/project-1352): Enables Healcomm to factor in your bonus healing from gear.  
 Clique: Enables click-casting on your unit frames.  
-[LazySpell](https://github.com/satan666/LazySpell): Enables Clique auto spell rank scaling depending on unit health deficit.
+[LazySpell](https://github.com/laytya/Lazyspell): Enables Clique auto spell rank scaling depending on unit health deficit.
 
 ## Additional Note
 If you're having issues with the frame borders/edges being un-uniformly sized or appearing clipped by the healthbar make sure to have a proper [UI scale](http://wow.gamepedia.com/UI_Scale) set.  
