@@ -151,9 +151,9 @@ function NotGrid:GetWorldDistance(unitid) -- I have no idea what goes on in this
 	px, py = GetPlayerMapPosition("player")
 	ux, uy = GetPlayerMapPosition(unitid)
 
-	if v.Zone ~= 0 and v.Continent ~= 0 then
+	if v.Zone ~= 0 and v.Continent ~= 0 and MapScales[v.Continent] and MapScales[v.Continent][v.Zone] then
 		distance = sqrt(((px - ux)/MapScales[v.Continent][v.Zone].x)^2 + ((py - uy)/MapScales[v.Continent][v.Zone].y)^2)
-	else
+	elseif MapScales[v.Continent] and MapScales[v.Continent][v.Zone] then
 		local xDelta, yDelta;
 		px, py = px*MapScales[v.Continent][v.Zone].x, py*MapScales[v.Continent][v.Zone].y
 		ux, uy = ux*MapScales[v.Continent][v.Zone].x, uy*MapScales[v.Continent][v.Zone].y
