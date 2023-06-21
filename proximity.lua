@@ -131,7 +131,8 @@ function NotGrid:CheckProximity(unitid) -- return 1=confirmed_true, 2=confirmed_
 		end
 		--if checking with map is toggled, AND the player is outside, AND we haven't returned an INRANGE confirmation yet, then start looking at the map for range
 		if self.o.usemapdistances and (self.ProximityVars.instance == "none" or self.ProximityVars.instance == "pvp") and not WorldMapFrame:IsVisible() then
-			if self:GetWorldDistance(unitid) <= 40 then
+			local distance = self:GetWorldDistance(unitid)
+			if distance and distance <= 40 then
 				return 1
 			else
 				return 2
