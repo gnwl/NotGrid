@@ -264,18 +264,18 @@ end
 SLASH_NOTGRIDCAST1 = "/ngcast"
 function SlashCmdList.NOTGRIDCAST(spell, editbox) -- this is all pretty much identical to clique handling. So redundant code, clean up sometime.
 	local unitid = GetMouseFocus().unit
-	if unitid and UnitExists(unitid) then
-		local LastTarget = UnitName("target")
-		ClearTarget()
-		CastSpellByName(spell)
-		NotGrid:SpellCanTarget()
-		if SpellIsTargeting() and SpellCanTargetUnit(unitid) then -- then come back to our own func and see if they can cast on the unit they wanted to cast on
-			SpellTargetUnit(unitid) -- if they can, cast on them
-		elseif SpellIsTargeting() then
-			SpellStopTargeting() -- otherwise stop targetting
-		end
-		if LastTarget then -- remember, use it as a boolean.
-			TargetLastTarget() -- and finally, if they actually had an old target, then target it
-		end
+	local LastTarget = UnitName("target") --used as boolean before using targetlasttarget
+	ClearTarget()
+	CastSpellByName(spell)
+	NotGrid:SpellCanTarget() --check proximity on all roster members while the spell is queued up
+	if unitid and UnitExists(unitid) and SpellIsTargeting() and SpellCanTargetUnit(unitid) then -- then come back to our own func and see if they can cast on the unit they wanted to cast on
+		SpellTargetUnit(unitid) -- if they can, cast on them
+	elseif SpellCanTargetUnit("mouseover") then -- for casting outside unitframes
+		SpellTargetUnit("mouseover")
+	elseif SpellIsTargeting() then --we queued up the spell but previous checks couldnt cast it on anyone
+		SpellStopTargeting() -- stop targetting
+	end
+	if LastTarget then -- remember, use it as a boolean.
+		TargetLastTarget() -- and finally, if they actually had an old target, then target it
 	end
 end
