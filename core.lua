@@ -265,8 +265,20 @@ SLASH_NOTGRIDCAST1 = "/ngcast"
 function SlashCmdList.NOTGRIDCAST(spell, editbox) -- this is all pretty much identical to clique handling. So redundant code, clean up sometime.
 	local unitid = GetMouseFocus().unit
 	local LastTarget = UnitName("target") --used as boolean before using targetlasttarget
+	local foundspell = spell -- using foundspell just to make it easier to eventually combine with clique handling
+	if LazySpell and unitid then
+		if LazySpell.ValidateSpell then -- use convenient function from newer version
+			foundspell = LazySpell:ValidateSpell(foundspell, unitid)
+		else -- go through the original version
+			local lsSpell,lsRank = LazySpell:ExtractSpell(foundspell)
+			if self.HealComm.Spells[lsSpell] and lsRank == 1 then
+				local lsRank = LazySpell:CalculateRank(lsSpell, unitid)
+				foundspell = lsSpell.."(Rank "..lsRank..")"
+			end
+		end
+	end
 	ClearTarget()
-	CastSpellByName(spell)
+	CastSpellByName(foundspell)
 	NotGrid:SpellCanTarget() --check proximity on all roster members while the spell is queued up
 	if unitid and UnitExists(unitid) and SpellIsTargeting() and SpellCanTargetUnit(unitid) then -- then come back to our own func and see if they can cast on the unit they wanted to cast on
 		SpellTargetUnit(unitid) -- if they can, cast on them
