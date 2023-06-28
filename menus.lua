@@ -274,6 +274,11 @@ local menuarray = {
 	},
 }
 
+
+--variables for dynamic menu
+local buttonheight = 16
+local numdisplay = 30
+
 --------------
 -- Dropdown --
 --------------
@@ -283,10 +288,26 @@ function NotGrid:InitializeMenu()
 	f:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 4, right = 4, top = 4, bottom = 4 }})
 	f:SetBackdropColor(0,0,0)
 	f:SetWidth(190)
-	f:SetHeight(22*getn(menuarray)) -- because of things.. this isn't prefect
-	f:SetPoint("RIGHT",UIParent,"RIGHT",-20,0)
+	f:SetHeight(buttonheight*(numdisplay+3)) -- +3 to offset it from the top
+	f:SetPoint("CENTER",UIParent)
 	f:SetMovable(true)
 	f:RegisterForDrag("LeftButton")
+	f:EnableMouseWheel()
+	f.offset = 0 -- for scrolling
+	f.fs = f:CreateFontString('$parentTitle', "ARTWORK", "GameFontNormalLarge")
+	f.fs:SetText(L["Scroll Me!"])
+	f.fs:SetPoint("TOPLEFT",12,-12)
+	--f.fs:SetTextColor(1,0.29,0.67,1)
+	f:SetScript("OnMouseWheel", function()
+		if f.offset >= 5 then
+			--f.fs:Hide()
+			f.fs:SetText("Not Grid")
+		end
+		self:ScrollHandler()
+	end)
+	f:SetScript("OnShow", function()
+		self:ScrollHandler() -- have to run it onshow because all the positioning is done in this func
+	end)
 	f:SetScript("OnDragStart", function()
 		NotGridOptionsMenu:StartMoving()
 	end)
@@ -300,11 +321,10 @@ function NotGrid:InitializeMenu()
 	for key,val in menuarray do
 		local fb = CreateFrame("Button", "$parentbutton"..key, f)
 		fb:SetWidth(140)
-		fb:SetHeight(14)
+		fb:SetHeight(buttonheight)
 		--fb:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 4, right = 4, top = 4, bottom = 4 }})
 		--fb:SetNormalTexture("Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Up")
 		fb:SetHighlightTexture("Interface/Buttons/UI-Listbox-Highlight","ADD")
-		fb:SetPoint("TOP",0,-(20*key))
 		--
 		fb.fs = fb:CreateFontString('$parenttext', "ARTWORK", "GameFontHighlightSmall")
 		fb.fs:SetText(val.text)
@@ -315,10 +335,11 @@ function NotGrid:InitializeMenu()
 		fb.slider = val.slider
 		fb.editbox = val.editbox
 		--fb.color = val.color
+		fb.tooltipText = val.tooltip
 		--
 		-- if fb.toggle, make a checkmark frame
 		if val.toggle then
-			fb.chk = CreateFrame("Frame","parentCheckmark",fb)
+			fb.chk = CreateFrame("Frame","$parentCheckmark",fb)
 			fb.chk:SetWidth(20)
 			fb.chk:SetHeight(20)
 			fb.chk.tex = fb.chk:CreateTexture()
@@ -341,7 +362,7 @@ function NotGrid:InitializeMenu()
 			fb.clr:SetPoint("LEFT",fb,"RIGHT",0,0)
 			fb.clr:SetScript("OnClick", function()
 				--DEFAULT_CHAT_FRAME:AddMessage(NotGridOptions[this.color.key][1])
-				notgrid_clickcolor()
+				self:ClickColor()
 			end)
 		end
 
@@ -383,6 +404,13 @@ function NotGrid:InitializeMenu()
 				NotGridMenuSliderContainer:Hide()
 				NotGridMenuEditBoxContainer:Hide()
 			end
+			if this.tooltipText then
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
+				GameTooltip:SetText(this.tooltipText, nil, nil, nil, nil, 1)
+			end
+		end)
+		fb:SetScript("OnLeave", function()
+			GameTooltip:Hide()
 		end)
 	end
 end
@@ -424,7 +452,7 @@ end
 
 function NotGrid:InitializeEditBox()
 	local f = CreateFrame("Frame", "NotGridMenuEditBoxContainer",NotGridOptionsMenu)
-	f:SetWidth(160)
+	f:SetWidth(350)
 	f:SetHeight(50)
 	f:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 4, right = 4, top = 4, bottom = 4 }})
 	f:SetBackdropColor(0,0,0,1)
@@ -432,9 +460,9 @@ function NotGrid:InitializeEditBox()
 	f:SetPoint("CENTER",UIParent,"CENTER",-100,0)
 	f:Hide()
 
-	f.e = CreateFrame("EditBox", "NotGridMenuEditBox", f)
+	f.e = CreateFrame("EditBox", "NotGridMenuEditBox", f, "InputBoxTemplate")
 	f.e:SetFontObject("GameFontHighlight")
-	f.e:SetWidth(140)
+	f.e:SetWidth(320)
 	f.e:SetHeight(40)
 	f.e:SetAutoFocus(false)
 	f.e:SetPoint("CENTER",0,0)
@@ -457,15 +485,15 @@ end
 
 local workingcolorswatch -- need to set these for reasons
 local workingcolorkey
-function notgrid_clickcolor()
+function NotGrid:ClickColor()
 	workingcolorswatch = this.tex
 	workingcolorkey = this.color.key
 	--DEFAULT_CHAT_FRAME:AddMessage(workingcolorkey.." "..workingcolorswatch:GetName())
 	local r, g, b, a = unpack(NotGridOptions[workingcolorkey])
 	ColorPickerFrame.previousValues = {r, g, b, a}
-	ColorPickerFrame.func = notgrid_colorpickerhandle
-	ColorPickerFrame.opacityFunc = notgrid_colorpickerhandle
-	ColorPickerFrame.cancelFunc = notgrid_setcolor
+	ColorPickerFrame.func = self.ColorPickerHandler
+	ColorPickerFrame.opacityFunc = self.ColorPickerHandler
+	ColorPickerFrame.cancelFunc = NotGrid_SetColor -- breaks if sent though notgrid
 	if a then
 		ColorPickerFrame.opacity = a
 		ColorPickerFrame.hasOpacity = true -- opacity prob has own func
@@ -477,16 +505,41 @@ function notgrid_clickcolor()
 	--frame:Hide()
 end
 
-function notgrid_colorpickerhandle()
+function NotGrid:ColorPickerHandler()
 	local a = OpacitySliderFrame:GetValue()
 	local r,g,b = ColorPickerFrame:GetColorRGB()
-	notgrid_setcolor({r,g,b,a})
+	NotGrid_SetColor({r,g,b,a}) -- why cant I reference self?
 end
 
-function notgrid_setcolor(vals) -- can be current vals or prevvals
+function NotGrid_SetColor(vals) -- can be current vals or prevvals
 	workingcolorswatch:SetTexture(unpack(vals))
 	NotGridOptions[workingcolorkey] = vals -- table of colorvals
 	NotGridOptionChange()
+end
+
+--------------------
+-- Scroll Handler --
+--------------------
+
+function NotGrid:ScrollHandler() --arg1 is either -1 or 1 depending on scolling down or up
+	if not arg1 then arg1 = 0 end
+	local menucount = getn(menuarray)
+	local offset = NotGridOptionsMenu.offset
+	offset = offset-arg1
+	if offset < 0 then offset = 0 end -- keep it from going below zero
+	if offset > menucount-numdisplay then offset = menucount-numdisplay end -- keep it from going above count
+	for key,_ in menuarray do
+		local f = getglobal("NotGridOptionsMenubutton"..key)
+		if (key > offset) and (key <= offset+numdisplay) then
+			f:SetPoint("TOP","NotGridOptionsMenu","TOP",0,-buttonheight*(key+1-offset)) -- its offset by two spaces at the top
+			f:Show()
+		else
+			f:Hide()
+			if f.slider then NotGridMenuSliderContainer:Hide() end
+			if f.editbox then NotGridMenuEditBoxContainer:Hide() end
+		end
+	end
+	NotGridOptionsMenu.offset = offset -- record it into the frame variable for reference
 end
 
 -------------------------

@@ -79,6 +79,8 @@ L:RegisterTranslations("enUS", function() return {
 
 ["Background"] = true,
 
+["Scroll Me!"] = true,
+
 } end)
 
 L:RegisterTranslations("ruRU", function() return {
@@ -157,5 +159,7 @@ L:RegisterTranslations("ruRU", function() return {
 
 ["Config Mode"] = "Режим настройки",
 ["Background"] = "Задний фон",
+
+["Scroll Me!"] = "Прокрути меня!",
 
 } end)
