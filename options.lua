@@ -76,6 +76,7 @@ local DefaultOptions = {
 	["showwhilesolo"] = true,
 	["showinparty"] = true,
 	["showpartyinraid"] = false,
+	["showpets"] = false,
 	["showblizzframes"] = true,
 	["locked"] = false,
 

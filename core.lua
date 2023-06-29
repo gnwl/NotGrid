@@ -23,6 +23,7 @@ function NotGrid:OnEnable()
 	self:RegisterEvent("PLAYER_ENTERING_WORLD","RosterChange")
 	self:RegisterEvent("PARTY_MEMBERS_CHANGED","RosterChange")
 	self:RegisterEvent("RAID_ROSTER_UPDATE","RosterChange")
+	self:RegisterEvent("UNIT_PET","RosterChange")
 	--proximity stuff
 	self:RegisterEvent("ZONE_CHANGED_NEW_AREA","UpdateProximityMapVars")
 	self:RegisterEvent("ACTIONBAR_SLOT_CHANGED", "GetFortyYardSpell")

@@ -10,7 +10,11 @@ function NotGrid:CreateFrames()
 	for i=1,4 do
 		self.UnitFrames["party"..i] = self:CreateUnitFrame("party"..i)
 	end
+	for i=1,4 do
+		self.UnitFrames["partypet"..i] = self:CreateUnitFrame("partypet"..i)
+	end
 	self.UnitFrames["player"] = self:CreateUnitFrame("player")
+	self.UnitFrames["pet"] = self:CreateUnitFrame("pet")
 end
 
 function NotGrid:CreateContainerFrame()
@@ -246,8 +250,10 @@ function NotGrid:PositionFrames()
 					else
 						_,_,subgroup = GetRaidRosterInfo(f.raidindex)
 					end
-				elseif (raidcount > 0 and o.showpartyinraid) or (raidcount == 0 and partycount > 0 and o.showinparty) or (raidcount == 0 and partycount == 0 and o.showwhilesolo) then -- else a party.. I could hide it now?
+				elseif (string.find(f.unit,"party%d") or (f.unit == "player")) and ((raidcount > 0 and o.showpartyinraid) or (raidcount == 0 and partycount > 0 and o.showinparty) or (raidcount == 0 and partycount == 0 and o.showwhilesolo)) then -- else a party.. I could hide it now?
 					subgroup = 9
+				elseif (string.find(f.unit,"partypet%d") or (f.unit == "pet")) and ((raidcount > 0 and o.showpartyinraid and o.showpets) or (raidcount == 0 and partycount > 0 and o.showinparty and o.showpets) or (raidcount == 0 and partycount == 0 and o.showwhilesolo and o.showpets)) then
+					subgroup = 10
 				else
 					f:Hide() -- I won't set a subgroup so it will fail the next check, wont position, and won't get counted into subgroup/totalgroups
 				end

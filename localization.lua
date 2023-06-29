@@ -80,6 +80,13 @@ L:RegisterTranslations("enUS", function() return {
 ["Background"] = true,
 
 ["Scroll Me!"] = true,
+["Show Pets"] = true,
+
+--------------
+-- Tooltips --
+--------------
+
+["Note: Prone to visual errors."] = true,
 
 } end)
 
@@ -161,5 +168,13 @@ L:RegisterTranslations("ruRU", function() return {
 ["Background"] = "Задний фон",
 
 ["Scroll Me!"] = "Прокрути меня!",
+
+["Show Pets"] = "Показать питомцев",
+
+--------------
+-- Tooltips --
+--------------
+
+["Note: Prone to visual errors."] = "Примечание: подвержен визуальным ошибкам.",
 
 } end)
