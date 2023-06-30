@@ -81,6 +81,8 @@ L:RegisterTranslations("enUS", function() return {
 
 ["Scroll Me!"] = true,
 ["Show Pets"] = true,
+["Custom Pet Color"] = true,
+["TBC Shaman Color"] = true,
 
 --------------
 -- Tooltips --
@@ -170,6 +172,8 @@ L:RegisterTranslations("ruRU", function() return {
 ["Scroll Me!"] = "Прокрути меня!",
 
 ["Show Pets"] = "Показать питомцев",
+["Custom Pet Color"] = true,
+["TBC Shaman Color"] = true,
 
 --------------
 -- Tooltips --

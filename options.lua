@@ -68,6 +68,11 @@ local DefaultOptions = {
 	["colorunitnamehealthbyclass"] = true,
 	["colorunithealthbarbyclass"] = true,
 	["colorunithealthbarbgbyclass"] = false, -- think I'm deprecating this?
+	["usetbcshamancolor"] = true,
+	["usepetcolor"] = true,
+	["petcolor"] = {1,0.74,0},
+
+
 	["smartcenter"] = false,
 	["showhealcommtext"] = true,
 	["showhealcommbar"] = true,

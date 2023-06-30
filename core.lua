@@ -74,7 +74,16 @@ function NotGrid:UNIT_MAIN(f)
 		local name = UnitName(unitid)
 		local shortname = string.sub(name, 1, o.namelength)
 		local _,class = UnitClass(unitid)
-		local color = RAID_CLASS_COLORS[class] or {r=1,g=0,b=1}
+		local color = {}
+		if f.pet and o.usepetcolor then
+			color.r,color.g,color.b = unpack(o.petcolor)
+		elseif class and class == "SHAMAN" and o.useshamancolor then
+			color = {r=0.14,g=0.35,b=1}
+		elseif class then
+			color = RAID_CLASS_COLORS[class]
+		else
+			color = {r=1,g=0,b=1}
+		end
 		local powertype = UnitPowerType(unitid)
 		local pcolor = ManaBarColor[powertype]
 		--update some stuff

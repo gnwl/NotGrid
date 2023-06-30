@@ -33,6 +33,9 @@ function NotGrid:CreateUnitFrame(unitid,raidindex)
 	if raidindex then
 		f.raidindex = raidindex -- :^)
 	end
+	if string.find(unitid,"pet") then
+		f.pet = true -- so I have a boolean to check against
+	end
 
 	f.healthbar = CreateFrame("StatusBar","$parenthealthbar",f)
 	f.healthbar.bgtex = f.healthbar:CreateTexture("$parentbgtex","BACKGROUND")
