@@ -21,13 +21,15 @@ L:RegisterTranslations("enUS", function() return {
 ["Unit Padding"] = true,
 ["Font"] = true,
 ["Texture"] = true,
-["Name"] = true,
+["Name Color"] = true,
+["Name Size"] = true,
 ["Name Length"] = true,
-["Health"] = true,
+["Health Color"] = true,
+["Health Threshold"] = true,
 ["Highlight Target"] = true,
 ["Aggro Warning"] = true,
 ["Mana Warning"] = true,
-["Healcomm"] = true,
+["Healcomm Bar"] = true,
 ["Healcomm Text"] = true,
 ["Top Left Icon"] = true,
 ["Top Icon"] = true,
@@ -43,10 +45,10 @@ L:RegisterTranslations("enUS", function() return {
 ["Show While Solo"] = true,
 ["Show In Party"] = true,
 ["Show Party In Raid"] = true,
-["Disable Mouseover In Combat"] = true,
+["Disable Tooltip In Combat"] = true,
 ["Locked"] = true,
 
-["Orientation"] = true,
+["Health Orientation"] = true,
 ["Show Blizz Frames"] = true,
 ["Growth Direction"] = true,
 
@@ -89,6 +91,10 @@ L:RegisterTranslations("enUS", function() return {
 --------------
 
 ["Note: Prone to visual errors."] = true,
+["Toggle for class color."] = true,
+["As your raid expands the frames stay centered on the original group placement. Currently only works for horizontal growth."] = true,
+["Health percentage before name is replaced with health deficit."] = true,
+["Mana percentage before border color changes."] = true,
 
 } end)
 
@@ -113,13 +119,15 @@ L:RegisterTranslations("ruRU", function() return {
 ["Unit Padding"] = "Интервал рамок",
 ["Font"] = "Шрифт",
 ["Texture"] = "Текстура",
-["Name"] = "Имя по цвету класса",
+["Name Color"] = true,
+["Name Size"] = true,
 ["Name Length"] = "Длина имени",
-["Health"] = "Здоровье по цвету класса",
+["Health Color"] = true,
+["Health Threshold"] = true,
 ["Highlight Target"] = "Выделение цели",
 ["Aggro Warning"] = "Предупреждение аггро",
 ["Mana Warning"] = "Предупреждение маны",
-["Healcomm"] = "Входящее исцеление",
+["Healcomm Bar"] = true,
 ["Healcomm Text"] = "Текст входящего исцеления",
 ["Top Left Icon"] = "Иконка сверху слева",
 ["Top Icon"] = "Иконка сверху",
@@ -135,9 +143,10 @@ L:RegisterTranslations("ruRU", function() return {
 ["Show While Solo"] = "Показать вне группы",
 ["Show In Party"] = "Показать в группе",
 ["Show Party In Raid"] = "Показать группы в рейде",
+["Disable Tooltip In Combat"] = true,
 ["Locked"] = "Заблокировать",
 
-["Orientation"] = "Ориентация",
+["Health Orientation"] = true,
 ["Show Blizz Frames"] = "Показать окна Blizzard",
 ["Growth Direction"] = "Направление роста",
 
@@ -180,5 +189,9 @@ L:RegisterTranslations("ruRU", function() return {
 --------------
 
 ["Note: Prone to visual errors."] = "Примечание: подвержен визуальным ошибкам.",
+["Toggle for class color."] = true,
+["As your raid expands the frames stay centered on the original group placement. Currently only works for horizontal growth."] = true,
+["Health percentage before name is replaced with health deficit."] = true,
+["Mana percentage before border color changes."] = true,
 
 } end)

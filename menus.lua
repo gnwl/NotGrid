@@ -54,11 +54,6 @@ local menuarray = {
 		key = "unithealthbartexture",
 		},
 	},
-	{text = L["Orientation"],
-	editbox = {
-		key = "unithealthorientation",
-		},
-	},
 	{text = L["Background"], -- (Toggle for Class)
 	editbox = {
 		key = "unithealthbarbgtexture",
@@ -67,86 +62,69 @@ local menuarray = {
 	color = {
 			key = "unithealthbarbgcolor",
 		},
+	tooltip = L["Toggle for class color."],
 	},
-
-	--unitnamehealthtextsize
-	{text = L["Name"], -- (Toggle for Class)
-	toggle = "colorunitnamehealthbyclass",
+	{text = L["Name Size"],
 	slider = {
 		key = "unitnamehealthtextsize",
 		minval = 1,
 		maxval = 20,
 		},
-	color = {
-			key = "unitnamehealthtextcolor",
-		},
 	},
-	{text = L["Name Length"], -- (Toggle for Class)
+	{text = L["Name Length"],
 	slider = {
 		key = "namelength",
 		minval = 1,
 		maxval = 12,
 		},
 	},
-
-	{text = L["Health"], -- (Toggle for Class)
+	{text = L["Name Color"], -- (Toggle for Class)
+	toggle = "colorunitnamehealthbyclass",
+	color = {
+			key = "unitnamehealthtextcolor",
+		},
+	tooltip = L["Toggle for class color."],
+	},
+	{text = L["Health Color"], -- (Toggle for Class)
 	toggle = "colorunithealthbarbyclass",
+	color = {
+			key = "unithealthbarcolor",
+		},
+	tooltip = L["Toggle for class color."],
+	},
+	{text = L["Health Orientation"],
+	editbox = {
+		key = "unithealthorientation",
+		},
+	},
+	{text = L["Health Threshold"],
 	slider = {
 		key = "healththreshhold",
 		minval = 1,
 		maxval = 100,
-		},
-	color = {
-			key = "unithealthbarcolor",
+		tooltip = L["Health percentage before name is replaced with health deficit."],
 		},
 	},
-
-	{text = L["Highlight Target"], -- (Toggle for Class)
-	toggle = "tracktarget",
-	color = {
-			key = "targetcolor",
-		},
+	{text = L["Show Power Bar"],
+	toggle = "showpowerbar",
 	},
-
-	{text = L["Aggro Warning"],
-	toggle = "trackaggro",
-	color = {
-			key = "aggrowarningcolor",
-		},
-	},
-
-	{text = L["Mana Warning"], -- (Toggle for Class)
-	toggle = "trackmana",
+	{text = L["Power Position"],
 	slider = {
-		key = "manathreshhold",
+		key = "powerposition",
 		minval = 1,
-		maxval = 100,
-		},
-	color = {
-			key = "manawarningcolor",
+		maxval = 4,
 		},
 	},
-
-	{text = L["Healcomm"],
-	toggle = "showhealcommbar",
-	color = {
-			key = "unithealcommbarcolor",
-		},
-	},
-	{text = L["Healcomm Text"],
-	toggle = "showhealcommtext",
+	{text = L["Power Size"],
 	slider = {
-		key = "unithealcommtextsize",
+		key = "powersize",
 		minval = 1,
-		maxval = 20,
-		},
-	color = {
-			key = "unithealcommtextcolor",
+		maxval = 50,
 		},
 	},
 
 
-
+	{text = "",},
 	-- Icons --
 
 	{text = L["Top Left Icon"],
@@ -214,23 +192,52 @@ local menuarray = {
 		},
 	},
 	-- end of icons --
-	{text = L["Show Power Bar"], 
-	toggle = "showpowerbar",
-	},
-	{text = L["Power Position"], 
-	slider = {
-		key = "powerposition",
-		minval = 1,
-		maxval = 4,
+	{text = "",},
+
+	{text = L["Healcomm Bar"],
+	toggle = "showhealcommbar",
+	color = {
+			key = "unithealcommbarcolor",
 		},
 	},
-	{text = L["Power Size"], 
+	{text = L["Healcomm Text"],
+	toggle = "showhealcommtext",
 	slider = {
-		key = "powersize",
+		key = "unithealcommtextsize",
 		minval = 1,
-		maxval = 50,
+		maxval = 20,
+		},
+	color = {
+			key = "unithealcommtextcolor",
 		},
 	},
+	{text = L["Highlight Target"],
+	toggle = "tracktarget",
+	color = {
+			key = "targetcolor",
+		},
+	},
+
+	{text = L["Aggro Warning"],
+	toggle = "trackaggro",
+	color = {
+			key = "aggrowarningcolor",
+		},
+	},
+
+	{text = L["Mana Warning"],
+	toggle = "trackmana",
+	slider = {
+		key = "manathreshhold",
+		minval = 1,
+		maxval = 100,
+		tooltip = L["Mana percentage before border color changes."],
+		},
+	color = {
+			key = "manawarningcolor",
+		},
+	},
+
 	{text = L["Proximity Leeway"], 
 	slider = {
 		key = "proximityleeway",
@@ -241,8 +248,12 @@ local menuarray = {
 	{text = L["Use Map Proximity"], 
 	toggle = "usemapdistances",
 	},
+
+	{text = "",},
+
 	{text = L["Smart Center"], 
 	toggle = "smartcenter",
+	tooltip = L["As your raid expands the frames stay centered on the original group placement. Currently only works for horizontal growth."],
 	},
 	{text = L["Growth Direction"], 
 	slider = {
@@ -251,6 +262,9 @@ local menuarray = {
 		maxval = 8,
 		},
 	},
+
+	{text = "",},
+
 	{text = L["Show While Solo"], 
 	toggle = "showwhilesolo",
 	},
@@ -276,9 +290,12 @@ local menuarray = {
 	{text = L["Show Blizz Frames"], 
 	toggle = "showblizzframes",
 	},
-	{text = L["Disable Mouseover In Combat"],
+	{text = L["Disable Tooltip In Combat"],
 	toggle = "disablemouseoverincombat",
 	},
+
+	{text = "",},
+
 	{text = L["Config Mode"], 
 	toggle = "configmode",
 	},
@@ -348,7 +365,7 @@ function NotGrid:InitializeMenu()
 		fb.slider = val.slider
 		fb.editbox = val.editbox
 		--fb.color = val.color
-		fb.tooltipText = val.tooltip
+		fb.tooltip = val.tooltip
 		--
 		-- if fb.toggle, make a checkmark frame
 		if val.toggle then
@@ -408,6 +425,9 @@ function NotGrid:InitializeMenu()
 				NotGridMenuSlider:SetMinMaxValues(this.slider.minval, this.slider.maxval)
 				NotGridMenuSlider:SetValue(NotGridOptions[this.slider.key])
 				NotGridMenuSlider.currval:SetText(NotGridOptions[this.slider.key])
+				if this.slider.tooltip then
+					NotGridMenuSlider.tooltip = this.slider.tooltip
+				end
 				NotGridMenuSliderContainer:ClearAllPoints()
 				NotGridMenuSliderContainer:SetPoint("TOPRIGHT",this,"TOPLEFT",-20,0)
 				NotGridMenuSliderContainer:Show()
@@ -417,14 +437,17 @@ function NotGrid:InitializeMenu()
 				NotGridMenuSliderContainer:Hide()
 				NotGridMenuEditBoxContainer:Hide()
 			end
-			if this.tooltipText then
+			if this.tooltip then
 				GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
-				GameTooltip:SetText(this.tooltipText, nil, nil, nil, nil, 1)
+				GameTooltip:SetText(this.tooltip, nil, nil, nil, nil, 1)
 			end
 		end)
 		fb:SetScript("OnLeave", function()
 			GameTooltip:Hide()
 		end)
+		if val.text == "" then
+			fb:Disable()
+		end
 	end
 end
 
@@ -457,6 +480,17 @@ function NotGrid:InitializeSlider()
 	f.s.currval = f.s:CreateFontString('$parentcurrval', "ARTWORK", "GameFontHighlightSmall")
 	f.s.currval:SetPoint("TOP",0,8)
 	f.s.currval:SetText("50")
+	f.s:SetScript("OnEnter", function()
+		if this.tooltip then
+			GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
+			GameTooltip:SetText(this.tooltip, nil, nil, nil, nil, 1)
+		end
+	end)
+	f.s:SetScript("OnHide", function()
+		if this.tooltip then
+			this.tooltip = nil
+		end
+	end)
 end
 
 -------------
