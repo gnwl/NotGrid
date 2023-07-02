@@ -39,6 +39,7 @@ L:RegisterTranslations("enUS", function() return {
 ["Bottom Icon"] = true,
 ["Bottom Left Icon"] = true,
 ["Left Icon"] = true,
+["Icon Size"] = true,
 ["Proximity Leeway"] = true,
 ["Use Map Proximity"] = true,
 ["Smart Center"] = true,
@@ -95,6 +96,7 @@ L:RegisterTranslations("enUS", function() return {
 ["As your raid expands the frames stay centered on the original group placement. Currently only works for horizontal growth."] = true,
 ["Health percentage before name is replaced with health deficit."] = true,
 ["Mana percentage before border color changes."] = true,
+["Amound of seconds to be considered \"In Range\" after a positive spell or combat log confirmation."] = true,
 
 } end)
 
@@ -137,6 +139,7 @@ L:RegisterTranslations("ruRU", function() return {
 ["Bottom Icon"] = "Иконка снизу",
 ["Bottom Left Icon"] = "Иконка снизу слева",
 ["Left Icon"] = "Иконка слева",
+["Icon Size"] = true,
 ["Proximity Leeway"] = "Proximity Leeway", --
 ["Use Map Proximity"] = "Use Map Proximity", --
 ["Smart Center"] = "Smart Center", --
@@ -193,5 +196,6 @@ L:RegisterTranslations("ruRU", function() return {
 ["As your raid expands the frames stay centered on the original group placement. Currently only works for horizontal growth."] = true,
 ["Health percentage before name is replaced with health deficit."] = true,
 ["Mana percentage before border color changes."] = true,
+["Amound of seconds to be considered \"In Range\" after a positive spell or combat log confirmation."] = true,
 
 } end)

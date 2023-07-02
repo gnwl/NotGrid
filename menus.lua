@@ -122,6 +122,13 @@ local menuarray = {
 		maxval = 50,
 		},
 	},
+	{text = L["Icon Size"],
+	slider = {
+		key = "unittrackingiconsize",
+		minval = 1,
+		maxval = 30,
+		},
+	},
 
 
 	{text = "",},
@@ -243,6 +250,7 @@ local menuarray = {
 		key = "proximityleeway",
 		minval = 0,
 		maxval = 30,
+		tooltip = L["Amound of seconds to be considered \"In Range\" after a positive spell or combat log confirmation."],
 		},
 	},
 	{text = L["Use Map Proximity"], 
@@ -553,7 +561,7 @@ function NotGrid:ClickColor()
 end
 
 function NotGrid:ColorPickerHandler()
-	local a = OpacitySliderFrame:GetValue()
+	local a = 1 - OpacitySliderFrame:GetValue()
 	local r,g,b = ColorPickerFrame:GetColorRGB()
 	NotGrid_SetColor({r,g,b,a}) -- why cant I reference self?
 end
