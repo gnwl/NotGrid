@@ -121,15 +121,15 @@ L:RegisterTranslations("ruRU", function() return {
 ["Unit Padding"] = "Интервал рамок",
 ["Font"] = "Шрифт",
 ["Texture"] = "Текстура",
-["Name Color"] = true,
-["Name Size"] = true,
+["Name Color"] = "Цвет имени",
+["Name Size"] = "Размер имени",
 ["Name Length"] = "Длина имени",
-["Health Color"] = true,
-["Health Threshold"] = true,
+["Health Color"] = "Цвет здоровья",
+["Health Threshold"] = "Порог здоровья",
 ["Highlight Target"] = "Выделение цели",
 ["Aggro Warning"] = "Предупреждение аггро",
 ["Mana Warning"] = "Предупреждение маны",
-["Healcomm Bar"] = true,
+["Healcomm Bar"] = "Полоса входящего исцеления",
 ["Healcomm Text"] = "Текст входящего исцеления",
 ["Top Left Icon"] = "Иконка сверху слева",
 ["Top Icon"] = "Иконка сверху",
@@ -139,17 +139,17 @@ L:RegisterTranslations("ruRU", function() return {
 ["Bottom Icon"] = "Иконка снизу",
 ["Bottom Left Icon"] = "Иконка снизу слева",
 ["Left Icon"] = "Иконка слева",
-["Icon Size"] = true,
+["Icon Size"] = "Размер иконки",
 ["Proximity Leeway"] = "Proximity Leeway", --
-["Use Map Proximity"] = "Use Map Proximity", --
-["Smart Center"] = "Smart Center", --
+["Use Map Proximity"] = "Использовать карту приближения", --
+["Smart Center"] = "Умный центр", --
 ["Show While Solo"] = "Показать вне группы",
 ["Show In Party"] = "Показать в группе",
 ["Show Party In Raid"] = "Показать группы в рейде",
-["Disable Tooltip In Combat"] = true,
+["Disable Tooltip In Combat"] = "Отключить всплывающую подсказку в бою",
 ["Locked"] = "Заблокировать",
 
-["Health Orientation"] = true,
+["Health Orientation"] = "Ориентация здоровья",
 ["Show Blizz Frames"] = "Показать окна Blizzard",
 ["Growth Direction"] = "Направление роста",
 
@@ -174,9 +174,9 @@ L:RegisterTranslations("ruRU", function() return {
 ["Arathi Basin"] = "Низина Арати",
 ["Warsong Gulch"] = "Ущелье Песни Войны",
 
-["Show Power Bar"] = "Показать Power Bar", -- Power bar ??
-["Power Position"] = "Позиция Power Bar", -- 
-["Power Size"] = "Размер Power Bar", --
+["Show Power Bar"] = "Показать полосу силы",
+["Power Position"] = "Позиция полосы силы",
+["Power Size"] = "Размер полосы силы",
 
 ["Config Mode"] = "Режим настройки",
 ["Background"] = "Задний фон",
@@ -184,18 +184,18 @@ L:RegisterTranslations("ruRU", function() return {
 ["Scroll Me!"] = "Прокрути меня!",
 
 ["Show Pets"] = "Показать питомцев",
-["Custom Pet Color"] = true,
-["TBC Shaman Color"] = true,
+["Custom Pet Color"] = "Пользовательский цвет питомца",
+["TBC Shaman Color"] = "Пользовательский цвет шамана - TBC",
 
 --------------
 -- Tooltips --
 --------------
 
 ["Note: Prone to visual errors."] = "Примечание: подвержен визуальным ошибкам.",
-["Toggle for class color."] = true,
-["As your raid expands the frames stay centered on the original group placement. Currently only works for horizontal growth."] = true,
-["Health percentage before name is replaced with health deficit."] = true,
-["Mana percentage before border color changes."] = true,
-["Amound of seconds to be considered \"In Range\" after a positive spell or combat log confirmation."] = true,
+["Toggle for class color."] = "Вкл.\\Выкл. цвет класса",
+["As your raid expands the frames stay centered on the original group placement. Currently only works for horizontal growth."] = "По мере того, как ваш рейд расширяет рамки, оставаться в центре исходного размещения группы. В настоящее время работает только для горизонтального роста.",
+["Health percentage before name is replaced with health deficit."] = "Процент здоровья перед именем заменяется дефицитом здоровья.",
+["Mana percentage before border color changes."] = "Процент маны до изменения цвета бордюра.",
+["Amound of seconds to be considered \"In Range\" after a positive spell or combat log confirmation."] = "Количество секунд, которое будет учитывать \"в пределах досягаемости\" после положительного заклинания или подтверждения боевого журнала.",
 
 } end)
