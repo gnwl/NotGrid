@@ -141,8 +141,8 @@ L:RegisterTranslations("ruRU", function() return {
 ["Left Icon"] = "Иконка слева",
 ["Icon Size"] = "Размер иконки",
 ["Proximity Leeway"] = "Proximity Leeway", --
-["Use Map Proximity"] = "Использовать карту приближения", --
-["Smart Center"] = "Умный центр", --
+["Use Map Proximity"] = "Использовать карту приближения",
+["Smart Center"] = "Умный центр",
 ["Show While Solo"] = "Показать вне группы",
 ["Show In Party"] = "Показать в группе",
 ["Show Party In Raid"] = "Показать группы в рейде",
