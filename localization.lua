@@ -87,6 +87,8 @@ L:RegisterTranslations("enUS", function() return {
 ["Custom Pet Color"] = true,
 ["TBC Shaman Color"] = true,
 
+["Proximity Rate"] = true,
+
 --------------
 -- Tooltips --
 --------------
@@ -97,6 +99,7 @@ L:RegisterTranslations("enUS", function() return {
 ["Health percentage before name is replaced with health deficit."] = true,
 ["Mana percentage before border color changes."] = true,
 ["Amound of seconds to be considered \"In Range\" after a positive spell or combat log confirmation."] = true,
+["Amount of seconds between proximity checks."] = true,
 
 } end)
 
@@ -187,6 +190,8 @@ L:RegisterTranslations("ruRU", function() return {
 ["Custom Pet Color"] = "Пользовательский цвет питомца",
 ["TBC Shaman Color"] = "Пользовательский цвет шамана - TBC",
 
+["Proximity Rate"] = "Коэффициент близости",
+
 --------------
 -- Tooltips --
 --------------
@@ -197,5 +202,6 @@ L:RegisterTranslations("ruRU", function() return {
 ["Health percentage before name is replaced with health deficit."] = "Процент здоровья перед именем заменяется дефицитом здоровья.",
 ["Mana percentage before border color changes."] = "Процент маны до изменения цвета бордюра.",
 ["Amound of seconds to be considered \"In Range\" after a positive spell or combat log confirmation."] = "Количество секунд, которое будет учитывать \"в пределах досягаемости\" после положительного заклинания или подтверждения боевого журнала.",
+["Amount of seconds between proximity checks."] = "Количество секунд между проверками близости.",
 
 } end)

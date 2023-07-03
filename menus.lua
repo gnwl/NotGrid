@@ -245,6 +245,15 @@ local menuarray = {
 		},
 	},
 
+	{text = L["Proximity Rate"],
+	slider = {
+		key = "proximityrate",
+		minval = 0.5,
+		maxval = 5,
+		stepvalue = 0.5,
+		tooltip = L["Amount of seconds between proximity checks."],
+		},
+	},
 	{text = L["Proximity Leeway"], 
 	slider = {
 		key = "proximityleeway",
@@ -433,6 +442,11 @@ function NotGrid:InitializeMenu()
 				NotGridMenuSlider:SetMinMaxValues(this.slider.minval, this.slider.maxval)
 				NotGridMenuSlider:SetValue(NotGridOptions[this.slider.key])
 				NotGridMenuSlider.currval:SetText(NotGridOptions[this.slider.key])
+				if this.slider.stepvalue then
+					NotGridMenuSlider:SetValueStep(this.slider.stepvalue)
+				else
+					NotGridMenuSlider:SetValueStep(1)
+				end
 				if this.slider.tooltip then
 					NotGridMenuSlider.tooltip = this.slider.tooltip
 				end
@@ -482,6 +496,10 @@ function NotGrid:InitializeSlider()
 			NotGridOptions[this.key] = arg1
 			this.currval:SetText(arg1)
 			NotGridOptionChange()
+		end
+		if this.key == "proximityrate" then
+			NotGrid:CancelAllScheduledEvents() -- bit silly, but it will rarely be used
+			NotGrid:ScheduleRepeatingEvent("NG_UNIT_PROXIMITY", NotGrid.o.proximityrate)
 		end
 	end)
 

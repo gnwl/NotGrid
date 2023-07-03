@@ -36,6 +36,8 @@ function NotGrid:OnEnable()
 	end
 	--
 	self:RegisterEvent("UNIT_AURA")
+	self:RegisterEvent("NG_UNIT_PROXIMITY","UNIT_PROXIMITY")
+	self:ScheduleRepeatingEvent("NG_UNIT_PROXIMITY", self.o.proximityrate)
 end
 
 --------------------

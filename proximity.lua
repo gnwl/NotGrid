@@ -72,23 +72,27 @@ local MapScales = {
 	}
 }
 
+
+
 --------------------
 -- UNIT_PROXIMITY --
 --------------------
-
-function NotGrid:UNIT_PROXIMITY(f)
-	local unitid = f.unit
-	if UnitExists(unitid) then
-		local response = self:CheckProximity(unitid)
-		if response == 1 then
-			self:RangeToggle(f, 1)
-		elseif response == 2 then
-			self:RangeToggle(f, 2)
-		else
-			self:RangeToggle(f, 3)
+function NotGrid:UNIT_PROXIMITY()
+	for key,f in self.UnitFrames do
+		local unitid = f.unit
+		if UnitExists(unitid) and f:IsVisible() then
+			local response = self:CheckProximity(unitid)
+			if response == 1 then
+				self:RangeToggle(f, 1)
+			elseif response == 2 then
+				self:RangeToggle(f, 2)
+			else
+				self:RangeToggle(f, 3)
+			end
 		end
 	end
 end
+
 
 function NotGrid:RangeToggle(f, condition)
 	if condition == 1 then
