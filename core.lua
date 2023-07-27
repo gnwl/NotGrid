@@ -241,29 +241,7 @@ function NotGrid:CliqueHandle(button) -- if/else for Clique handling is done in 
 		end
 	end
 	if foundspell then
-		local LastTarget = UnitName("target") -- I use this as a boolean because targetting by name can be erronous
-		ClearTarget()
-		if LazySpell then
-			if LazySpell.ValidateSpell then -- use convenient function from newer version
-				foundspell = LazySpell:ValidateSpell(foundspell, this.unit)
-			else -- go through the original version
-				local lsSpell,lsRank = LazySpell:ExtractSpell(foundspell)
-				if self.HealComm.Spells[lsSpell] and lsRank == 1 then
-					local lsRank = LazySpell:CalculateRank(lsSpell, this.unit)
-					foundspell = lsSpell.."(Rank "..lsRank..")"
-				end
-			end
-		end
-		CastSpellByName(foundspell) -- then cast it, but note that because we've cleared target to cast it we're just "spelltargeting"
-		self:SpellCanTarget() -- run through a proximitycheck on all units using this spell before continueing on
-		if SpellIsTargeting() and SpellCanTargetUnit(this.unit) then -- then come back to our own func and see if they can cast on the unit they wanted to cast on
-			SpellTargetUnit(this.unit) -- if they can, cast on them
-		elseif SpellIsTargeting() then
-			SpellStopTargeting() -- otherwise stop targetting
-		end
-		if LastTarget then -- remember, use it as a boolean.
-			TargetLastTarget() -- and finally, if they actually had an old target, then target it
-		end
+		self:CastHandle(foundspell,this.unit)
 	else
 		self:ClickHandle(button) -- if it failed to find anything in clique then we send it to the regular handler
 	end
@@ -276,8 +254,14 @@ end
 SLASH_NOTGRIDCAST1 = "/ngcast"
 function SlashCmdList.NOTGRIDCAST(spell, editbox) -- this is all pretty much identical to clique handling. So redundant code, clean up sometime.
 	local unitid = GetMouseFocus().unit
-	local LastTarget = UnitName("target") --used as boolean before using targetlasttarget
-	local foundspell = spell -- using foundspell just to make it easier to eventually combine with clique handling
+	NotGrid:CastHandle(spell,unitid)
+end
+
+---------------------
+-- Spell Cast Hook --
+---------------------
+
+function NotGrid:CastHandle(foundspell, unitid)
 	if LazySpell and unitid then
 		if LazySpell.ValidateSpell then -- use convenient function from newer version
 			foundspell = LazySpell:ValidateSpell(foundspell, unitid)
@@ -289,6 +273,7 @@ function SlashCmdList.NOTGRIDCAST(spell, editbox) -- this is all pretty much ide
 			end
 		end
 	end
+	--proximity stuff
 	if unitid == "target" then -- prioritize healcomm functionality above proximity checks
 		CastSpellByName(foundspell)
 		if SpellIsTargeting() then
@@ -296,12 +281,13 @@ function SlashCmdList.NOTGRIDCAST(spell, editbox) -- this is all pretty much ide
 		end
 		return
 	end
+	local LastTarget = UnitName("target") --used as boolean before using targetlasttarget
 	ClearTarget()
 	CastSpellByName(foundspell)
-	NotGrid:SpellCanTarget() --check proximity on all roster members while the spell is queued up
+	self:SpellCanTarget() --check proximity on all roster members while the spell is queued up
 	if unitid and UnitExists(unitid) and SpellIsTargeting() and SpellCanTargetUnit(unitid) then -- then come back to our own func and see if they can cast on the unit they wanted to cast on
 		SpellTargetUnit(unitid) -- if they can, cast on them
-	elseif SpellCanTargetUnit("mouseover") then -- for casting outside unitframes
+	elseif SpellCanTargetUnit("mouseover") then -- for casting outside unitframes .. does this affect clique in anyway?
 		SpellTargetUnit("mouseover")
 	end
 	if SpellIsTargeting() then -- we queued up the spell but previous checks couldnt cast it on anyone
