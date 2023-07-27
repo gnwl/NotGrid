@@ -289,13 +289,18 @@ function SlashCmdList.NOTGRIDCAST(spell, editbox) -- this is all pretty much ide
 			end
 		end
 	end
+	if unitid == "target" then -- prioritize healcomm functionality above proximity checks
+		CastSpellByName(foundspell)
+		if SpellIsTargeting() then
+			SpellStopTargeting()
+		end
+		return
+	end
 	ClearTarget()
 	CastSpellByName(foundspell)
 	NotGrid:SpellCanTarget() --check proximity on all roster members while the spell is queued up
 	if unitid and UnitExists(unitid) and SpellIsTargeting() and SpellCanTargetUnit(unitid) then -- then come back to our own func and see if they can cast on the unit they wanted to cast on
 		SpellTargetUnit(unitid) -- if they can, cast on them
-	elseif unitid == "target" then
-		TargetLastTarget() -- targeting while SpellisCasting casts the spell on specified target.. in this case lasttarget
 	elseif SpellCanTargetUnit("mouseover") then -- for casting outside unitframes
 		SpellTargetUnit("mouseover")
 	end
