@@ -11,6 +11,7 @@ function NotGrid:OnInitialize()
 	self.ProximityVars = {} -- will hold vars related to proximity handling. Mostly world map stuff
 	self:UpdateProximityMapVars() -- need to do this here so I have values on reloadui
 	self:GetFortyYardSpell() -- queries the player's action bars for a 40 yard spell to use in proximity checking
+	self:GetMapSizes() -- populate ProximityVars with mapsizes of server
 	--
 	self:CreateFrames()
 end

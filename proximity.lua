@@ -7,63 +7,6 @@ local spells40yd = { -- Macros are forced to have text associated with them so w
 	["SHAMAN"] = {"Interface\\Icons\\Spell_Nature_MagicImmunity", "Interface\\Icons\\Spell_Nature_HealingWaveLesser", "Interface\\Icons\\Spell_Nature_HealingWaveGreater"},
 }
 
--- extracted from WorldMapArea dbc table  --  x is left/right, y is top/bottom  --  areaname correlates to GetMapInfo() api call
-local MapSizes = {
-	["Alterac"] = {x = 2800.0003, y = 1866.6667},
-	["AlteracValley"] = {x = 4237.5, y = 2825},
-	["Arathi"] = {x = 3600.0004, y = 2399.9997},
-	["ArathiBasin"] = {x = 1756.2497, y = 1170.833},
-	["Ashenvale"] = {x = 5766.667, y = 3843.7504},
-	["Aszhara"] = {x = 5070.833, y = 3381.25},
-	["Azeroth"] = {x = 35199.9, y = 23466.6},
-	["Badlands"] = {x = 2487.5, y = 1658.334},
-	["Barrens"] = {x = 10133.334, y = 6756.25},
-	["BlastedLands"] = {x = 3350, y = 2233.33},
-	["BurningSteppes"] = {x = 2929.1663, y = 1952.083},
-	["Darkshore"] = {x = 6550, y = 4366.666},
-	["Darnassis"] = {x = 1058.333, y = 705.733},
-	["DeadwindPass"] = {x = 2499.9997, y = 1666.664},
-	["Desolace"] = {x = 4495.833, y = 2997.9163},
-	["DunMorogh"] = {x = 4925, y = 3283.334},
-	["Durotar"] = {x = 5287.5, y = 3525},
-	["Duskwood"] = {x = 2700.0003, y = 1800.004},
-	["Dustwallow"] = {x = 5250.0001, y = 3500},
-	["EasternPlaguelands"] = {x = 3870.833, y = 2581.25},
-	["Elwynn"] = {x = 3470.834, y = 2314.587},
-	["Felwood"] = {x = 5750, y = 3833.333},
-	["Feralas"] = {x = 6950, y = 4633.333},
-	["Hilsbrad"] = {x = 3200, y = 2133.333},
-	["Hinterlands"] = {x = 3850, y = 2566.667},
-	["Ironforge"] = {x = 790.6246, y = 527.605},
-	["Kalimdor"] = {x = 36799.81, y = 24533.2},
-	["LochModan"] = {x = 2758.333, y = 1839.583},
-	["Moonglade"] = {x = 2308.333, y = 1539.583},
-	["Mulgore"] = {x = 5137.5, y = 3425.0003},
-	["Ogrimmar"] = {x = 1402.605, y = 935.416},
-	["Redridge"] = {x = 2170.834, y = 1447.92},
-	["SearingGorge"] = {x = 2231.2503, y = 1487.5},
-	["Silithus"] = {x = 3483.334, y = 2322.916},
-	["Silverpine"] = {x = 4200, y = 2800},
-	["StonetalonMountains"] = {x = 4883.333, y = 3256.2503},
-	["Stormwind"] = {x = 1344.27037, y = 896.354},
-	["Stranglethorn"] = {x = 6381.25, y = 4254.17},
-	["SwampOfSorrows"] = {x = 2293.75, y = 1529.167},
-	["Tanaris"] = {x = 6900, y = 4600},
-	["Teldrassil"] = {x = 5091.666, y = 3393.75},
-	["ThousandNeedles"] = {x = 4399.9997, y = 2933.333},
-	["ThunderBluff"] = {x = 1043.7499, y = 695.8331},
-	["Tirisfal"] = {x = 4518.75, y = 3012.5001},
-	["Undercity"] = {x = 959.375, y = 640.104},
-	["UngoroCrater"] = {x = 3700.0003, y = 2466.666},
-	["WarsongGulch"] = {x = 1145.8337, y = 764.5831},
-	["WesternPlaguelands"] = {x = 4299.9997, y = 2866.667},
-	["Westfall"] = {x = 3500.0003, y = 2333.33},
-	["Wetlands"] = {x = 4135.4167, y = 2756.25},
-	["Winterspring"] = {x = 7100.0003, y = 4733.333}
-}
-
-
-
 --------------------
 -- UNIT_PROXIMITY --
 --------------------
@@ -145,9 +88,9 @@ function NotGrid:GetWorldDistance(unitid) -- Thanks to Rhena/Renew/Astrolabe
 	SetMapToCurrentZone()
 	px, py = GetPlayerMapPosition("player") -- gets position data in units of percentage of map size
 	ux, uy = GetPlayerMapPosition(unitid)
-	if v.mapFileName and MapSizes[v.mapFileName] then
-		local xdelta = (px - ux)*MapSizes[v.mapFileName].x -- (px-ux) gives distance in percentage units, multiply by mapsize to convert to wow units.
-		local ydelta = (py - uy)*MapSizes[v.mapFileName].y
+	if v.mapFileName and v.MapSizes[v.mapFileName] then
+		local xdelta = (px - ux)*v.MapSizes[v.mapFileName].x -- (px-ux) gives distance in percentage units, multiply by mapsize to convert to wow units.
+		local ydelta = (py - uy)*v.MapSizes[v.mapFileName].y
 		distance = sqrt(xdelta^2 + ydelta^2)*(40/42.9) -- Then use maths distance formula for two points on a grid. include a modifiier of (40/42.9) because there seems to be 40 spell yards per 42.9 wow gps units.
 	end
 	return distance
