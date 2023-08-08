@@ -11,6 +11,10 @@ local spells40yd = { -- Macros are forced to have text associated with them so w
 -- UNIT_PROXIMITY --
 --------------------
 function NotGrid:UNIT_PROXIMITY()
+	if self.o.usemapdistances and not WorldMapFrame:IsVisible() then
+		SetMapToCurrentZone() -- have to do this every time because there are situations where zone_changed events don't fire - specifically entering/exiting many instances
+		self.ProximityVars.mapFileName, _, _ = GetMapInfo()
+	end
 	for key,f in self.UnitFrames do
 		local unitid = f.unit
 		if UnitExists(unitid) and f:IsVisible() then
@@ -66,13 +70,14 @@ function NotGrid:CheckProximity(unitid) -- return 1=confirmed_true, 2=confirmed_
 				return 2
 			end
 		end
-		--if checking with map is toggled, AND the player is outside, AND we haven't returned an INRANGE confirmation yet, then start looking at the map for range
-		if self.o.usemapdistances and (self.ProximityVars.instance == "none" or self.ProximityVars.instance == "pvp") and not WorldMapFrame:IsVisible() then
+		if self.o.usemapdistances and self.ProximityVars.mapFileName and not WorldMapFrame:IsVisible() then
 			local distance = self:GetWorldDistance(unitid)
-			if distance and distance <= 40 then
-				return 1
-			else
-				return 2
+			if distance then -- A nil distance would mean map error & unconfirmed distance. Otherwise confirm in range or confirm out of range
+				if distance <= 40 then
+					return 1
+				else
+					return 2
+				end
 			end
 		end
 	end
@@ -85,30 +90,14 @@ end
 function NotGrid:GetWorldDistance(unitid) -- Thanks to Rhena/Renew/Astrolabe
 	local px, py, ux, uy, distance
 	local v = self.ProximityVars
-	SetMapToCurrentZone()
 	px, py = GetPlayerMapPosition("player") -- gets position data in units of percentage of map size
 	ux, uy = GetPlayerMapPosition(unitid)
-	if v.mapFileName and v.MapSizes[v.mapFileName] then
+	if v.mapFileName and v.MapSizes[v.mapFileName] and px ~= 0 and ux ~= 0 then -- we check player and unit against absolute 0 as returning such is likely an out of bounds map error. if such is the case we'll return a nil distance
 		local xdelta = (px - ux)*v.MapSizes[v.mapFileName].x -- (px-ux) gives distance in percentage units, multiply by mapsize to convert to wow units.
 		local ydelta = (py - uy)*v.MapSizes[v.mapFileName].y
 		distance = sqrt(xdelta^2 + ydelta^2)*(40/42.9) -- Then use maths distance formula for two points on a grid. include a modifiier of (40/42.9) because there seems to be 40 spell yards per 42.9 wow gps units.
 	end
 	return distance
-end
-
-function NotGrid:UpdateProximityMapVars()
-	local v = self.ProximityVars
-	SetMapToCurrentZone()
-	v.mapFileName, _, _ = GetMapInfo()
-	_, v.instance = IsInInstance()
-	--[[ -- these become moot with the change to using mapFileName
-	v.Continent = GetCurrentMapContinent()
-	v.Zone = GetCurrentMapZone()
-	v.ZoneName = GetZoneText()
-	if v.ZoneName == "Warsong Gulch" or v.ZoneName == "Arathi Basin" or v.ZoneName == "Alterac Valley" then
-		v.Zone = v.ZoneName
-	end
-	]]
 end
 
 -------------------------

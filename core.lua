@@ -9,7 +9,6 @@ function NotGrid:OnInitialize()
 	self.UnitFrames = {}
 	--proximity stuff
 	self.ProximityVars = {} -- will hold vars related to proximity handling. Mostly world map stuff
-	self:UpdateProximityMapVars() -- need to do this here so I have values on reloadui
 	self:GetFortyYardSpell() -- queries the player's action bars for a 40 yard spell to use in proximity checking
 	self:GetMapSizes() -- populate ProximityVars with mapsizes of server
 	--
@@ -26,7 +25,6 @@ function NotGrid:OnEnable()
 	self:RegisterEvent("RAID_ROSTER_UPDATE","RosterChange")
 	self:RegisterEvent("UNIT_PET","RosterChange")
 	--proximity stuff
-	self:RegisterEvent("ZONE_CHANGED_NEW_AREA","UpdateProximityMapVars")
 	self:RegisterEvent("ACTIONBAR_SLOT_CHANGED", "GetFortyYardSpell")
 	for key in L.CombatEvents do
 		self:RegisterEvent(key, "CombatEventHandle")
