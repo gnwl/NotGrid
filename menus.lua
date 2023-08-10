@@ -105,6 +105,9 @@ local menuarray = {
 		tooltip = L["Health percentage before name is replaced with health deficit."],
 		},
 	},
+
+	{text = "",},
+
 	{text = L["Show Power Bar"],
 	toggle = "showpowerbar",
 	},
@@ -122,6 +125,12 @@ local menuarray = {
 		maxval = 50,
 		},
 	},
+
+
+	{text = "",},
+
+	-- Icons --
+
 	{text = L["Icon Size"],
 	slider = {
 		key = "unittrackingiconsize",
@@ -129,11 +138,6 @@ local menuarray = {
 		maxval = 30,
 		},
 	},
-
-
-	{text = "",},
-	-- Icons --
-
 	{text = L["Top Left Icon"],
 	editbox = {
 		key = "trackingicon1",
@@ -218,6 +222,9 @@ local menuarray = {
 			key = "unithealcommtextcolor",
 		},
 	},
+
+	{text = "",},
+
 	{text = L["Highlight Target"],
 	toggle = "tracktarget",
 	color = {
@@ -245,6 +252,11 @@ local menuarray = {
 		},
 	},
 
+	{text = "",},
+
+	{text = L["Use Map Proximity"],
+	toggle = "usemapdistances",
+	},
 	{text = L["Proximity Rate"],
 	slider = {
 		key = "proximityrate",
@@ -261,9 +273,6 @@ local menuarray = {
 		maxval = 30,
 		tooltip = L["Amound of seconds to be considered \"In Range\" after a positive spell or combat log confirmation."],
 		},
-	},
-	{text = L["Use Map Proximity"], 
-	toggle = "usemapdistances",
 	},
 
 	{text = "",},
