@@ -89,6 +89,8 @@ L:RegisterTranslations("enUS", function() return {
 
 ["Proximity Rate"] = true,
 
+["Health Background"] = true,
+
 --------------
 -- Tooltips --
 --------------
@@ -191,6 +193,8 @@ L:RegisterTranslations("ruRU", function() return {
 ["TBC Shaman Color"] = "Пользовательский цвет шамана - TBC",
 
 ["Proximity Rate"] = "Коэффициент близости",
+
+["Health Background"] = "фон здоровья",
 
 --------------
 -- Tooltips --

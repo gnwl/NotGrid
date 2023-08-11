@@ -55,14 +55,9 @@ local menuarray = {
 		},
 	},
 	{text = L["Background"], -- (Toggle for Class)
-	editbox = {
-		key = "unithealthbarbgtexture",
-		},
-	toggle = "colorunithealthbarbgbyclass",
 	color = {
-			key = "unithealthbarbgcolor",
+			key = "unitbgcolor",
 		},
-	tooltip = L["Toggle for class color."],
 	},
 	{text = L["Name Size"],
 	slider = {
@@ -89,6 +84,16 @@ local menuarray = {
 	toggle = "colorunithealthbarbyclass",
 	color = {
 			key = "unithealthbarcolor",
+		},
+	tooltip = L["Toggle for class color."],
+	},
+	{text = L["Health Background"], -- (Toggle for Class)
+	editbox = {
+		key = "unithealthbarbgtexture",
+		},
+	toggle = "colorunithealthbarbgbyclass",
+	color = {
+			key = "unithealthbarbgcolor",
 		},
 	tooltip = L["Toggle for class color."],
 	},

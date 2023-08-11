@@ -37,6 +37,8 @@ function NotGrid:CreateUnitFrame(unitid,raidindex)
 		f.pet = true -- so I have a boolean to check against
 	end
 
+	f.border = CreateFrame("Frame","$parentborder",f) -- make a seperate frame for the edgefile/border for better customization possibilities
+
 	f.healthbar = CreateFrame("StatusBar","$parenthealthbar",f)
 	f.healthbar.bgtex = f.healthbar:CreateTexture("$parentbgtex","BACKGROUND")
 
@@ -110,22 +112,28 @@ end
 function NotGrid:ConfigUnitFrames() -- this can get called on every setting change, instead of doing some wierd roundabout way. Hurray!
 	local o = self.o
 	for _,f in self.UnitFrames do
-		--DEFAULT_CHAT_FRAME:AddMessage(key)
-		f:SetAlpha(self.o.ooralpha) -- for proximity I set them to out of range styling by default
+		--f:SetAlpha(self.o.ooralpha) -- not necessary to set them out of range by default, and makes config mode weird, and would obstruct disabling prox checking
+		local width, height
 		if o.showpowerbar and o.powerposition <= 2 then -- factor in a modifier for the powerbar width/height
-			f:SetWidth(o.unitwidth+o.unitborder*2) -- so here's the jiffy: the way edgefile works is it basically sits on the center of the edge of the frame and expands both inward and outward. So to compensate asthetically for that I ahve to increase the size of my frame double the desired width of the edgefile/border
-			f:SetHeight(o.unitheight+o.powersize+1+o.unitborder*2)
+			width = o.unitwidth
+			height = o.unitheight+o.powersize+1
 		elseif o.showpowerbar and o.powerposition >= 3 then
-			f:SetWidth(o.unitwidth+o.powersize+1+o.unitborder*2)
-			f:SetHeight(o.unitheight+o.unitborder*2)
+			width = o.unitwidth+o.powersize+1
+			height = o.unitheight
 		else
-			f:SetWidth(o.unitwidth+o.unitborder*2)
-			f:SetHeight(o.unitheight+o.unitborder*2)
+			width = o.unitwidth
+			height = o.unitheight
 		end
-		f:SetBackdrop({bgFile = "Interface\\Buttons\\WHITE8X8", edgeFile = "Interface\\Buttons\\WHITE8X8", tile = true, tileSize = 16, edgeSize = o.unitborder})
-		f:SetBackdropColor(unpack(o.unitbgcolor)) -- remember this is only here to be set at 0 opacity, the healthbar functions as the background as this clips into the border
-		f:SetBackdropBorderColor(unpack(o.unitbordercolor))
-		--f:SetPoint("CENTER",40,tonumber(dicks)*40)
+		f:SetWidth(width)
+		f:SetHeight(height)
+		f:SetBackdrop({bgFile = "Interface\\Buttons\\WHITE8X8", tile = true, tileSize = 16})
+		f:SetBackdropColor(unpack(o.unitbgcolor))
+
+		f.border:SetWidth(width+o.unitborder*2) -- the way edgefile works is it basically sits on the center of the edge of the frame and expands both inward and outward. So to compensate asthetically for that I ahve to increase the size of my frame double the desired width of the edgefile/border
+		f.border:SetHeight(height+o.unitborder*2)
+		f.border:SetBackdrop({edgeFile = "Interface\\Buttons\\WHITE8X8", edgeSize = o.unitborder})
+		f.border:SetBackdropBorderColor(unpack(o.unitbordercolor))
+		f.border:SetPoint("CENTER",0,0)
 
 		f.healthbar:SetWidth(o.unitwidth)
 		f.healthbar:SetHeight(o.unitheight)
@@ -142,22 +150,22 @@ function NotGrid:ConfigUnitFrames() -- this can get called on every setting chan
 		if o.showpowerbar then
 			if o.powerposition <= 2 then -- power on top
 				if o.powerposition == 1 then
-					f.healthbar:SetPoint("BOTTOM",0,o.unitborder)
-					f.powerbar:SetPoint("TOP",0,-o.unitborder)
+					f.healthbar:SetPoint("BOTTOM",0,0)
+					f.powerbar:SetPoint("TOP",0,0)
 				else
-					f.healthbar:SetPoint("TOP",0,-o.unitborder)
-					f.powerbar:SetPoint("BOTTOM",0,o.unitborder)
+					f.healthbar:SetPoint("TOP",0,0)
+					f.powerbar:SetPoint("BOTTOM",0,0)
 				end
 				f.powerbar:SetWidth(o.unitwidth)
 				f.powerbar:SetHeight(o.powersize)
 				f.powerbar:SetOrientation("HORIZONTAL")
 			elseif o.powerposition >= 3 then
 				if o.powerposition == 3 then
-					f.healthbar:SetPoint("LEFT",o.unitborder,0)
-					f.powerbar:SetPoint("RIGHT",-o.unitborder,0)
+					f.healthbar:SetPoint("LEFT",0,0)
+					f.powerbar:SetPoint("RIGHT",0,0)
 				else
-					f.healthbar:SetPoint("RIGHT",-o.unitborder,0)
-					f.powerbar:SetPoint("LEFT",o.unitborder,0)
+					f.healthbar:SetPoint("RIGHT",0,0)
+					f.powerbar:SetPoint("LEFT",0,0)
 				end
 				f.powerbar:SetWidth(o.powersize)
 				f.powerbar:SetHeight(o.unitheight)
@@ -169,9 +177,9 @@ function NotGrid:ConfigUnitFrames() -- this can get called on every setting chan
 			f.powerbar:Hide()
 		end
 		f.powerbar:SetStatusBarTexture(o.unithealthbartexture)
-		--f.powerbar.bgtex:SetTexture(o.unithealthbartexture)
-		--f.powerbar.bgtex:SetVertexColor(unpack(o.unithealthbarbgcolor))
-		--f.powerbar.bgtex:SetAllPoints()
+		f.powerbar.bgtex:SetTexture(o.unithealthbartexture)
+		f.powerbar.bgtex:SetVertexColor(unpack(o.unithealthbarbgcolor))
+		f.powerbar.bgtex:SetAllPoints()
 		--f.powerbar:SetStatusBarColor(unpack(o.unithealthbarcolor))
 
 		f.incres:SetWidth(o.unitheight) -- yep, so it stays square under most common sizes. Think of a mathematical way in the future
