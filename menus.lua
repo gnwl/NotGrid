@@ -582,7 +582,7 @@ function NotGrid:ClickColor()
 	ColorPickerFrame.opacityFunc = self.ColorPickerHandler
 	ColorPickerFrame.cancelFunc = NotGrid_SetColor -- breaks if sent though notgrid
 	if a then
-		ColorPickerFrame.opacity = a
+		ColorPickerFrame.opacity = 1-a
 		ColorPickerFrame.hasOpacity = true -- opacity prob has own func
 	else
 		ColorPickerFrame.hasOpacity = false
@@ -593,9 +593,13 @@ function NotGrid:ClickColor()
 end
 
 function NotGrid:ColorPickerHandler()
-	local a = OpacitySliderFrame:GetValue()
+	local a = 1 - OpacitySliderFrame:GetValue()
 	local r,g,b = ColorPickerFrame:GetColorRGB()
-	NotGrid_SetColor({r,g,b,a}) -- why cant I reference self?
+	if ColorPickerFrame.hasOpacity then
+		NotGrid_SetColor({r,g,b,a}) -- why cant I reference self?
+	else
+		NotGrid_SetColor({r,g,b})
+	end
 end
 
 function NotGrid_SetColor(vals) -- can be current vals or prevvals
