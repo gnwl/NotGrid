@@ -593,7 +593,7 @@ function NotGrid:ClickColor()
 end
 
 function NotGrid:ColorPickerHandler()
-	local a = 1 - OpacitySliderFrame:GetValue()
+	local a = OpacitySliderFrame:GetValue()
 	local r,g,b = ColorPickerFrame:GetColorRGB()
 	NotGrid_SetColor({r,g,b,a}) -- why cant I reference self?
 end
