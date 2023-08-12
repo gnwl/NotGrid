@@ -415,10 +415,13 @@ function NotGrid:InitializeMenu()
 		if val.color then
 			fb.clr = CreateFrame("Button","$parentButton",fb)
 			fb.clr.color = val.color
-			fb.clr:SetWidth(12)
-			fb.clr:SetHeight(12)
+			fb.clr:SetWidth(14)
+			fb.clr:SetHeight(14)
+			fb.clr:SetBackdrop({edgeFile = "Interface\\Buttons\\WHITE8X8", edgeSize = 1})
+			fb.clr:SetBackdropBorderColor(1,1,1,0.8)
 			fb.clr.tex = fb.clr:CreateTexture("$parentTexture")
-			fb.clr.tex:SetTexture(unpack(NotGridOptions[val.color.key]))
+			fb.clr.tex:SetTexture("Interface\\ChatFrame\\ChatFrameColorSwatch")
+			fb.clr.tex:SetVertexColor(unpack(NotGridOptions[val.color.key]))
 			fb.clr.tex:SetAllPoints()
 			fb.clr:SetPoint("LEFT",fb,"RIGHT",0,0)
 			fb.clr:SetScript("OnClick", function()
@@ -603,7 +606,7 @@ function NotGrid:ColorPickerHandler()
 end
 
 function NotGrid_SetColor(vals) -- can be current vals or prevvals
-	workingcolorswatch:SetTexture(unpack(vals))
+	workingcolorswatch:SetVertexColor(unpack(vals))
 	NotGridOptions[workingcolorkey] = vals -- table of colorvals
 	NotGridOptionChange()
 end
