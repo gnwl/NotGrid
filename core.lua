@@ -226,24 +226,29 @@ function NotGrid:ClickHandle(button)
 end
 
 function NotGrid:CliqueHandle(button) -- if/else for Clique handling is done in the frames.lua when creating the frame
-	local a,c,s = IsAltKeyDown() or 0, IsControlKeyDown() or 0, IsShiftKeyDown() or 0
-	local modifiers = a*1+c*2+s*4
-	local foundspell = nil
-	for _,value in CliqueDB["chars"][self.CliqueProfile][L["Default Friendly"]] do
-		if value["button"] == button and value["modifiers"] == modifiers then
-			if value["rank"] then
-				foundspell = value["name"]..L["(Rank "]..value["rank"]..")" -- wew
-			else
-				foundspell = value["name"]
-			end
-			break
-		end
-	end
-	if foundspell then
-		self:CastHandle(foundspell,this.unit)
-	else
-		self:ClickHandle(button) -- if it failed to find anything in clique then we send it to the regular handler
-	end
+	--local a,c,s = IsAltKeyDown() or 0, IsControlKeyDown() or 0, IsShiftKeyDown() or 0
+	--local modifiers = a*1+c*2+s*4
+	
+	--local foundspell = nil
+	--for _,value in CliqueDB["chars"][self.CliqueProfile][L["Default Friendly"]] do
+	--	if value["button"] == button and value["modifiers"] == modifiers then
+	--		if value["rank"] then
+	--			foundspell = value["name"]..L["(Rank "]..value["rank"]..")" -- wew
+	--		else
+	--			foundspell = value["name"]
+	--		end
+	--		break
+	--	end
+	--end
+	--if foundspell then
+	--	self:CastHandle(foundspell,this.unit)
+	--else
+	--	self:ClickHandle(button) -- if it failed to find anything in clique then we send it to the regular handler
+	--end
+	
+	if not Clique:OnClick(button, unit) then
+        self:ClickHandle(button) -- if it failed to find anything in clique then we send it to the regular handler
+    end
 end
 
 ---------------------
