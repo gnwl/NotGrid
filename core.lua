@@ -246,7 +246,7 @@ function NotGrid:CliqueHandle(button) -- if/else for Clique handling is done in 
 	--	self:ClickHandle(button) -- if it failed to find anything in clique then we send it to the regular handler
 	--end
 	
-	if not Clique:OnClick(button, unit) then
+	if not Clique:OnClick(button, this.unit) then
         self:ClickHandle(button) -- if it failed to find anything in clique then we send it to the regular handler
     end
 end
