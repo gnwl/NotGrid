@@ -89,6 +89,8 @@ local DefaultOptions = {
 
 	["growthdirection"] = 1, -- 1: Group Left to Right, 2: Group Right to Left, 3: Group Top to Bottom, 4: Group Bottom to Top, 5: Unit Top to Bottom.. etc
 
+	["cliquehook"] = false, -- keep default false to avoid confusion from new users
+
 	["configmode"] = false,
 	["disablemouseoverincombat"] = false,
 }

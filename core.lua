@@ -30,8 +30,8 @@ function NotGrid:OnEnable()
 		self:RegisterEvent(key, "CombatEventHandle")
 	end
 	--
-	if Clique then
-		self.CliqueProfile = string.format(L["%s of %s"],GetUnitName("player"),GetRealmName())
+	if Clique and self.o.cliquehook then
+		Clique.CastSpell = NotGrid.CastHandle -- lazyspell uses _ as a prefix to load last so it will hook into my hook.
 	end
 	--
 	self:RegisterEvent("UNIT_AURA")
@@ -225,27 +225,6 @@ function NotGrid:ClickHandle(button)
 	end
 end
 
-function NotGrid:CliqueHandle(button) -- if/else for Clique handling is done in the frames.lua when creating the frame
-	local a,c,s = IsAltKeyDown() or 0, IsControlKeyDown() or 0, IsShiftKeyDown() or 0
-	local modifiers = a*1+c*2+s*4
-	local foundspell = nil
-	for _,value in CliqueDB["chars"][self.CliqueProfile][L["Default Friendly"]] do
-		if value["button"] == button and value["modifiers"] == modifiers then
-			if value["rank"] then
-				foundspell = value["name"]..L["(Rank "]..value["rank"]..")" -- wew
-			else
-				foundspell = value["name"]
-			end
-			break
-		end
-	end
-	if foundspell then
-		self:CastHandle(foundspell,this.unit)
-	else
-		self:ClickHandle(button) -- if it failed to find anything in clique then we send it to the regular handler
-	end
-end
-
 ---------------------
 -- Mousover Mimick --
 ---------------------
@@ -266,7 +245,7 @@ function NotGrid:CastHandle(foundspell, unitid)
 			foundspell = LazySpell:ValidateSpell(foundspell, unitid)
 		else -- go through the original version
 			local lsSpell,lsRank = LazySpell:ExtractSpell(foundspell)
-			if self.HealComm.Spells[lsSpell] and lsRank == 1 then
+			if NotGrid.HealComm.Spells[lsSpell] and lsRank == 1 then
 				local lsRank = LazySpell:CalculateRank(lsSpell, unitid)
 				foundspell = lsSpell.."(Rank "..lsRank..")"
 			end
@@ -283,7 +262,7 @@ function NotGrid:CastHandle(foundspell, unitid)
 	local LastTarget = UnitName("target") --used as boolean before using targetlasttarget
 	ClearTarget()
 	CastSpellByName(foundspell)
-	self:SpellCanTarget() --check proximity on all roster members while the spell is queued up
+	NotGrid:SpellCanTarget() --check proximity on all roster members while the spell is queued up, have to specify NotGrid because it will be called by Clique if hooked
 	if unitid and UnitExists(unitid) and SpellIsTargeting() and SpellCanTargetUnit(unitid) then -- then come back to our own func and see if they can cast on the unit they wanted to cast on
 		SpellTargetUnit(unitid) -- if they can, cast on them
 	elseif SpellCanTargetUnit("mouseover") then -- for casting outside unitframes .. does this affect clique in anyway?

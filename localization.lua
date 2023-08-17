@@ -91,6 +91,8 @@ L:RegisterTranslations("enUS", function() return {
 
 ["Health Background"] = true,
 
+["Clique Hook"] = true,
+
 --------------
 -- Tooltips --
 --------------
@@ -102,6 +104,7 @@ L:RegisterTranslations("enUS", function() return {
 ["Mana percentage before border color changes."] = true,
 ["Amound of seconds to be considered \"In Range\" after a positive spell or combat log confirmation."] = true,
 ["Amount of seconds between proximity checks."] = true,
+["cliquehook_tooltip"] = "Hooks the Clique spellcast function to use NG instead for proximity checking beyond 28 yards within instances. Toggling will reload UI.",
 
 } end)
 

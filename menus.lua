@@ -327,6 +327,14 @@ local menuarray = {
 
 	{text = "",},
 
+	{text = L["Clique Hook"],
+	toggle = "cliquehook",
+	reloadui = true,
+	tooltip = L["cliquehook_tooltip"],
+	},
+
+	{text = "",},
+
 	{text = L["Config Mode"], 
 	toggle = "configmode",
 	},
@@ -397,6 +405,7 @@ function NotGrid:InitializeMenu()
 		fb.editbox = val.editbox
 		--fb.color = val.color
 		fb.tooltip = val.tooltip
+		fb.reloadui = val.reloadui
 		--
 		-- if fb.toggle, make a checkmark frame
 		if val.toggle then
@@ -441,6 +450,9 @@ function NotGrid:InitializeMenu()
 					fb.chk.tex:SetTexture("Interface/Buttons/UI-CheckBox-Check")
 					NotGridOptionChange()
 				end
+			end
+			if this.reloadui then
+				ReloadUI()
 			end
 		end)
 		fb:SetScript("OnEnter", function()

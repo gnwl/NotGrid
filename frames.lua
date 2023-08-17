@@ -64,7 +64,9 @@ function NotGrid:CreateUnitFrame(unitid,raidindex)
 	f:RegisterForDrag("LeftButton")
 	f:SetScript("OnClick", function()
 		if Clique then
-			self:CliqueHandle(arg1)
+			if not Clique:OnClick(arg1, this.unit) then
+				self:ClickHandle(arg1) -- if it failed to find anything in clique then we send it to the regular handler
+			end
 		else
 			self:ClickHandle(arg1)
 		end
