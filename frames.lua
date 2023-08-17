@@ -213,6 +213,9 @@ function NotGrid:ConfigUnitFrames() -- this can get called on every setting chan
 				fs:SetTextColor(unpack(o.unithealcommtextcolor))
 				fs:SetFont(o.unitfont, o.unithealcommtextsize)
 				fs:SetPoint("TOP",f.namehealthtext,"BOTTOM",0,o.unithealcommtextoffsety)
+				if not o.showhealcommtext then
+					fs:Hide()
+				end
 			end
 		end
 		for i,point in {"TOPLEFT", "TOP", "TOPRIGHT", "RIGHT", "BOTTOMRIGHT", "BOTTOM", "BOTTOMLEFT", "LEFT"} do
@@ -263,9 +266,9 @@ function NotGrid:PositionFrames()
 					else
 						_,_,subgroup = GetRaidRosterInfo(f.raidindex)
 					end
-				elseif (string.find(f.unit,"party%d") or (f.unit == "player")) and ((raidcount > 0 and o.showpartyinraid) or (raidcount == 0 and partycount > 0 and o.showinparty) or (raidcount == 0 and partycount == 0 and o.showwhilesolo)) then -- else a party.. I could hide it now?
+				elseif (string.find(f.unit,"party%d") or (f.unit == "player")) and ((raidcount > 0 and o.showpartyinraid) or (raidcount == 0 and partycount > 0 and o.showinparty and not o.configmode) or (raidcount == 0 and partycount == 0 and o.showwhilesolo and not o.configmode) or (o.configmode and o.showpartyinraid)) then
 					subgroup = 9
-				elseif (string.find(f.unit,"partypet%d") or (f.unit == "pet")) and ((raidcount > 0 and o.showpartyinraid and o.showpets) or (raidcount == 0 and partycount > 0 and o.showinparty and o.showpets) or (raidcount == 0 and partycount == 0 and o.showwhilesolo and o.showpets)) then
+				elseif (string.find(f.unit,"partypet%d") or (f.unit == "pet")) and ((raidcount > 0 and o.showpartyinraid and o.showpets) or (raidcount == 0 and partycount > 0 and o.showinparty and o.showpets and not o.configmode) or (raidcount == 0 and partycount == 0 and o.showwhilesolo and o.showpets and not o.configmode) or (o.configmode and o.showpartyinraid and o.showpets)) then
 					subgroup = 10
 				else
 					f:Hide() -- I won't set a subgroup so it will fail the next check, wont position, and won't get counted into subgroup/totalgroups

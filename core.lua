@@ -75,7 +75,23 @@ function NotGrid:UNIT_MAIN(f)
 		local name = UnitName(unitid)
 		local shortname = string.sub(name, 1, o.namelength)
 		local _,class = UnitClass(unitid)
+		local powertype = UnitPowerType(unitid)
+		local pcolor = ManaBarColor[powertype]
 		local color = {}
+
+		if o.configmode then
+			local c = {"WARRIOR","PALADIN","HUNTER","ROGUE","PRIEST","SHAMAN","MAGE","WARLOCK","DRUID"}
+			local id = string.sub(f.unit, -1)
+			id = tonumber(id)
+			if id == 0 then id = 1 end
+			if id == 1 then
+				pcolor = ManaBarColor[1]
+			elseif id == 4 then
+				pcolor = ManaBarColor[3]
+			end
+			class = c[id]
+		end
+
 		if f.pet and o.usepetcolor then
 			color.r,color.g,color.b = unpack(o.petcolor)
 		elseif class and class == "SHAMAN" and o.useshamancolor then
@@ -85,8 +101,7 @@ function NotGrid:UNIT_MAIN(f)
 		else
 			color = {r=1,g=0,b=1}
 		end
-		local powertype = UnitPowerType(unitid)
-		local pcolor = ManaBarColor[powertype]
+
 		--update some stuff
 		f.name = name
 		--handle coloring text
@@ -103,13 +118,22 @@ function NotGrid:UNIT_MAIN(f)
 		f.powerbar:SetStatusBarColor(pcolor.r, pcolor.g, pcolor.b)
 
 		if UnitIsConnected(unitid) then
-			local healamount = self.HealComm:getHeal(name)
-			local currhealth = UnitHealth(unitid)
-			local maxhealth = UnitHealthMax(unitid)
-			local deficit = maxhealth - currhealth
-			local healtext
-			local currpower = UnitMana(unitid)
-			local maxpower = UnitManaMax(unitid)
+			local healamount, currhealth, maxhealth, deficit, healtext, currpower, maxpower
+			if o.configmode then
+				currhealth = UnitHealth(unitid)/2
+				maxhealth = UnitHealthMax(unitid)
+				deficit = maxhealth - currhealth
+				currpower = UnitMana(unitid)/2
+				maxpower = UnitManaMax(unitid)
+				healamount = maxhealth/4
+			else
+				currhealth = UnitHealth(unitid)
+				maxhealth = UnitHealthMax(unitid)
+				deficit = maxhealth - currhealth
+				currpower = UnitMana(unitid)
+				maxpower = UnitManaMax(unitid)
+				healamount = self.HealComm:getHeal(name)
+			end
 
 			if healamount > 999 then
 				healtext = string.format("+%.1fk", healamount/1000.0)
