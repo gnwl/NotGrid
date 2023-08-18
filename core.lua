@@ -106,16 +106,19 @@ function NotGrid:UNIT_MAIN(f)
 		f.name = name
 		--handle coloring text
 		if o.colorunithealthbarbyclass then
-			f.healthbar:SetStatusBarColor(color.r, color.g, color.b)
+			f.healthbar:SetStatusBarColor(color.r, color.g, color.b, o.unithealthbarcolor[4])
 		end
 		if o.colorunitnamehealthbyclass then
-			f.namehealthtext:SetTextColor(color.r, color.g, color.b)
+			f.namehealthtext:SetTextColor(color.r, color.g, color.b, o.unitnamehealthtextcolor[4])
 		end
 		if o.colorunithealthbarbgbyclass then
 			f.healthbar.bgtex:SetVertexColor(color.r, color.g, color.b)
 		end
 
 		f.powerbar:SetStatusBarColor(pcolor.r, pcolor.g, pcolor.b)
+		if o.colorpowerbarbgbytype then
+			f.powerbar.bgtex:SetVertexColor(pcolor.r, pcolor.g, pcolor.b)
+		end
 
 		if UnitIsConnected(unitid) then
 			local healamount, currhealth, maxhealth, deficit, healtext, currpower, maxpower

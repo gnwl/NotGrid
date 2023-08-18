@@ -180,7 +180,7 @@ function NotGrid:ConfigUnitFrames() -- this can get called on every setting chan
 		end
 		f.powerbar:SetStatusBarTexture(o.unithealthbartexture)
 		f.powerbar.bgtex:SetTexture(o.unithealthbartexture)
-		f.powerbar.bgtex:SetVertexColor(unpack(o.unithealthbarbgcolor))
+		f.powerbar.bgtex:SetVertexColor(unpack(o.unitpowerbarbgcolor))
 		f.powerbar.bgtex:SetAllPoints()
 		--f.powerbar:SetStatusBarColor(unpack(o.unithealthbarcolor))
 
@@ -356,7 +356,7 @@ function NotGrid:SetIncHealFrame(f, healamount, currhealth, maxhealth) -- well t
 		f.incheal:SetPoint("LEFT",currwidth,0)
 	end
 	local color = o.unithealcommbarcolor
-	f.incheal:SetBackdropColor(color[1],color[2],color[3],1) -- instead of hide/show I set opacity. Note that I can't use SetAlpha cause it will hide the child elements
+	f.incheal:SetBackdropColor(color[1],color[2],color[3],color[4]) -- instead of hide/show I set opacity. Note that I can't use SetAlpha cause it will hide the child elements
 end
 
 -----------------------------

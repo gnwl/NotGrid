@@ -13,6 +13,15 @@ end
 
 local menuarray = {
 	--flavortext, booleantoggle, currvalueforslider, currecntvalueforeditbox, currvalueforcolor
+	{text = L["Locked"],
+	toggle = "locked",
+	},
+	{text = L["Config Mode"],
+	toggle = "configmode",
+	},
+
+	{text = "",},
+
 	{text = L["Unit Width"], 
 	slider = {
 		key = "unitwidth",
@@ -115,6 +124,13 @@ local menuarray = {
 
 	{text = L["Show Power Bar"],
 	toggle = "showpowerbar",
+	},
+	{text = L["Power Background"],
+	toggle = "colorpowerbarbgbytype",
+	tooltip = L["Toggle for power color."],
+	color = {
+			key = "unitpowerbarbgcolor",
+		},
 	},
 	{text = L["Power Position"],
 	slider = {
@@ -331,15 +347,6 @@ local menuarray = {
 	toggle = "cliquehook",
 	reloadui = true,
 	tooltip = L["cliquehook_tooltip"],
-	},
-
-	{text = "",},
-
-	{text = L["Config Mode"], 
-	toggle = "configmode",
-	},
-	{text = L["Locked"], 
-	toggle = "locked",
 	},
 }
 

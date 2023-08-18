@@ -10,14 +10,14 @@ local DefaultOptions = {
 	["unitbordercolor"] = {0,0,0,0.8},
 	["unithealthorientation"] = "VERTICAL",
 	["unithealthbartexture"] = "Interface\\AddOns\\NotGrid\\media\\Striped",
-	["unithealthbarcolor"] = {39/255,186/255,42/255},
+	["unithealthbarcolor"] = {39/255,186/255,42/255,1},
 	["unithealthbarbgcolor"] = {0,0,0,0.1},
 	["unithealthbarbgtexture"] = "Interface\\Buttons\\WHITE8X8",
 	["unitfont"] = "Fonts\\ARIALN.TTF",
-	["unitnamehealthtextcolor"] = {1,1,1},
+	["unitnamehealthtextcolor"] = {1,1,1,1},
 	["unitnamehealthtextsize"] = 12,
-	["unithealcommbarcolor"] = {32/255,112/255,11/255},
-	["unithealcommtextcolor"] = {39/255,186/255,42/255},
+	["unithealcommbarcolor"] = {32/255,112/255,11/255,1},
+	["unithealcommtextcolor"] = {39/255,186/255,42/255,1},
 	["unithealcommtextsize"] = 10,
 	["unithealcommtextoffsety"] = 0,
 	["unittrackingiconsize"] = 6,
@@ -27,6 +27,8 @@ local DefaultOptions = {
 	["showpowerbar"] = false,
 	["powersize"] = 10, -- this will be width if the player chooses to make it Verical, or height if they make it Horizontal
 	["powerposition"] = 3, -- 1=top,2=bottom,3=left,4=right
+	["colorpowerbarbgbytype"] = false,
+	["unitpowerbarbgcolor"] = {0,0,0,0.1},
 
 	["trackingicon1"] = "Rejuvenation",
 	["trackingicon1color"] = {0.37,0.83,0.38},
