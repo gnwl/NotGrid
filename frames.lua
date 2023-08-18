@@ -30,6 +30,7 @@ end
 function NotGrid:CreateUnitFrame(unitid,raidindex)
 	local f = CreateFrame("Button","$parent"..unitid,self.Container)
 	f.unit = unitid
+	f.lastseen = GetTime() -- we set this at creation, so we don't have to config frame as out of range alpha by default
 	if raidindex then
 		f.raidindex = raidindex -- :^)
 	end
@@ -114,7 +115,7 @@ end
 function NotGrid:ConfigUnitFrames() -- this can get called on every setting change, instead of doing some wierd roundabout way. Hurray!
 	local o = self.o
 	for _,f in self.UnitFrames do
-		--f:SetAlpha(self.o.ooralpha) -- not necessary to set them out of range by default, and makes config mode weird, and would obstruct disabling prox checking
+		--f:SetAlpha(self.o.ooralpha) -- we set lastseen at frame creation instead. doing it like this makes config mode weird, and would obstruct disabling prox checking
 		local width, height
 		if o.showpowerbar and o.powerposition <= 2 then -- factor in a modifier for the powerbar width/height
 			width = o.unitwidth
