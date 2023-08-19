@@ -98,11 +98,52 @@ function NotGrid:CreateUnitFrame(unitid,raidindex)
 	f:SetScript("OnLeave", function() 
 		UnitFrame_OnLeave() -- blizz function that handles tooltip for units
 	end)
-	f:SetScript("OnUpdate", function()
-		self:UNIT_MAIN(this)
-		self:UNIT_BORDER(this)
-		--self:UNIT_AURA(this)
-		--self:UNIT_PROXIMITY(this)
+
+	--we can split these up into their own relative frames & functions later
+	--we have to respond to these to update names/classes etc on roster changes
+	f:RegisterEvent("PLAYER_ENTERING_WORLD")
+	f:RegisterEvent("PARTY_MEMBERS_CHANGED")
+	f:RegisterEvent("RAID_ROSTER_UPDATE")
+	f:RegisterEvent("UNIT_PET")
+	--might as well
+	f:RegisterEvent("UNIT_NAME_UPDATE")
+	f:RegisterEvent("UNIT_PORTRAIT_UPDATE")
+	--healthbar
+	f:RegisterEvent("UNIT_HEALTH")
+	f:RegisterEvent("UNIT_MAXHEALTH")
+	--manabar
+	f:RegisterEvent("UNIT_MANA")
+	f:RegisterEvent("UNIT_RAGE")
+	f:RegisterEvent("UNIT_FOCUS")
+	f:RegisterEvent("UNIT_ENERGY")
+	f:RegisterEvent("UNIT_HAPPINESS")
+	f:RegisterEvent("UNIT_MAXMANA")
+	f:RegisterEvent("UNIT_MAXRAGE")
+	f:RegisterEvent("UNIT_MAXFOCUS")
+	f:RegisterEvent("UNIT_MAXENERGY")
+	f:RegisterEvent("UNIT_MAXHAPPINESS")
+	f:RegisterEvent("UNIT_DISPLAYPOWER")
+	--aura
+	f:RegisterEvent("UNIT_AURA")
+	--used for highlight target feature
+	f:RegisterEvent("PLAYER_TARGET_CHANGED")
+	--banzai/healcomm are registered in core on enable
+
+	f:SetScript("OnEvent", function()
+		if arg1 and arg1 == this.unit then -- if an event has coniditions specific to a unit, then only specified unit will update
+			if event == "UNIT_AURA" then
+				self:UNIT_AURA(this.unit)
+			else
+				self:UNIT_MAIN(this.unit)
+				self:UNIT_BORDER(this.unit)
+			end
+		elseif event == "PLAYER_TARGET_CHANGED" then -- all units will update their border
+			self:UNIT_BORDER(this.unit)
+		elseif not arg1 then -- no arg1, its a generic event like partymemberschanged and all units will update themselves
+			self:UNIT_MAIN(this.unit)
+			self:UNIT_BORDER(this.unit)
+			self:UNIT_AURA(unitid)
+		end
 	end)
 
 	return f

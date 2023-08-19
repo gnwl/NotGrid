@@ -6,6 +6,7 @@ function NotGrid:OnInitialize()
 	self.HealComm = AceLibrary("HealComm-1.0")
 	self.Banzai = AceLibrary("Banzai-1.0") -- only reports as having aggro if someone with this library is targetting the mob and reporting that the mob is targeting said unit
 	self.Gratuity = AceLibrary("Gratuity-2.0") -- for aura handling
+	self.RosterLib = AceLibrary("RosterLib-2.0")
 	self.UnitFrames = {}
 	--proximity stuff
 	self.ProximityVars = {} -- will hold vars related to proximity handling. Mostly world map stuff
@@ -33,27 +34,42 @@ function NotGrid:OnEnable()
 	if Clique and self.o.cliquehook then
 		Clique.CastSpell = NotGrid.CastHandle -- lazyspell uses _ as a prefix to load last so it will hook into my hook.
 	end
-	--
-	self:RegisterEvent("UNIT_AURA")
+	--Banzai/Aggro
+	self:RegisterEvent("Banzai_UnitGainedAggro","UNIT_BORDER") -- sends unitid to UNIT_BORDER
+	self:RegisterEvent("Banzai_UnitLostAggro","UNIT_BORDER")
+	--Healcomm
+	self:RegisterEvent("HealComm_Healupdate","HealCommHandler")
+	self:RegisterEvent("HealComm_Ressupdate","HealCommHandler")
+	--Proximity
 	self:RegisterEvent("NG_UNIT_PROXIMITY","UNIT_PROXIMITY")
 	self:ScheduleRepeatingEvent("NG_UNIT_PROXIMITY", self.o.proximityrate)
+end
+
+function NotGrid:HealCommHandler(name) -- be nice if it sent us the unitid instead
+	self:UNIT_MAIN(self.RosterLib:GetUnitIDFromName(name))
 end
 
 --------------------
 -- Roster Changes -- So we can can handle auras and positioning in events of reloadui,config,or just new players joining raid and not sending UNIT_AURA events.
 --------------------
 
-function NotGrid:RosterChange(event) -- Separate them out for better performance in mass joining/disbanding of raids. Though it doesn't help much.
+function NotGrid:RosterChange(event) -- adjust this at some point. frames already register these events themselves, only here for positioning and on config/menu changes
 	if event == "PARTY_MEMBERS_CHANGED" then
 		for i=1,4 do
+			self:UNIT_MAIN("party"..i)
+			self:UNIT_BORDER("party"..i)
 			self:UNIT_AURA("party"..i)
 		end
 	elseif event == "RAID_ROSTER_UPDATE" then
 		for i=1,40 do
+			self:UNIT_MAIN("raid"..i)
+			self:UNIT_BORDER("raid"..i)
 			self:UNIT_AURA("raid"..i)
 		end
 	else
 		for unitid,_ in self.UnitFrames do
+			self:UNIT_MAIN(unitid)
+			self:UNIT_BORDER(unitid)
 			self:UNIT_AURA(unitid)
 		end
 	end
@@ -64,14 +80,14 @@ end
 -- UNIT_MAIN -- Handles the healthbar, healthtext, healcommbar, healcommtext, ressurection, nametext, classcolor..
 ---------------
 
-function NotGrid:UNIT_MAIN(f)
+function NotGrid:UNIT_MAIN(unitid)
 	local o = self.o
-	local unitid = f.unit
+	local f = self.UnitFrames[unitid]
 	if o.configmode then
 		unitid = "player"
 	end
 
-	if UnitExists(unitid) then
+	if f and UnitExists(unitid) then
 		local name = UnitName(unitid)
 		local shortname = string.sub(name, 1, o.namelength)
 		local _,class = UnitClass(unitid)
@@ -204,10 +220,10 @@ end
 -- UNIT_BORDER --
 -----------------
 
-function NotGrid:UNIT_BORDER(f) -- 
+function NotGrid:UNIT_BORDER(unitid)
 	local o = self.o
-	local unitid = f.unit
-	if UnitExists(unitid) then
+	local f = self.UnitFrames[unitid]
+	if f and UnitExists(unitid) then
 		local name = UnitName(unitid)
 		local targetname = UnitName("Target") -- could get erronous with pets
 		local currmana = UnitMana(unitid)
