@@ -74,6 +74,18 @@ function NotGrid:CheckAura(str, aura)
 	end
 end
 
+function NotGrid:SetIconFrame(f, activeval, spelltype, i) -- don't need spelltype after we're just using user specified colors
+	f:SetBackdropColor(unpack(self.o["trackingicon"..i.."color"]))
+	f.active = activeval
+	f:Show()
+end
+
+function NotGrid:ClearIconFrame(f)
+	f.active = nil
+	f:Hide()
+end
+
+
 
 --[[ Notes
 	UNIT_AURA will trigger when a unit moves into render range and out of render range.
