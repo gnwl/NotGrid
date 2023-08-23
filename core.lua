@@ -218,7 +218,7 @@ end
 
 function NotGrid:SetIncHealFrame(f, healamount, currhealth, maxhealth) -- well this was easier than I was expecting it to be
 	local o = self.o
-	if o.unithealthorientation == "VERTICAL" then -- I could rewrite these so its less copy paste but leaving it for now
+	if o.unithealthorientation == 1 then -- I could rewrite these so its less copy paste but leaving it for now
 		local modifier = maxhealth/o.unitheight -- get the modifer to convert health amounts to pixels based on set height
 		local healheight = healamount/modifier
 		local currheight = currhealth/modifier
@@ -228,7 +228,7 @@ function NotGrid:SetIncHealFrame(f, healamount, currhealth, maxhealth) -- well t
 		f.incheal:SetHeight(healheight)
 		f.incheal:ClearAllPoints()
 		f.incheal:SetPoint("BOTTOM",0,currheight)
-	elseif o.unithealthorientation == "HORIZONTAL" then
+	else
 		local modifier = maxhealth/o.unitwidth
 		local healwidth = healamount/modifier
 		local currwidth = currhealth/modifier

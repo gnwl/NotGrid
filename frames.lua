@@ -181,7 +181,11 @@ function NotGrid:ConfigUnitFrames() -- this can get called on every setting chan
 
 		f.healthbar:SetWidth(o.unitwidth)
 		f.healthbar:SetHeight(o.unitheight)
-		f.healthbar:SetOrientation(o.unithealthorientation)
+		if o.unithealthorientation == 1 then
+			f.healthbar:SetOrientation("VERTICAL")
+		else
+			f.healthbar:SetOrientation("HORIZONTAL")
+		end
 		f.healthbar:SetStatusBarTexture(o.unithealthbartexture)
 		f.healthbar:SetStatusBarColor(unpack(o.unithealthbarcolor))
 		f.healthbar.bgtex:SetTexture(o.unithealthbarbgtexture)
@@ -332,9 +336,9 @@ function NotGrid:PositionFrames()
 					elseif o.growthdirection == 6 then -- single bottom to top
 						f:SetPoint("CENTER",0,(o.unitheight+powermody+o.unitborder*2+o.unitpadding)*TotalUnits)
 					elseif o.growthdirection == 7 then -- single left to right
-						f:SetPoint("CENTER",(o.unitwidth+powermody+o.unitborder*2+o.unitpadding)*TotalUnits,0)
+						f:SetPoint("CENTER",(o.unitwidth+powermodx+o.unitborder*2+o.unitpadding)*TotalUnits,0)
 					elseif o.growthdirection == 8 then -- single right to left
-						f:SetPoint("CENTER",-(o.unitwidth+powermody+o.unitborder*2+o.unitpadding)*TotalUnits,0)
+						f:SetPoint("CENTER",-(o.unitwidth+powermodx+o.unitborder*2+o.unitpadding)*TotalUnits,0)
 					end
 					f:Show()
 					TotalUnits = TotalUnits+1

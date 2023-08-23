@@ -8,7 +8,7 @@ local DefaultOptions = {
 	["unitpadding"] = 2,
 	["unitbgcolor"] = {0,0,0,0.4},
 	["unitbordercolor"] = {0,0,0,0.8},
-	["unithealthorientation"] = "VERTICAL",
+	["unithealthorientation"] = 1,
 	["unithealthbartexture"] = "Interface\\AddOns\\NotGrid\\media\\Striped",
 	["unithealthbarcolor"] = {39/255,186/255,42/255,1},
 	["unithealthbarbgcolor"] = {0,0,0,0.1},
@@ -25,7 +25,7 @@ local DefaultOptions = {
 	["unittrackingiconbordercolor"] = {0,0,0,1},
 
 	["showpowerbar"] = false,
-	["powersize"] = 10, -- this will be width if the player chooses to make it Verical, or height if they make it Horizontal
+	["powersize"] = 3, -- this will be width if the player chooses to make it Verical, or height if they make it Horizontal
 	["powerposition"] = 3, -- 1=top,2=bottom,3=left,4=right
 	["colorpowerbarbgbytype"] = false,
 	["unitpowerbarbgcolor"] = {0,0,0,0.1},
@@ -116,8 +116,7 @@ function SlashCmdList.NOTGRID(msg, editbox)
 		for key,value in DefaultOptions do
 			NotGridOptions[key] = value
 		end
-		NotGrid:ConfigUnitFrames()
-		NotGrid:PositionFrames()
+		ReloadUI() -- we have to reloadui to make the config menu update as well
 	elseif msg == "grid" then
 		NotGrid.o.unithealthbartexture = "Interface\\AddOns\\NotGrid\\media\\GridGradient"
 		NotGrid.o.unithealthbarbgtexture = "Interface\\AddOns\\NotGrid\\media\\GridGradient"
@@ -125,7 +124,7 @@ function SlashCmdList.NOTGRID(msg, editbox)
 		NotGrid.o.unithealthbarbgcolor = {0,0,0,1}
 		NotGrid.o.colorunithealthbarbyclass = false
 		NotGrid.o.colorunithealthbarbgbyclass = true
-		NotGridOptionChange()
+		ReloadUI()
 	else
 		NotGridOptionsMenu:Show()
 	end

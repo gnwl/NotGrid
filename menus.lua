@@ -107,8 +107,10 @@ local menuarray = {
 	tooltip = L["Toggle for class color."],
 	},
 	{text = L["Health Orientation"],
-	editbox = {
+	slider = {
 		key = "unithealthorientation",
+		minval = 1,
+		maxval = 2,
 		},
 	},
 	{text = L["Health Threshold"],
