@@ -233,7 +233,8 @@ function NotGrid:SetIncHealFrame(f, healamount, currhealth, maxhealth) -- well t
 		local healwidth = healamount/modifier
 		local currwidth = currhealth/modifier
 		local maxwidth = o.unitwidth-currwidth
-		if healwidth > maxwidth then healwidth = maxwidth end
+		if maxwidth == 0 then return end
+		if healwidth >= maxwidth then healwidth = maxwidth end
 		f.incheal:SetWidth(healwidth)
 		f.incheal:ClearAllPoints()
 		f.incheal:SetPoint("LEFT",currwidth,0)
