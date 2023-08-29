@@ -72,22 +72,6 @@ function NotGrid:CreateUnitFrame(unitid,raidindex)
 			self:ClickHandle(arg1)
 		end
 	end)
-	f:SetScript("OnDragStart", function()
-		if not self.o.locked then 
-			self.Container:StartMoving() 
-		end
-	end)
-	f:SetScript("OnDragStop", function() -- on drag of any unit frame will drag the NotGridContainer frame
-		if not self.o.locked then
-			self.Container:StopMovingOrSizing()
-			local point,relativeTo,relativePoint,xOfs,yOfs = self.Container:GetPoint()
-			self.o.containerpoint = point
-			self.o.containeroffx = xOfs
-			self.o.containeroffy = yOfs
-			--self:UpdateUnitFrames()
-			self:PositionFrames()
-		end
-	end)
 	f:SetScript("OnEnter", function()
 		if UnitAffectingCombat("player") and self.o.disablemouseoverincombat then
 			return

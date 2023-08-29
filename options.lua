@@ -87,7 +87,6 @@ local DefaultOptions = {
 	["showpartyinraid"] = false,
 	["showpets"] = false,
 	["showblizzframes"] = true,
-	["locked"] = false,
 
 	["growthdirection"] = 1, -- 1: Group Left to Right, 2: Group Right to Left, 3: Group Top to Bottom, 4: Group Bottom to Top, 5: Unit Top to Bottom.. etc
 

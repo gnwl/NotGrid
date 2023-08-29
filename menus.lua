@@ -9,15 +9,22 @@ function NotGrid:DoDropDown()
 	self:InitializeMenu()
 	self:InitializeSlider()
 	self:InitializeEditBox()
+	self:InitializePositionBox()
 end
 
 local menuarray = {
 	--flavortext, booleantoggle, currvalueforslider, currecntvalueforeditbox, currvalueforcolor
-	{text = L["Locked"],
-	toggle = "locked",
-	},
 	{text = L["Config Mode"],
 	toggle = "configmode",
+	},
+
+	{text = "",},
+
+	{text = L["Position"],
+	position = {
+		xkey = "containeroffx",
+		ykey = "containeroffy",
+		},
 	},
 
 	{text = "",},
@@ -345,6 +352,7 @@ local menuarray = {
 
 	{text = "",},
 
+
 	{text = L["Clique Hook"],
 	toggle = "cliquehook",
 	reloadui = true,
@@ -415,6 +423,7 @@ function NotGrid:InitializeMenu()
 		--fb.color = val.color
 		fb.tooltip = val.tooltip
 		fb.reloadui = val.reloadui
+		fb.position = val.position
 		--
 		-- if fb.toggle, make a checkmark frame
 		if val.toggle then
@@ -475,6 +484,7 @@ function NotGrid:InitializeMenu()
 				NotGridMenuEditBoxContainer:Show()
 				--make sure slider is hidden
 				NotGridMenuSliderContainer:Hide()
+				NotGridMenuPositionBoxContainer:Hide()
 			elseif this.slider then
 				NotGridMenuSlider.key = this.slider.key
 				NotGridMenuSlider:SetMinMaxValues(this.slider.minval, this.slider.maxval)
@@ -493,9 +503,26 @@ function NotGrid:InitializeMenu()
 				NotGridMenuSliderContainer:Show()
 				--make sure editbox is hidden
 				NotGridMenuEditBoxContainer:Hide()
+				NotGridMenuPositionBoxContainer:Hide()
+			elseif this.position then
+				NotGridMenuPositionBoxLeftButton.key = this.position.xkey
+				NotGridMenuPositionBoxRightButton.key = this.position.xkey
+				NotGridMenuPositionBoxUpButton.key = this.position.ykey
+				NotGridMenuPositionBoxDownButton.key = this.position.ykey
+				NotGridMenuPositionBoxXeditbox.key = this.position.xkey
+				NotGridMenuPositionBoxYeditbox.key = this.position.ykey
+				NotGridMenuPositionBoxXeditbox:SetText(NotGridOptions[this.position.xkey])
+				NotGridMenuPositionBoxYeditbox:SetText(NotGridOptions[this.position.ykey])
+				NotGridMenuPositionBoxContainer:ClearAllPoints()
+				NotGridMenuPositionBoxContainer:SetPoint("TOPRIGHT",this,"TOPLEFT",-20,0)
+				NotGridMenuPositionBoxContainer:Show()
+				--
+				NotGridMenuSliderContainer:Hide()
+				NotGridMenuEditBoxContainer:Hide()
 			else
 				NotGridMenuSliderContainer:Hide()
 				NotGridMenuEditBoxContainer:Hide()
+				NotGridMenuPositionBoxContainer:Hide()
 			end
 			if this.tooltip then
 				GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
@@ -585,6 +612,102 @@ function NotGrid:InitializeEditBox()
 		NotGridOptionChange()
 	end)
 	f.e:SetScript("OnEscapePressed", function()
+		this:ClearFocus()
+		this:SetText(NotGridOptions[this.key])
+	end)
+end
+
+----------------------
+-- PositioningFrame --
+----------------------
+
+function NotGrid:InitializePositionBox()
+	local f = CreateFrame("Frame", "NotGridMenuPositionBoxContainer",NotGridOptionsMenu)
+	f:SetWidth(200)
+	f:SetHeight(100)
+	f:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 4, right = 4, top = 4, bottom = 4 }})
+	f:SetBackdropColor(0,0,0,1)
+	f:SetPoint("CENTER",UIParent,"CENTER",-100,0)
+	f:Hide()
+
+	f.upb = CreateFrame("Button", "NotGridMenuPositionBoxUpButton", f, "UIPanelButtonTemplate")
+	f.upb:SetPoint("CENTER",0,30)
+	f.upb:SetWidth(20)
+	f.upb:SetHeight(20)
+	f.upb:SetText("^")
+	f.upb:SetScript("OnClick", function(self, button, down)
+		NotGridOptions[this.key] = NotGridOptions[this.key]+10
+		NotGridMenuPositionBoxYeditbox:SetText(NotGridOptions[this.key])
+		NotGridOptionChange()
+	end)
+
+	f.downb = CreateFrame("Button", "NotGridMenuPositionBoxDownButton", f, "UIPanelButtonTemplate")
+	f.downb:SetPoint("CENTER",0,-30)
+	f.downb:SetWidth(20)
+	f.downb:SetHeight(20)
+	f.downb:SetText("v")
+	f.downb:SetScript("OnClick", function(self, button, down)
+		NotGridOptions[this.key] = NotGridOptions[this.key]-10
+		NotGridMenuPositionBoxYeditbox:SetText(NotGridOptions[this.key])
+		NotGridOptionChange()
+	end)
+
+	f.leftb = CreateFrame("Button", "NotGridMenuPositionBoxLeftButton", f, "UIPanelButtonTemplate")
+	f.leftb:SetPoint("CENTER",-80,0)
+	f.leftb:SetWidth(20)
+	f.leftb:SetHeight(20)
+	f.leftb:SetText("<")
+	f.leftb:SetScript("OnClick", function(self, button, down)
+		NotGridOptions[this.key] = NotGridOptions[this.key]-10
+		NotGridMenuPositionBoxXeditbox:SetText(NotGridOptions[this.key])
+		NotGridOptionChange()
+	end)
+
+	f.rightb = CreateFrame("Button", "NotGridMenuPositionBoxRightButton", f, "UIPanelButtonTemplate")
+	f.rightb:SetPoint("CENTER",80,0)
+	f.rightb:SetWidth(20)
+	f.rightb:SetHeight(20)
+	f.rightb:SetText(">")
+	f.rightb:SetScript("OnClick", function(self, button, down)
+		NotGridOptions[this.key] = NotGridOptions[this.key]+10
+		NotGridMenuPositionBoxXeditbox:SetText(NotGridOptions[this.key])
+		NotGridOptionChange()
+	end)
+
+	f.ex = CreateFrame("EditBox", "NotGridMenuPositionBoxXeditbox", f, "InputBoxTemplate")
+	f.ex:SetFontObject("GameFontHighlight")
+	f.ex:SetWidth(50)
+	f.ex:SetHeight(40)
+	f.ex:SetAutoFocus(false)
+	f.ex:SetPoint("CENTER",-30,0)
+	f.ex:SetText("xx")
+	f.ex:EnableKeyboard()
+	f.ex:SetScript("OnEnterPressed", function()
+		this:ClearFocus()
+		NotGridOptions[this.key] = tonumber(this:GetText())
+		NotGridOptions[NotGridMenuPositionBoxYeditbox.key] = tonumber(NotGridMenuPositionBoxYeditbox:GetText())
+		NotGridOptionChange()
+	end)
+	f.ex:SetScript("OnEscapePressed", function()
+		this:ClearFocus()
+		this:SetText(NotGridOptions[this.key])
+	end)
+
+	f.ey = CreateFrame("EditBox", "NotGridMenuPositionBoxYeditbox", f, "InputBoxTemplate")
+	f.ey:SetFontObject("GameFontHighlight")
+	f.ey:SetWidth(50)
+	f.ey:SetHeight(40)
+	f.ey:SetAutoFocus(false)
+	f.ey:SetPoint("CENTER",30,0)
+	f.ey:SetText("yy")
+	f.ey:EnableKeyboard()
+	f.ey:SetScript("OnEnterPressed", function()
+		this:ClearFocus()
+		NotGridOptions[this.key] = tonumber(this:GetText())
+		NotGridOptions[NotGridMenuPositionBoxXeditbox.key] = tonumber(NotGridMenuPositionBoxXeditbox:GetText())
+		NotGridOptionChange()
+	end)
+	f.ey:SetScript("OnEscapePressed", function()
 		this:ClearFocus()
 		this:SetText(NotGridOptions[this.key])
 	end)

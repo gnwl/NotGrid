@@ -95,6 +95,8 @@ L:RegisterTranslations("enUS", function() return {
 
 ["Power Background"] = true,
 
+["Position"] = true,
+
 --------------
 -- Tooltips --
 --------------
