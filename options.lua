@@ -1,7 +1,7 @@
 local L = AceLibrary("AceLocale-2.2"):new("NotGrid")
 
 local DefaultOptions = {
-	["version"] = 1, -- set this so I can check against it after saved variables are loaded and potentially tell the user to reset to defaults if things have changed too much
+	["version"] = 1.107, -- will be the commit number from now on. Really only needs to be updated for changes that cause config errors to reset their defaults on initialization
 	["unitwidth"] = 36, -- for best results use a multiple of 5
 	["unitheight"] = 36,
 	["unitborder"] = 2,
@@ -102,6 +102,16 @@ function NotGrid:SetDefaultOptions() -- this will run on initialization and make
 			NotGridOptions[key] = value
 		end
 	end
+	--if the current version is older than a commit that caused a config change, then set the affected configs back to default
+	if NotGridOptions.version < 1.106 and NotGridOptions.containerpoint ~= "CENTER" then -- means they used the old drag positioning and it will be set relative to TOPLEFT
+		NotGridOptions.containerpoint = DefaultOptions.containerpoint
+		NotGridOptions.containeroffx = DefaultOptions.containeroffx
+		NotGridOptions.containeroffy = DefaultOptions.containeroffy
+	end
+	if NotGridOptions.version < 1.104 and type(NotGridOptions.unithealthorientation) ~= "number" then -- means they used the old editbox config and it will be set as "VERTICAL"/"HORIZONTAL"
+		NotGridOptions.unithealthorientation = DefaultOptions.unithealthorientation
+	end
+	NotGridOptions.version = DefaultOptions.version --update the version
 end
 
 --------------------
