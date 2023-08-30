@@ -268,11 +268,11 @@ function NotGrid:ConfigUnitFrames() -- this can get called on every setting chan
 					fs:SetTextColor(unpack(o.unitnamehealthtextcolor))
 				end
 				fs:SetFont(o.unitfont, o.unitnamehealthtextsize)
-				fs:SetPoint("CENTER",f.healthbar,"CENTER",0,0)
+				fs:SetPoint("CENTER",f.healthbar,"CENTER",o.unitnamehealthoffx,o.unitnamehealthoffy)
 			elseif fsname == "healcommtext" then
 				fs:SetTextColor(unpack(o.unithealcommtextcolor))
 				fs:SetFont(o.unitfont, o.unithealcommtextsize)
-				fs:SetPoint("TOP",f.namehealthtext,"BOTTOM",0,o.unithealcommtextoffsety)
+				fs:SetPoint("CENTER",f.healthbar,"CENTER",o.unithealcommtextoffx,o.unithealcommtextoffy)
 				if not o.showhealcommtext then
 					fs:Hide()
 				end

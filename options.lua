@@ -19,7 +19,8 @@ local DefaultOptions = {
 	["unithealcommbarcolor"] = {32/255,112/255,11/255,1},
 	["unithealcommtextcolor"] = {39/255,186/255,42/255,1},
 	["unithealcommtextsize"] = 10,
-	["unithealcommtextoffsety"] = 0,
+	["unithealcommtextoffx"] = 0,
+	["unithealcommtextoffy"] = -10,
 	["unittrackingiconsize"] = 6,
 	["unittrackingiconborder"] = 1,
 	["unittrackingiconbordercolor"] = {0,0,0,1},
@@ -58,6 +59,10 @@ local DefaultOptions = {
 	["containerpoint"] = "CENTER",
 	["containeroffx"] = 0,
 	["containeroffy"] = 0,
+
+	["unitnamehealthoffx"] = 0,
+	["unitnamehealthoffy"] = 0,
+
 
 	["healththreshhold"] = 90,
 	["manathreshhold"] = 20,

@@ -92,6 +92,12 @@ local menuarray = {
 		maxval = 12,
 		},
 	},
+	{text = L["Name Position"],
+	position = {
+		xkey = "unitnamehealthoffx",
+		ykey = "unitnamehealthoffy",
+		},
+	},
 	{text = L["Name Color"], -- (Toggle for Class)
 	toggle = "colorunitnamehealthbyclass",
 	color = {
@@ -128,8 +134,8 @@ local menuarray = {
 		key = "healththreshhold",
 		minval = 1,
 		maxval = 100,
-		tooltip = L["Health percentage before name is replaced with health deficit."],
 		},
+	tooltip = L["Health percentage before name is replaced with health deficit."],
 	},
 
 	{text = "",},
@@ -255,6 +261,12 @@ local menuarray = {
 			key = "unithealcommtextcolor",
 		},
 	},
+	{text = L["Healcomm Text Position"],
+	position = {
+		xkey = "unithealcommtextoffx",
+		ykey = "unithealcommtextoffy",
+		},
+	},
 
 	{text = "",},
 
@@ -278,8 +290,8 @@ local menuarray = {
 		key = "manathreshhold",
 		minval = 1,
 		maxval = 100,
-		tooltip = L["Mana percentage before border color changes."],
 		},
+	tooltip = L["Mana percentage before border color changes."],
 	color = {
 			key = "manawarningcolor",
 		},
@@ -296,16 +308,16 @@ local menuarray = {
 		minval = 0.5,
 		maxval = 5,
 		stepvalue = 0.5,
-		tooltip = L["Amount of seconds between proximity checks."],
 		},
+	tooltip = L["Amount of seconds between proximity checks."],
 	},
 	{text = L["Proximity Leeway"], 
 	slider = {
 		key = "proximityleeway",
 		minval = 0,
 		maxval = 30,
-		tooltip = L["Amound of seconds to be considered \"In Range\" after a positive spell or combat log confirmation."],
 		},
+	tooltip = L["proximityleeway_tooltip"],
 	},
 
 	{text = "",},
@@ -644,47 +656,49 @@ function NotGrid:InitializePositionBox()
 
 	f.upb = CreateFrame("Button", "NotGridMenuPositionBoxUpButton", f, "UIPanelButtonTemplate")
 	f.upb:SetPoint("CENTER",0,30)
-	f.upb:SetWidth(20)
-	f.upb:SetHeight(20)
 	f.upb:SetText("^")
-	f.upb:SetScript("OnClick", function(self, button, down)
-		NotGridOptions[this.key] = NotGridOptions[this.key]+10
-		NotGridMenuPositionBoxYeditbox:SetText(NotGridOptions[this.key])
-		NotGridOptionChange()
-	end)
 
 	f.downb = CreateFrame("Button", "NotGridMenuPositionBoxDownButton", f, "UIPanelButtonTemplate")
 	f.downb:SetPoint("CENTER",0,-30)
-	f.downb:SetWidth(20)
-	f.downb:SetHeight(20)
 	f.downb:SetText("v")
-	f.downb:SetScript("OnClick", function(self, button, down)
-		NotGridOptions[this.key] = NotGridOptions[this.key]-10
-		NotGridMenuPositionBoxYeditbox:SetText(NotGridOptions[this.key])
-		NotGridOptionChange()
-	end)
 
 	f.leftb = CreateFrame("Button", "NotGridMenuPositionBoxLeftButton", f, "UIPanelButtonTemplate")
 	f.leftb:SetPoint("CENTER",-80,0)
-	f.leftb:SetWidth(20)
-	f.leftb:SetHeight(20)
 	f.leftb:SetText("<")
-	f.leftb:SetScript("OnClick", function(self, button, down)
-		NotGridOptions[this.key] = NotGridOptions[this.key]-10
-		NotGridMenuPositionBoxXeditbox:SetText(NotGridOptions[this.key])
-		NotGridOptionChange()
-	end)
 
 	f.rightb = CreateFrame("Button", "NotGridMenuPositionBoxRightButton", f, "UIPanelButtonTemplate")
 	f.rightb:SetPoint("CENTER",80,0)
-	f.rightb:SetWidth(20)
-	f.rightb:SetHeight(20)
 	f.rightb:SetText(">")
-	f.rightb:SetScript("OnClick", function(self, button, down)
-		NotGridOptions[this.key] = NotGridOptions[this.key]+10
-		NotGridMenuPositionBoxXeditbox:SetText(NotGridOptions[this.key])
-		NotGridOptionChange()
-	end)
+
+	for k,v in {up = f.upb, down = f.downb, left = f.leftb, right = f.rightb} do
+		v.direction = k
+		v:SetWidth(20)
+		v:SetHeight(20)
+		v:SetScript("OnClick", function(self, button, down)
+			if this.direction == "up" or this.direction == "right" then
+				NotGridOptions[this.key] = NotGridOptions[this.key]+NotGrid:GetAdjustment()
+			else
+				NotGridOptions[this.key] = NotGridOptions[this.key]-NotGrid:GetAdjustment()
+			end
+			if this.direction == "up" or this.direction == "down" then
+				NotGridMenuPositionBoxYeditbox:SetText(NotGridOptions[this.key])
+			else
+				NotGridMenuPositionBoxXeditbox:SetText(NotGridOptions[this.key])
+			end
+			NotGridOptionChange()
+		end)
+		v:SetScript("OnEnter", function()
+			if this.direction == "down" then
+				GameTooltip:SetOwner(this, "ANCHOR_BOTTOMRIGHT")
+			else
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
+			end
+			GameTooltip:SetText("Shift+Ctrl = 100\nShift = 10", nil, nil, nil, nil, 1)
+		end)
+		v:SetScript("OnLeave", function()
+			GameTooltip:Hide()
+		end)
+	end
 
 	f.ex = CreateFrame("EditBox", "NotGridMenuPositionBoxXeditbox", f, "InputBoxTemplate")
 	f.ex:SetFontObject("GameFontHighlight")
@@ -725,6 +739,17 @@ function NotGrid:InitializePositionBox()
 	end)
 end
 
+function NotGrid:GetAdjustment(direction)
+	local adjustment
+	if IsShiftKeyDown() and IsControlKeyDown() then
+		adjustment = 100
+	elseif IsShiftKeyDown() then
+		adjustment = 10
+	else
+		adjustment = 1
+	end
+	return adjustment
+end
 
 -----------------
 -- color funcs --

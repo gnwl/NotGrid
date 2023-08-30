@@ -99,6 +99,10 @@ L:RegisterTranslations("enUS", function() return {
 
 ["Border Artwork"] = true,
 
+["Name Position"] = true,
+
+["Healcomm Text Position"] = true,
+
 --------------
 -- Tooltips --
 --------------
@@ -108,10 +112,11 @@ L:RegisterTranslations("enUS", function() return {
 ["As your raid expands the frames stay centered on the original group placement. Currently only works for horizontal growth."] = true,
 ["Health percentage before name is replaced with health deficit."] = true,
 ["Mana percentage before border color changes."] = true,
-["Amound of seconds to be considered \"In Range\" after a positive spell or combat log confirmation."] = true,
+["proximityleeway_tooltip"] = "Amount of seconds to be considered \"In Range\" after a positive confirmation.",
 ["Amount of seconds between proximity checks."] = true,
 ["cliquehook_tooltip"] = "Hooks the Clique spellcast function to use NG instead for proximity checking beyond 28 yards within instances. Toggling will reload UI.",
-["Toggle for power color."] = true
+["Toggle for power color."] = true,
+["position_tooltip"] = "Shift+Ctrl = 100\nShift = 10",
 
 
 } end)
