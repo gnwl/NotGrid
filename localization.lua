@@ -97,6 +97,8 @@ L:RegisterTranslations("enUS", function() return {
 
 ["Position"] = true,
 
+["Border Artwork"] = true,
+
 --------------
 -- Tooltips --
 --------------

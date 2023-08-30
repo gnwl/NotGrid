@@ -53,11 +53,14 @@ local menuarray = {
 			key = "unitbordercolor",
 		},
 	},
+	{text = L["Border Artwork"],
+	toggle = "borderartwork",
+	},
 	{text = L["Unit Padding"], 
 	slider = {
 		key = "unitpadding",
-		minval = -10,
-		maxval = 50,
+		minval = -20,
+		maxval = 20,
 		},
 	},
 	{text = L["Font"],
@@ -352,7 +355,6 @@ local menuarray = {
 
 	{text = "",},
 
-
 	{text = L["Clique Hook"],
 	toggle = "cliquehook",
 	reloadui = true,
@@ -462,10 +464,20 @@ function NotGrid:InitializeMenu()
 				if NotGridOptions[this.toggle] == true then
 					NotGridOptions[this.toggle] = false
 					fb.chk.tex:SetTexture("Interface/Buttons/UI-CheckBox-Check-Disabled")
+					if this.toggle == "borderartwork" then
+						NotGrid.o.unitbordercolor = {0,0,0,0.8}
+						NotGrid.o.unitpadding = 2
+						NotGrid.o.unitborder = 2
+					end
 					NotGridOptionChange()
 				else
 					NotGridOptions[this.toggle] = true
 					fb.chk.tex:SetTexture("Interface/Buttons/UI-CheckBox-Check")
+					if this.toggle == "borderartwork" then
+						NotGrid.o.unitbordercolor = {0.8,0.8,0.8,1}
+						NotGrid.o.unitpadding = -10
+						NotGrid.o.unitborder = 8
+					end
 					NotGridOptionChange()
 				end
 			end
@@ -712,6 +724,7 @@ function NotGrid:InitializePositionBox()
 		this:SetText(NotGridOptions[this.key])
 	end)
 end
+
 
 -----------------
 -- color funcs --

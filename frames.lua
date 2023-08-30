@@ -39,6 +39,7 @@ function NotGrid:CreateUnitFrame(unitid,raidindex)
 	end
 
 	f.border = CreateFrame("Frame","$parentborder",f) -- make a seperate frame for the edgefile/border for better customization possibilities
+	f.border.middleart = f.border:CreateTexture("NGArtworkMiddle", "ARTWORK")
 
 	f.healthbar = CreateFrame("StatusBar","$parenthealthbar",f)
 	f.healthbar.bgtex = f.healthbar:CreateTexture("$parentbgtex","BACKGROUND")
@@ -58,9 +59,7 @@ function NotGrid:CreateUnitFrame(unitid,raidindex)
 	for i=1,8 do
 		f.healthbar["trackingicon"..i] = CreateFrame("Frame","$parenttrackingicon"..i,f.healthbar) -- easier to work with digits than topleft/topright/etc..
 	end
-
 	--scripts and stuff
-
 	f:RegisterForClicks("LeftButtonDown", "RightButtonDown", "MiddleButtonDown", "Button4Down", "Button5Down") -- somehow I recall this not matterign?
 	f:RegisterForDrag("LeftButton")
 	f:SetScript("OnClick", function()
@@ -157,11 +156,27 @@ function NotGrid:ConfigUnitFrames() -- this can get called on every setting chan
 		f:SetBackdrop({bgFile = "Interface\\Buttons\\WHITE8X8", tile = true, tileSize = 16})
 		f:SetBackdropColor(unpack(o.unitbgcolor))
 
-		f.border:SetWidth(width+o.unitborder*2) -- the way edgefile works is it basically sits on the center of the edge of the frame and expands both inward and outward. So to compensate asthetically for that I ahve to increase the size of my frame double the desired width of the edgefile/border
-		f.border:SetHeight(height+o.unitborder*2)
-		f.border:SetBackdrop({edgeFile = "Interface\\Buttons\\WHITE8X8", edgeSize = o.unitborder})
+		if o.borderartwork then
+			f.border:SetWidth(width+o.unitborder) -- the way edgefile works is it basically sits on the center of the edge of the frame and expands both inward and outward. So to compensate asthetically for that I ahve to increase the size of my frame double the desired width of the edgefile/border
+			f.border:SetHeight(height+o.unitborder)
+			f.border:SetBackdrop({edgeFile = "Interface\\AddOns\\NotGrid\\media\\borderartwork", edgeSize = 16})
+		else
+			f.border:SetWidth(width+o.unitborder*2) -- the way edgefile works is it basically sits on the center of the edge of the frame and expands both inward and outward. So to compensate asthetically for that I ahve to increase the size of my frame double the desired width of the edgefile/border
+			f.border:SetHeight(height+o.unitborder*2)
+			f.border:SetBackdrop({edgeFile = "Interface\\Buttons\\WHITE8X8", edgeSize = o.unitborder})
+		end
 		f.border:SetBackdropBorderColor(unpack(o.unitbordercolor))
 		f.border:SetPoint("CENTER",0,0)
+		f.border:SetFrameLevel(f:GetFrameLevel() + 2)
+		f.border.middleart:SetTexture("Interface/TargetingFrame/UI-TargetingFrame")
+		if o.powerposition <= 2 then
+			f.border.middleart:SetTexCoord((58/256)+(1/256/2), (82/256)+(1/256/2), (39/128)+(1/128/2), (44/128)+(1/128/2))
+			f.border.middleart:SetVertexColor(unpack(o.unitbordercolor))
+		else
+			f.border.middleart:SetTexCoord((26/256)+(1/256/2), (32/256)+(1/256/2), (27/128)+(1/128/2), (34/128)+(1/128/2))
+			f.border.middleart:SetVertexColor(unpack(o.unitbordercolor))
+		end
+
 
 		f.healthbar:SetWidth(o.unitwidth)
 		f.healthbar:SetHeight(o.unitheight)
@@ -179,34 +194,49 @@ function NotGrid:ConfigUnitFrames() -- this can get called on every setting chan
 		--position health and powerbar
 		f.healthbar:ClearAllPoints()
 		f.powerbar:ClearAllPoints()
+		f.border.middleart:ClearAllPoints()
 		if o.showpowerbar then
 			if o.powerposition <= 2 then -- power on top
 				if o.powerposition == 1 then
 					f.healthbar:SetPoint("BOTTOM",0,0)
 					f.powerbar:SetPoint("TOP",0,0)
+					f.border.middleart:SetPoint("BOTTOM", f.powerbar, 0, -4)
 				else
 					f.healthbar:SetPoint("TOP",0,0)
 					f.powerbar:SetPoint("BOTTOM",0,0)
+					f.border.middleart:SetPoint("TOP", f.powerbar, 0, 4)
 				end
 				f.powerbar:SetWidth(o.unitwidth)
 				f.powerbar:SetHeight(o.powersize)
 				f.powerbar:SetOrientation("HORIZONTAL")
+				f.border.middleart:SetWidth(width)
+				f.border.middleart:SetHeight(6)
 			elseif o.powerposition >= 3 then
 				if o.powerposition == 3 then
 					f.healthbar:SetPoint("LEFT",0,0)
 					f.powerbar:SetPoint("RIGHT",0,0)
+					f.border.middleart:SetPoint("LEFT", f.powerbar, -4, 0)
 				else
 					f.healthbar:SetPoint("RIGHT",0,0)
 					f.powerbar:SetPoint("LEFT",0,0)
+					f.border.middleart:SetPoint("RIGHT", f.powerbar, 4, 0)
 				end
 				f.powerbar:SetWidth(o.powersize)
 				f.powerbar:SetHeight(o.unitheight)
 				f.powerbar:SetOrientation("VERTICAL")
+				f.border.middleart:SetWidth(6)
+				f.border.middleart:SetHeight(height)
 			end
 			f.powerbar:Show()
+			if o.borderartwork then
+				f.border.middleart:Show()
+			else
+				f.border.middleart:Hide()
+			end
 		else
 			f.healthbar:SetPoint("CENTER",0,0)
 			f.powerbar:Hide()
+			f.border.middleart:Hide()
 		end
 		f.powerbar:SetStatusBarTexture(o.unithealthbartexture)
 		f.powerbar.bgtex:SetTexture(o.unithealthbartexture)

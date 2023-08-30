@@ -94,6 +94,8 @@ local DefaultOptions = {
 
 	["configmode"] = false,
 	["disablemouseoverincombat"] = false,
+
+	["borderartwork"] = false,
 }
 
 function NotGrid:SetDefaultOptions() -- this will run on initialization and make sure everything is set. We can also use it if we wipe the NotGridOptions table and wnant to load it up with defaults

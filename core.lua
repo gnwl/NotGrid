@@ -257,12 +257,16 @@ function NotGrid:UNIT_BORDER(unitid)
 		local maxmana = UnitManaMax(unitid)
 		if o.tracktarget and targetname and targetname == name then
 			f.border:SetBackdropBorderColor(unpack(o.targetcolor))
+			f.border.middleart:SetVertexColor(unpack(o.targetcolor))
 		elseif o.trackaggro and self.Banzai:GetUnitAggroByUnitId(unitid) then
 			f.border:SetBackdropBorderColor(unpack(o.aggrowarningcolor))
+			f.border.middleart:SetVertexColor(unpack(o.aggrowarningcolor))
 		elseif o.trackmana and UnitPowerType(unitid) == 0 and currmana/maxmana*100 < o.manathreshhold and not UnitIsDeadOrGhost(unitid) then
 			f.border:SetBackdropBorderColor(unpack(o.manawarningcolor))
+			f.border.middleart:SetVertexColor(unpack(o.manawarningcolor))
 		else
 			f.border:SetBackdropBorderColor(unpack(o.unitbordercolor))
+			f.border.middleart:SetVertexColor(unpack(o.unitbordercolor))
 		end
 	end
 end
