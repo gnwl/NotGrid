@@ -26,7 +26,6 @@ Libs\Banzai-1.0\Banzai-1.0.lua
 
 localization.lua
 core.lua
-auras.lua
 frames.lua
 mapsizes.lua
 proximity.lua
