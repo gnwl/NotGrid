@@ -284,6 +284,7 @@ function NotGrid:ConfigUnitFrames() -- this can get called on every setting chan
 			fi:SetHeight(o.unittrackingiconsize)
 			fi:SetBackdrop({bgFile = "Interface\\Buttons\\WHITE8X8", edgeFile = "Interface\\Buttons\\WHITE8X8", tile = true, tileSize = o.unittrackingiconsize, edgeSize = o.unittrackingiconborder})
 			fi:SetBackdropBorderColor(o.unittrackingiconbordercolor)
+			fi:SetBackdropColor(unpack(o["trackingicon"..i.."color"]))
 			fi:ClearAllPoints()
 			fi:SetPoint(point,0,0)
 			fi:Hide()
