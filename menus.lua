@@ -502,7 +502,13 @@ function NotGrid:InitializeMenu()
 				--show them both
 			elseif this.editbox then
 				NotGridMenuEditBox.key = this.editbox.key
-				NotGridMenuEditBox:SetText(NotGridOptions[this.editbox.key])
+				if type(NotGridOptions[this.editbox.key]) == "table" then -- for tracking icons
+					NotGridMenuEditBox:SetText(table.concat(NotGridOptions[this.editbox.key],"/")) -- gfind and table.concat seem to have problems with | character so we use /
+					NotGridMenuEditBox.istable = true
+				else
+					NotGridMenuEditBox:SetText(NotGridOptions[this.editbox.key])
+					NotGridMenuEditBox.istable = false
+				end
 				NotGridMenuEditBoxContainer:ClearAllPoints()
 				NotGridMenuEditBoxContainer:SetPoint("TOPRIGHT",this,"TOPLEFT",-20,0)
 				NotGridMenuEditBoxContainer:Show()
@@ -632,12 +638,23 @@ function NotGrid:InitializeEditBox()
 	f.e:EnableKeyboard()
 	f.e:SetScript("OnEnterPressed", function()
 		this:ClearFocus()
-		NotGridOptions[this.key] = this:GetText()
+		if this.istable then
+			NotGridOptions[this.key] = {} -- should probably compost it but will rarely get called
+			for text in string.gfind(this:GetText(), "([^/]+)") do -- There are issues with using | as a seperator, not sure why
+				table.insert(NotGridOptions[this.key], text)
+			end
+		else
+			NotGridOptions[this.key] = this:GetText()
+		end
 		NotGridOptionChange()
 	end)
 	f.e:SetScript("OnEscapePressed", function()
 		this:ClearFocus()
-		this:SetText(NotGridOptions[this.key])
+		if this.istable then
+			this:SetText(table.concat(NotGridOptions[this.key],"/"))
+		else
+			this:SetText(NotGridOptions[this.key])
+		end
 	end)
 end
 

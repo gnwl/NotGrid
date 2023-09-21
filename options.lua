@@ -1,7 +1,7 @@
 local L = AceLibrary("AceLocale-2.2"):new("NotGrid")
 
 local DefaultOptions = {
-	["version"] = 1.107, -- will be the commit number from now on. Really only needs to be updated for changes that cause config errors to reset their defaults on initialization
+	["version"] = 1.112, -- will be the commit number from now on. Really only needs to be updated for changes that cause config errors to reset their defaults on initialization
 	["unitwidth"] = 36, -- for best results use a multiple of 5
 	["unitheight"] = 36,
 	["unitborder"] = 2,
@@ -31,21 +31,21 @@ local DefaultOptions = {
 	["colorpowerbarbgbytype"] = false,
 	["unitpowerbarbgcolor"] = {0,0,0,0.1},
 
-	["trackingicon1"] = "Rejuvenation",
+	["trackingicon1"] = {"Rejuvenation","Regrowth","Renew",}, -- potentially be better to have the auraname/spelltype be the key, but that introduces other problems to work around
 	["trackingicon1color"] = {0.37,0.83,0.38},
-	["trackingicon2"] = "",
+	["trackingicon2"] = {"",},
 	["trackingicon2color"] = {0.20,0.60,1.00},
-	["trackingicon3"] = "Magic",
+	["trackingicon3"] = {"Magic",},
 	["trackingicon3color"] = {0.20,0.60,1.00},
-	["trackingicon4"] = "Poison",
+	["trackingicon4"] = {"Poison",},
 	["trackingicon4color"] = {0.00,0.60,0},
-	["trackingicon5"] = "Curse",
+	["trackingicon5"] = {"Curse",},
 	["trackingicon5color"] = {0.60,0.00,1.00},
-	["trackingicon6"] = "Disease",
+	["trackingicon6"] = {"Disease",},
 	["trackingicon6color"] = {0.60,0.40,0},
-	["trackingicon7"] = "Mortal Strike|Mortal Wound|Veil of Shadow|Curse of the Deadwood|Blood Fury|Wound Poison|Hex of Weakness",
+	["trackingicon7"] = {"Mortal Strike","Mortal Wound","Veil of Shadow","Curse of the Deadwood","Blood Fury","Wound Poison","Hex of Weakness",},
 	["trackingicon7color"] = {0.80,0,0},
-	["trackingicon8"] = "",
+	["trackingicon8"] = {"",},
 	["trackingicon8color"] = {0.20,0.60,1.00},
 
 	["trackaggro"] = true,
@@ -110,6 +110,11 @@ function NotGrid:SetDefaultOptions() -- this will run on initialization and make
 		end
 	end
 	--if the current version is older than a commit that caused a config change, then set the affected configs back to default
+	if NotGridOptions.version < 1.112 and type(NotGridOptions.trackingicon1) ~= "table" then -- means they're using old aura handling and we need strings to be tables
+		for i=1,8 do
+			NotGridOptions["trackingicon"..i] = DefaultOptions["trackingicon"..i]
+		end
+	end
 	if NotGridOptions.version < 1.106 and NotGridOptions.containerpoint ~= "CENTER" then -- means they used the old drag positioning and it will be set relative to TOPLEFT
 		NotGridOptions.containerpoint = DefaultOptions.containerpoint
 		NotGridOptions.containeroffx = DefaultOptions.containeroffx

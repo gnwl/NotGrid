@@ -283,7 +283,7 @@ function NotGrid:UNIT_AURA(unitid)
 
 		for i=1,8 do
 			local f = f.healthbar["trackingicon"..i]
-			if self:CheckAura(o["trackingicon"..i],bufftable,debufftable) then
+			if self:CheckAura(i,bufftable,debufftable) then
 				f:Show()
 			else
 				f:Hide()
@@ -292,12 +292,10 @@ function NotGrid:UNIT_AURA(unitid)
 	end
 end
 
-function NotGrid:CheckAura(str, bufftable, debufftable)
-	if str then
-		for text in string.gfind(str, "([^|]+)") do
-			if bufftable[text] or debufftable[text] then
-				return true
-			end
+function NotGrid:CheckAura(i, bufftable, debufftable)
+	for _,text in self.o["trackingicon"..i] do
+		if bufftable[text] or debufftable[text] then
+			return true
 		end
 	end
 end
