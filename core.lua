@@ -7,6 +7,7 @@ function NotGrid:OnInitialize()
 	self.Banzai = AceLibrary("Banzai-1.0") -- only reports as having aggro if someone with this library is targetting the mob and reporting that the mob is targeting said unit
 	self.Gratuity = AceLibrary("Gratuity-2.0") -- for aura handling
 	self.RosterLib = AceLibrary("RosterLib-2.0")
+	self.Compost = AceLibrary("Compost-2.0")
 	self.UnitFrames = {}
 	--proximity stuff
 	self.ProximityVars = {} -- will hold vars related to proximity handling. Mostly world map stuff
@@ -251,8 +252,8 @@ function NotGrid:UNIT_AURA(unitid)
 	local o = self.o
 	local f = self.UnitFrames[unitid]
 
-	local bufftable = {} -- I only care about buffname for buffs -- reset every time
-	local debufftable = {} -- spelltype only matters for debuffs -- could probably have these both in the same table
+	local bufftable = self.Compost:Acquire() -- I only care about buffname for buffs -- reset every time
+	local debufftable = self.Compost:Acquire() -- spelltype only matters for debuffs -- could probably have these both in the same table
 
 	if f and UnitExists(unitid) then
 		--get buff info -- loop through every buff and adds info to table
@@ -290,6 +291,8 @@ function NotGrid:UNIT_AURA(unitid)
 			end
 		end
 	end
+	self.Compost:Reclaim(bufftable)
+	self.Compost:Reclaim(debufftable)
 end
 
 function NotGrid:CheckAura(i, bufftable, debufftable)

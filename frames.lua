@@ -300,7 +300,7 @@ function NotGrid:PositionFrames()
 	local partycount = GetNumPartyMembers()
 	local raidcount = GetNumRaidMembers()
 
-	local SubGroupCounts = {0,0,0,0,0,0,0,0,0,0} -- reset it every time
+	local SubGroupCounts = self.Compost:Acquire(0,0,0,0,0,0,0,0,0,0) -- reset it every time
 	local TotalGroups = 0
 	local TotalUnits = 0
 	local o = self.o
@@ -387,5 +387,5 @@ function NotGrid:PositionFrames()
 			getglobal("PartyMemberFrame"..i):Hide();
 		end
 	end
-
+	self.Compost:Reclaim(SubGroupCounts)
 end
