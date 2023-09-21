@@ -105,6 +105,8 @@ function NotGrid:UNIT_MAIN(unitid)
 				pcolor = ManaBarColor[1]
 			elseif id == 4 then
 				pcolor = ManaBarColor[3]
+			else
+				pcolor = ManaBarColor[0]
 			end
 			class = c[id]
 		end
@@ -143,7 +145,7 @@ function NotGrid:UNIT_MAIN(unitid)
 				currhealth = UnitHealth(unitid)/2
 				maxhealth = UnitHealthMax(unitid)
 				deficit = maxhealth - currhealth
-				currpower = UnitMana(unitid)/2
+				currpower = UnitManaMax(unitid)/2
 				maxpower = UnitManaMax(unitid)
 				healamount = maxhealth/4
 			else
