@@ -48,7 +48,11 @@ function NotGrid:OnEnable()
 end
 
 function NotGrid:HealCommHandler(name) -- be nice if it sent us the unitid instead
-	self:UNIT_MAIN(self.RosterLib:GetUnitIDFromName(name))
+	local unitid = self.RosterLib:GetUnitIDFromName(name)
+	self:UNIT_MAIN(unitid)
+	if self.IdenticalUnits[unitid] then
+		self:UNIT_MAIN(self.IdenticalUnits[unitid])
+	end
 end
 
 --------------------
