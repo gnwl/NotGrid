@@ -9,6 +9,8 @@ function NotGrid:OnInitialize()
 	self.RosterLib = AceLibrary("RosterLib-2.0")
 	self.Compost = AceLibrary("Compost-2.0")
 	self.UnitFrames = {}
+	--
+	self.IdenticalUnits = {} -- will hold pairs of party/player/raidids that are the same effective unit. For use with rosterlib & healcomm stuff
 	--proximity stuff
 	self.ProximityVars = {} -- will hold vars related to proximity handling. Mostly world map stuff
 	self:GetFortyYardSpell() -- queries the player's action bars for a 40 yard spell to use in proximity checking
@@ -22,10 +24,6 @@ function NotGrid:OnEnable()
 	self:SetDefaultOptions() -- if NotGridOptions is empty(no saved varoables) this will fill it up with defaults
 	self:DoDropDown()
 	self:ConfigUnitFrames()
-	self:RegisterEvent("PLAYER_ENTERING_WORLD","RosterChange")
-	self:RegisterEvent("PARTY_MEMBERS_CHANGED","RosterChange")
-	self:RegisterEvent("RAID_ROSTER_UPDATE","RosterChange")
-	self:RegisterEvent("UNIT_PET","RosterChange")
 	--proximity stuff
 	self:RegisterEvent("ACTIONBAR_SLOT_CHANGED", "GetFortyYardSpell")
 	for key in L.CombatEvents do
@@ -35,6 +33,9 @@ function NotGrid:OnEnable()
 	if Clique and self.o.cliquehook then
 		Clique.CastSpell = NotGrid.CastHandle -- lazyspell uses _ as a prefix to load last so it will hook into my hook.
 	end
+	--RosterLib
+	self:RegisterEvent("RosterLib_RosterChanged")
+	self:RegisterEvent("RosterLib_UnitChanged")
 	--Banzai/Aggro
 	self:RegisterEvent("Banzai_UnitGainedAggro","UNIT_BORDER") -- sends unitid to UNIT_BORDER
 	self:RegisterEvent("Banzai_UnitLostAggro","UNIT_BORDER")
@@ -53,28 +54,56 @@ end
 --------------------
 -- Roster Changes -- So we can can handle auras and positioning in events of reloadui,config,or just new players joining raid and not sending UNIT_AURA events.
 --------------------
-
-function NotGrid:RosterChange(event) -- adjust this at some point. frames already register these events themselves, only here for positioning and on config/menu changes
-	if event == "PARTY_MEMBERS_CHANGED" then
-		for i=1,4 do
-			self:UNIT_MAIN("party"..i)
-			self:UNIT_BORDER("party"..i)
-			self:UNIT_AURA("party"..i)
-		end
-	elseif event == "RAID_ROSTER_UPDATE" then
-		for i=1,40 do
-			self:UNIT_MAIN("raid"..i)
-			self:UNIT_BORDER("raid"..i)
-			self:UNIT_AURA("raid"..i)
-		end
-	else
-		for unitid,_ in self.UnitFrames do
-			self:UNIT_MAIN(unitid)
-			self:UNIT_BORDER(unitid)
-			self:UNIT_AURA(unitid)
+--roster events fire for all sorts of frivilous(in our case) reasons creating unnecessary updates
+--rosterlib cycles through units and makes sure something about them actually changed before sending the event. subgroup/rank/name/class etc
+function NotGrid:RosterLib_RosterChanged(updatedUnits) -- handle identical raid/partypets?.. bad idea because they don't have unique names. they'll just remain bugged
+	for _,val in updatedUnits do
+		if not (val.unitid and string.find(val.unitid, "raidpet")) or not (val.oldunitid and string.find(val.oldunitid, "raidpet")) then --make sure we have a unit we care about before we bother doing anything
+			if GetNumRaidMembers() > 0 then
+				self.Compost:Reclaim(self.IdenticalUnits)
+				self.IdenticalUnits = self.Compost:Acquire()
+				local playername = UnitName("player")
+				for i=1,40 do
+					if UnitExists("raid"..i) then
+						local raidid = "raid"..i
+						local raidname = UnitName(raidid)
+						if playername == raidname then
+							self.IdenticalUnits[raidid] = "player"
+							self.IdenticalUnits["player"] = raidid
+						end
+						for i=1,4 do
+							if UnitExists("party"..i) then
+								local partyid = "party"..i
+								local partyname = UnitName(partyid)
+								if partyname == raidname then
+									self.IdenticalUnits[raidid] = partyid -- store them both as their own keys referencing eachother
+									self.IdenticalUnits[partyid] = raidid
+								end
+							end
+						end
+					end
+				end
+			elseif next(self.IdenticalUnits) then -- if theres data in the table, but we're not in raid, then wipe the table
+				self.Compost:Reclaim(self.IdenticalUnits)
+				self.IdenticalUnits = self.Compost:Acquire()
+			end
+			self:PositionFrames()
+			break
 		end
 	end
-	self:PositionFrames()
+end
+
+function NotGrid:RosterLib_UnitChanged(unitid, name, class, subgroup, rank, oldname, oldunitid, oldclass, uldsubgroup, oldrank)
+	if unitid and self.UnitFrames[unitid] then
+		self:UNIT_MAIN(unitid)
+		self:UNIT_BORDER(unitid)
+		self:UNIT_AURA(unitid)
+		if self.IdenticalUnits[unitid] then
+			self:UNIT_MAIN(self.IdenticalUnits[unitid])
+			self:UNIT_BORDER(self.IdenticalUnits[unitid])
+			self:UNIT_AURA(self.IdenticalUnits[unitid])
+		end
+	end
 end
 
 ---------------

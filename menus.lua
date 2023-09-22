@@ -841,5 +841,10 @@ end
 
 function NotGridOptionChange()
 	NotGrid:ConfigUnitFrames()
-	NotGrid:RosterChange()
+	for unitid,_ in NotGrid.UnitFrames do
+		NotGrid:UNIT_MAIN(unitid)
+		NotGrid:UNIT_BORDER(unitid)
+		NotGrid:UNIT_AURA(unitid)
+	end
+	NotGrid:PositionFrames()
 end

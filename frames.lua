@@ -83,11 +83,6 @@ function NotGrid:CreateUnitFrame(unitid,raidindex)
 	end)
 
 	--we can split these up into their own relative frames & functions later
-	--we have to respond to these to update names/classes etc on roster changes
-	f:RegisterEvent("PLAYER_ENTERING_WORLD")
-	f:RegisterEvent("PARTY_MEMBERS_CHANGED")
-	f:RegisterEvent("RAID_ROSTER_UPDATE")
-	f:RegisterEvent("UNIT_PET")
 	--might as well
 	f:RegisterEvent("UNIT_NAME_UPDATE")
 	f:RegisterEvent("UNIT_PORTRAIT_UPDATE")
@@ -122,10 +117,6 @@ function NotGrid:CreateUnitFrame(unitid,raidindex)
 			end
 		elseif event == "PLAYER_TARGET_CHANGED" then -- all units will update their border
 			self:UNIT_BORDER(this.unit)
-		elseif not arg1 then -- no arg1, its a generic event like partymemberschanged and all units will update themselves
-			self:UNIT_MAIN(this.unit)
-			self:UNIT_BORDER(this.unit)
-			self:UNIT_AURA(unitid)
 		end
 	end)
 
