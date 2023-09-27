@@ -73,7 +73,7 @@ local menuarray = {
 		key = "unithealthbartexture",
 		},
 	},
-	{text = L["Background"], -- (Toggle for Class)
+	{text = L["Background"],
 	color = {
 			key = "unitbgcolor",
 		},
@@ -98,21 +98,21 @@ local menuarray = {
 		ykey = "unitnamehealthoffy",
 		},
 	},
-	{text = L["Name Color"], -- (Toggle for Class)
+	{text = L["Name Color"],
 	toggle = "colorunitnamehealthbyclass",
 	color = {
 			key = "unitnamehealthtextcolor",
 		},
-	tooltip = L["Toggle for class color."],
+	tooltip = L["classcolor_tooltip"],
 	},
-	{text = L["Health Color"], -- (Toggle for Class)
+	{text = L["Health Color"],
 	toggle = "colorunithealthbarbyclass",
 	color = {
 			key = "unithealthbarcolor",
 		},
-	tooltip = L["Toggle for class color."],
+	tooltip = L["classcolor_tooltip"],
 	},
-	{text = L["Health Background"], -- (Toggle for Class)
+	{text = L["Health Background"],
 	editbox = {
 		key = "unithealthbarbgtexture",
 		},
@@ -120,7 +120,7 @@ local menuarray = {
 	color = {
 			key = "unithealthbarbgcolor",
 		},
-	tooltip = L["Toggle for class color."],
+	tooltip = L["classcolor_tooltip"],
 	},
 	{text = L["Health Orientation"],
 	slider = {
@@ -135,7 +135,7 @@ local menuarray = {
 		minval = 1,
 		maxval = 100,
 		},
-	tooltip = L["Health percentage before name is replaced with health deficit."],
+	tooltip = L["healththreshold_tooltip"],
 	},
 
 	{text = "",},
@@ -145,7 +145,7 @@ local menuarray = {
 	},
 	{text = L["Power Background"],
 	toggle = "colorpowerbarbgbytype",
-	tooltip = L["Toggle for power color."],
+	tooltip = L["powercolor_tooltip"],
 	color = {
 			key = "unitpowerbarbgcolor",
 		},
@@ -291,7 +291,7 @@ local menuarray = {
 		minval = 1,
 		maxval = 100,
 		},
-	tooltip = L["Mana percentage before border color changes."],
+	tooltip = L["manathreshhold_tooltip"],
 	color = {
 			key = "manawarningcolor",
 		},
@@ -309,7 +309,7 @@ local menuarray = {
 		maxval = 5,
 		stepvalue = 0.5,
 		},
-	tooltip = L["Amount of seconds between proximity checks."],
+	tooltip = L["proximityrate_tooltip"],
 	},
 	{text = L["Proximity Leeway"], 
 	slider = {
@@ -324,7 +324,7 @@ local menuarray = {
 
 	{text = L["Smart Center"], 
 	toggle = "smartcenter",
-	tooltip = L["As your raid expands the frames stay centered on the original group placement. Currently only works for horizontal growth."],
+	tooltip = L["smartcenter_tooltip"],
 	},
 	{text = L["Growth Direction"], 
 	slider = {
@@ -347,7 +347,7 @@ local menuarray = {
 	},
 	{text = L["Show Pets"],
 	toggle = "showpets",
-	tooltip = L["Note: Prone to visual errors."],
+	tooltip = L["pet_tooltip"],
 	},
 	{text = L["Custom Pet Color"],
 	toggle = "usepetcolor",
@@ -785,7 +785,7 @@ function NotGrid:ClickColor()
 	ColorPickerFrame.previousValues = {r, g, b, a}
 	ColorPickerFrame.func = self.ColorPickerHandler
 	ColorPickerFrame.opacityFunc = self.ColorPickerHandler
-	ColorPickerFrame.cancelFunc = NotGrid_SetColor -- breaks if sent though notgrid
+	ColorPickerFrame.cancelFunc = NotGrid_SetColor -- breaks if refrences notgrid
 	if a then
 		ColorPickerFrame.opacity = 1-a
 		ColorPickerFrame.hasOpacity = true -- opacity prob has own func
@@ -801,7 +801,7 @@ function NotGrid:ColorPickerHandler()
 	local a = 1 - OpacitySliderFrame:GetValue()
 	local r,g,b = ColorPickerFrame:GetColorRGB()
 	if ColorPickerFrame.hasOpacity then
-		NotGrid_SetColor({r,g,b,a}) -- why cant I reference self?
+		NotGrid_SetColor({r,g,b,a})
 	else
 		NotGrid_SetColor({r,g,b})
 	end

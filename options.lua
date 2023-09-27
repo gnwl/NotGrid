@@ -1,10 +1,10 @@
 local L = AceLibrary("AceLocale-2.2"):new("NotGrid")
 
 local DefaultOptions = {
-	["version"] = 1.119, -- will be the commit number from now on.
+	["version"] = 1.120, -- will be the commit number from now on.
 	["versionchecking"] = true,
 
-	["unitwidth"] = 36, -- for best results use a multiple of 5
+	["unitwidth"] = 36,
 	["unitheight"] = 36,
 	["unitborder"] = 2,
 	["unitpadding"] = 2,
@@ -78,7 +78,7 @@ local DefaultOptions = {
 
 	["colorunitnamehealthbyclass"] = true,
 	["colorunithealthbarbyclass"] = true,
-	["colorunithealthbarbgbyclass"] = false, -- think I'm deprecating this?
+	["colorunithealthbarbgbyclass"] = false,
 	["usetbcshamancolor"] = true,
 	["usepetcolor"] = true,
 	["petcolor"] = {1,0.74,0},
@@ -105,7 +105,7 @@ local DefaultOptions = {
 	["borderartwork"] = false,
 }
 
-function NotGrid:SetDefaultOptions() -- this will run on initialization and make sure everything is set. We can also use it if we wipe the NotGridOptions table and wnant to load it up with defaults
+function NotGrid:SetDefaultOptions() -- this will run on initialization and make sure everything is set. We can also use it if we wipe the NotGridOptions table and want to load it up with defaults
 	for key,value in DefaultOptions do
 		if not NotGridOptions[key] and not (not NotGridOptions[key] and type(NotGridOptions[key]) == "boolean") then -- if this wasn't set from the saved variable load
 			NotGridOptions[key] = value

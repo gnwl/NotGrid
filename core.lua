@@ -4,7 +4,7 @@ NotGridOptions = {} -- After the addon is fully initialized WoW will fill this u
 
 function NotGrid:OnInitialize()
 	self.HealComm = AceLibrary("HealComm-1.0")
-	self.Banzai = AceLibrary("Banzai-1.0") -- only reports as having aggro if someone with this library is targetting the mob and reporting that the mob is targeting said unit
+	self.Banzai = AceLibrary("Banzai-1.0") -- cycles through roster and checks targetof..unitds and targetoftargetof..unitids and reports aggro/loss depending
 	self.Gratuity = AceLibrary("Gratuity-2.0") -- for aura handling
 	self.RosterLib = AceLibrary("RosterLib-2.0")
 	self.Compost = AceLibrary("Compost-2.0")
@@ -21,7 +21,7 @@ end
 
 function NotGrid:OnEnable()
 	self.o = NotGridOptions -- Need to wait for addon to be fully initialized and saved variables loaded before I set this
-	self:SetDefaultOptions() -- if NotGridOptions is empty(no saved varoables) this will fill it up with defaults
+	self:SetDefaultOptions() -- if NotGridOptions is empty(no saved variables) this will fill it up with defaults
 	self:DoDropDown()
 	self:ConfigUnitFrames()
 	--proximity stuff
@@ -48,69 +48,6 @@ function NotGrid:OnEnable()
 	--Proximity
 	self:RegisterEvent("NG_UNIT_PROXIMITY","UNIT_PROXIMITY")
 	self:ScheduleRepeatingEvent("NG_UNIT_PROXIMITY", self.o.proximityrate)
-end
-
-function NotGrid:HealCommHandler(name) -- be nice if it sent us the unitid instead
-	local unitid = self.RosterLib:GetUnitIDFromName(name)
-	self:UNIT_MAIN(unitid)
-	if self.IdenticalUnits[unitid] then
-		self:UNIT_MAIN(self.IdenticalUnits[unitid])
-	end
-end
-
---------------------
--- Roster Changes -- So we can can handle auras and positioning in events of reloadui,config,or just new players joining raid and not sending UNIT_AURA events.
---------------------
---roster events fire for all sorts of frivilous(in our case) reasons creating unnecessary updates
---rosterlib cycles through units and makes sure something about them actually changed before sending the event. subgroup/rank/name/class etc
-function NotGrid:RosterLib_RosterChanged(updatedUnits) -- handle identical raid/partypets?.. bad idea because they don't have unique names. they'll just remain bugged
-	for _,val in updatedUnits do
-		if not (val.unitid and string.find(val.unitid, "raidpet")) and not (val.oldunitid and string.find(val.oldunitid, "raidpet")) then --make sure we have a unit we care about before we bother doing anything
-			if GetNumRaidMembers() > 0 then
-				self.Compost:Reclaim(self.IdenticalUnits)
-				self.IdenticalUnits = self.Compost:Acquire()
-				local playername = UnitName("player")
-				for i=1,40 do
-					if UnitExists("raid"..i) then
-						local raidid = "raid"..i
-						local raidname = UnitName(raidid)
-						if playername == raidname then
-							self.IdenticalUnits[raidid] = "player"
-							self.IdenticalUnits["player"] = raidid
-						end
-						for i=1,4 do
-							if UnitExists("party"..i) then
-								local partyid = "party"..i
-								local partyname = UnitName(partyid)
-								if partyname == raidname then
-									self.IdenticalUnits[raidid] = partyid -- store them both as their own keys referencing eachother
-									self.IdenticalUnits[partyid] = raidid
-								end
-							end
-						end
-					end
-				end
-			elseif next(self.IdenticalUnits) then -- if theres data in the table, but we're not in raid, then wipe the table
-				self.Compost:Reclaim(self.IdenticalUnits)
-				self.IdenticalUnits = self.Compost:Acquire()
-			end
-			self:PositionFrames()
-			break
-		end
-	end
-end
-
-function NotGrid:RosterLib_UnitChanged(unitid, name, class, subgroup, rank, oldname, oldunitid, oldclass, uldsubgroup, oldrank)
-	if unitid and self.UnitFrames[unitid] then
-		self:UNIT_MAIN(unitid)
-		self:UNIT_BORDER(unitid)
-		self:UNIT_AURA(unitid)
-		if self.IdenticalUnits[unitid] then
-			self:UNIT_MAIN(self.IdenticalUnits[unitid])
-			self:UNIT_BORDER(self.IdenticalUnits[unitid])
-			self:UNIT_AURA(self.IdenticalUnits[unitid])
-		end
-	end
 end
 
 ---------------
@@ -447,9 +384,81 @@ function NotGrid:CastHandle(spell, unitid)
 	end
 end
 
-----------------------
--- Version Checking --
-----------------------
+
+----------------------------------
+-- Miscellaneous Event Handling --
+----------------------------------
+
+-- Healcomm
+
+function NotGrid:HealCommHandler(name) -- be nice if it sent us the unitid instead
+	local unitid = self.RosterLib:GetUnitIDFromName(name)
+	self:UNIT_MAIN(unitid)
+	if self.IdenticalUnits[unitid] then
+		self:UNIT_MAIN(self.IdenticalUnits[unitid])
+	end
+end
+
+-- Roster
+
+--blizz roster events fire for all sorts of frivilous(in our case) reasons creating unnecessary updates
+--rosterlib cycles through units and sends ones that have changed, with what has changed, and we filter it from there as to whether we want to do anything with our frames
+function NotGrid:RosterLib_RosterChanged(updatedUnits)
+	for _,val in updatedUnits do
+		if not (val.unitid and string.find(val.unitid, "raidpet")) and not (val.oldunitid and string.find(val.oldunitid, "raidpet")) then -- if not raidpet, because we have no unitframes for them
+			self:GetIdenticalUnits()
+			self:PositionFrames()
+			break -- break out of the loop after finding at least one unit we have a frame for
+		end
+	end
+end
+
+function NotGrid:GetIdenticalUnits() -- party/raid pets?
+	if GetNumRaidMembers() > 0 then
+		self.Compost:Reclaim(self.IdenticalUnits)
+		self.IdenticalUnits = self.Compost:Acquire()
+		local playername = UnitName("player")
+		for i=1,40 do
+			if UnitExists("raid"..i) then
+				local raidid = "raid"..i
+				local raidname = UnitName(raidid)
+				if playername == raidname then
+					self.IdenticalUnits[raidid] = "player"
+					self.IdenticalUnits["player"] = raidid
+				end
+				for i=1,4 do
+					if UnitExists("party"..i) then
+						local partyid = "party"..i
+						local partyname = UnitName(partyid)
+						if partyname == raidname then
+							self.IdenticalUnits[raidid] = partyid -- store them both as their own keys referencing eachother
+							self.IdenticalUnits[partyid] = raidid
+						end
+					end
+				end
+			end
+		end
+	elseif next(self.IdenticalUnits) then -- if theres data in the table, but we're not in raid, then wipe the table
+		self.Compost:Reclaim(self.IdenticalUnits)
+		self.IdenticalUnits = self.Compost:Acquire()
+	end
+end
+
+function NotGrid:RosterLib_UnitChanged(unitid, name, class, subgroup, rank, oldname, oldunitid, oldclass, uldsubgroup, oldrank)
+	if unitid and self.UnitFrames[unitid] then
+		self:UNIT_MAIN(unitid)
+		self:UNIT_BORDER(unitid)
+		self:UNIT_AURA(unitid)
+		if self.IdenticalUnits[unitid] then
+			self:UNIT_MAIN(self.IdenticalUnits[unitid])
+			self:UNIT_BORDER(self.IdenticalUnits[unitid])
+			self:UNIT_AURA(self.IdenticalUnits[unitid])
+		end
+	end
+end
+
+
+-- Version Checking
 
 function NotGrid:PLAYER_ENTERING_WORLD() -- when they login,reloadui,or zone in/out of instances
 	if self.o.versionchecking then
