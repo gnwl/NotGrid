@@ -1,7 +1,7 @@
 local L = AceLibrary("AceLocale-2.2"):new("NotGrid")
 
 local DefaultOptions = {
-	["version"] = 1.118, -- will be the commit number from now on.
+	["version"] = 1.119, -- will be the commit number from now on.
 	["versionchecking"] = true,
 
 	["unitwidth"] = 36, -- for best results use a multiple of 5

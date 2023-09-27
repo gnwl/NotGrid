@@ -65,7 +65,7 @@ end
 --rosterlib cycles through units and makes sure something about them actually changed before sending the event. subgroup/rank/name/class etc
 function NotGrid:RosterLib_RosterChanged(updatedUnits) -- handle identical raid/partypets?.. bad idea because they don't have unique names. they'll just remain bugged
 	for _,val in updatedUnits do
-		if not (val.unitid and string.find(val.unitid, "raidpet")) or not (val.oldunitid and string.find(val.oldunitid, "raidpet")) then --make sure we have a unit we care about before we bother doing anything
+		if not (val.unitid and string.find(val.unitid, "raidpet")) and not (val.oldunitid and string.find(val.oldunitid, "raidpet")) then --make sure we have a unit we care about before we bother doing anything
 			if GetNumRaidMembers() > 0 then
 				self.Compost:Reclaim(self.IdenticalUnits)
 				self.IdenticalUnits = self.Compost:Acquire()
