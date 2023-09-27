@@ -103,6 +103,8 @@ L:RegisterTranslations("enUS", function() return {
 
 ["Healcomm Text Position"] = true,
 
+["Version Checking"] = true,
+
 --------------
 -- Tooltips --
 --------------

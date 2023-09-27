@@ -367,6 +367,9 @@ local menuarray = {
 
 	{text = "",},
 
+	{text = L["Version Checking"],
+	toggle = "versionchecking",
+	},
 	{text = L["Clique Hook"],
 	toggle = "cliquehook",
 	reloadui = true,

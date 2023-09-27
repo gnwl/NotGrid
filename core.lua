@@ -33,6 +33,9 @@ function NotGrid:OnEnable()
 	if Clique and self.o.cliquehook then
 		Clique.CastSpell = NotGrid.CastHandle -- lazyspell uses _ as a prefix to load last so it will hook into my hook.
 	end
+	--
+	self:RegisterEvent("PLAYER_ENTERING_WORLD")
+	self:RegisterEvent("CHAT_MSG_ADDON")
 	--RosterLib
 	self:RegisterEvent("RosterLib_RosterChanged")
 	self:RegisterEvent("RosterLib_UnitChanged")
@@ -441,5 +444,30 @@ function NotGrid:CastHandle(spell, unitid)
 	end
 	if LastTarget then -- remember, use it as a boolean.
 		TargetLastTarget() -- and finally, if they actually had an old target, then target it
+	end
+end
+
+----------------------
+-- Version Checking --
+----------------------
+
+function NotGrid:PLAYER_ENTERING_WORLD() -- when they login,reloadui,or zone in/out of instances
+	if self.o.versionchecking then
+		--SendAddonMessage("NotGrid", self.o.version, "GUILD")
+		--SendAddonMessage("NotGrid", self.o.version, "BATTLEGROUND")
+		if GetNumRaidMembers() > 0 then
+			SendAddonMessage("NotGrid", self.o.version, "RAID")
+		elseif GetNumPartyMembers() > 0 then
+			SendAddonMessage("NotGrid", self.o.version, "PARTY")
+		end
+	end
+end
+
+function NotGrid:CHAT_MSG_ADDON()
+	if arg1 == "NotGrid" and self.o.versionchecking then
+		if tonumber(arg2) > self.o.version and not self.versionalreadyshown then
+			DEFAULT_CHAT_FRAME:AddMessage("|cff0ccca6NotGrid:|r A newer version may be available.")
+			self.versionalreadyshown = true
+		end
 	end
 end
