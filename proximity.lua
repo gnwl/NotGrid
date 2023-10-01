@@ -11,10 +11,6 @@ local spells40yd = { -- Macros are forced to have text associated with them so w
 -- UNIT_PROXIMITY --
 --------------------
 function NotGrid:UNIT_PROXIMITY()
-	if self.o.usemapdistances and not WorldMapFrame:IsVisible() then
-		SetMapToCurrentZone() -- have to do this every time because there are situations where zone_changed events don't fire - specifically entering/exiting many instances
-		self.ProximityVars.mapFileName, _, _ = GetMapInfo()
-	end
 	for key,f in self.UnitFrames do
 		local unitid = f.unit
 		if UnitExists(unitid) and f:IsVisible() then
@@ -98,6 +94,11 @@ function NotGrid:GetWorldDistance(unitid) -- Thanks to Rhena/Renew/Astrolabe
 		distance = sqrt(xdelta^2 + ydelta^2)*(40/42.9) -- Then use maths distance formula for two points on a grid. include a modifiier of (40/42.9) because there seems to be 40 spell yards per 42.9 wow gps units.
 	end
 	return distance
+end
+
+function NotGrid:UpdateProximityMapVars()
+	SetMapToCurrentZone()
+	self.ProximityVars.mapFileName, _, _ = GetMapInfo()
 end
 
 -------------------------

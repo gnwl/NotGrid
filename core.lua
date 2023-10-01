@@ -35,6 +35,7 @@ function NotGrid:OnEnable()
 	end
 	--
 	self:RegisterEvent("PLAYER_ENTERING_WORLD")
+	self:RegisterEvent("ZONE_CHANGED_NEW_AREA","UpdateProximityMapVars")
 	self:RegisterEvent("CHAT_MSG_ADDON")
 	--RosterLib
 	self:RegisterEvent("RosterLib_RosterChanged")
@@ -458,7 +459,7 @@ function NotGrid:RosterLib_UnitChanged(unitid, name, class, subgroup, rank, oldn
 end
 
 
--- Version Checking
+-- Blizz Events
 
 function NotGrid:PLAYER_ENTERING_WORLD() -- when they login,reloadui,or zone in/out of instances
 	if self.o.versionchecking then
@@ -470,6 +471,7 @@ function NotGrid:PLAYER_ENTERING_WORLD() -- when they login,reloadui,or zone in/
 			SendAddonMessage("NotGrid", self.o.version, "PARTY")
 		end
 	end
+	self:UpdateProximityMapVars() -- zoning into an instance won't trigger a zonechange event if the outdoors name is the same name as the indoors. This ensures the vars update.
 end
 
 function NotGrid:CHAT_MSG_ADDON()
