@@ -82,6 +82,17 @@ function NotGrid:CreateUnitFrame(unitid,raidindex)
 		UnitFrame_OnLeave() -- blizz function that handles tooltip for units
 	end)
 
+	f:SetScript("OnDragStart", function()  -- on drag of any unit frame will drag the NotGridContainer frame
+		if self.o.draggable then
+			self.Container:StartMoving()
+		end
+	end)
+	f:SetScript("OnDragStop", function()
+		if self.o.draggable then
+			self.Container:StopMovingOrSizing()
+		end
+	end)
+
 	--we can split these up into their own relative frames & functions later
 	--might as well
 	f:RegisterEvent("UNIT_NAME_UPDATE")
@@ -361,13 +372,15 @@ function NotGrid:PositionFrames()
 	end
 
 	--handle the container frame
-	self.Container:ClearAllPoints()
-	if o.smartcenter == true and o.growthdirection == 1 then
-			self.Container:SetPoint(o.containerpoint,o.containeroffx-(o.unitwidth+powermodx+o.unitborder*2+o.unitpadding)/2*(TotalGroups-1),o.containeroffy)
-	elseif o.smartcenter == true and o.growthdirection == 2 then
-			self.Container:SetPoint(o.containerpoint,o.containeroffx+(o.unitwidth+powermodx+o.unitborder*2+o.unitpadding)/2*(TotalGroups-1),o.containeroffy)
-	else
-		self.Container:SetPoint(o.containerpoint,o.containeroffx,o.containeroffy)
+	if not o.draggable then
+		self.Container:ClearAllPoints()
+		if o.smartcenter == true and o.growthdirection == 1 then
+				self.Container:SetPoint(o.containerpoint,o.containeroffx-(o.unitwidth+powermodx+o.unitborder*2+o.unitpadding)/2*(TotalGroups-1),o.containeroffy)
+		elseif o.smartcenter == true and o.growthdirection == 2 then
+				self.Container:SetPoint(o.containerpoint,o.containeroffx+(o.unitwidth+powermodx+o.unitborder*2+o.unitpadding)/2*(TotalGroups-1),o.containeroffy)
+		else
+			self.Container:SetPoint(o.containerpoint,o.containeroffx,o.containeroffy)
+		end
 	end
 
 	--handle the blizzframes

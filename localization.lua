@@ -57,6 +57,7 @@ L:RegisterTranslations("enUS", function() return {
 ["Name Position"] = true,
 ["Healcomm Text Position"] = true,
 ["Version Checking"] = true,
+["Draggable"] = true,
 
 ["CombatEvents"] = {
 	["CHAT_MSG_SPELL_PERIODIC_PARTY_BUFFS"] = "(%a+) gains %a.+", --%a on the last just to make sure its not a digit
@@ -89,6 +90,7 @@ L:RegisterTranslations("enUS", function() return {
 ["cliquehook_tooltip"] = "Hooks the Clique spellcast function to use NG instead for proximity checking beyond 28 yards within instances. Toggling will reload UI.",
 ["powercolor_tooltip"] = "Toggle for power color.",
 ["position_tooltip"] = "Shift+Ctrl = 100\nShift = 10",
+["draggable_tooltip"] = "Note: Possible client crash bug\n           Smart Center disabled",
 
 
 } end)
@@ -150,6 +152,7 @@ L:RegisterTranslations("ruRU", function() return {
 ["Name Position"] = true,
 ["Healcomm Text Position"] = true,
 ["Version Checking"] = true,
+["Draggable"] = true,
 
 ["CombatEvents"] = {
 	["CHAT_MSG_SPELL_PERIODIC_PARTY_BUFFS"] = "(%a+) получает эффект %a.+",
@@ -182,5 +185,6 @@ L:RegisterTranslations("ruRU", function() return {
 ["cliquehook_tooltip"] = "Hooks the Clique spellcast function to use NG instead for proximity checking beyond 28 yards within instances. Toggling will reload UI.",
 ["powercolor_tooltip"] = true,
 ["position_tooltip"] = "Shift+Ctrl = 100\nShift = 10",
+["draggable_tooltip"] = true,
 
 } end)

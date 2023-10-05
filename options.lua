@@ -1,7 +1,7 @@
 local L = AceLibrary("AceLocale-2.2"):new("NotGrid")
 
 local DefaultOptions = {
-	["version"] = 1.122, -- will be the commit number from now on.
+	["version"] = 1.123, -- will be the commit number from now on.
 	["versionchecking"] = true,
 
 	["unitwidth"] = 36,
@@ -103,6 +103,8 @@ local DefaultOptions = {
 	["disablemouseoverincombat"] = false,
 
 	["borderartwork"] = false,
+
+	["draggable"] = false,
 }
 
 function NotGrid:SetDefaultOptions() -- this will run on initialization and make sure everything is set. We can also use it if we wipe the NotGridOptions table and want to load it up with defaults
