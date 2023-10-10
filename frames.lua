@@ -383,13 +383,5 @@ function NotGrid:PositionFrames()
 		end
 	end
 
-	--handle the blizzframes
-	for i=1,partycount do -- this isn't perfect because, for example, if partycount were at 0 it just wouldn't run and wouldn't hide any remaining frames. But blizz's code handles hiding it natively on member leave so I won't worry about it.
-		if o.showblizzframes then
-			getglobal("PartyMemberFrame"..i):Show();
-		else
-			getglobal("PartyMemberFrame"..i):Hide();
-		end
-	end
 	self.Compost:Reclaim(SubGroupCounts)
 end

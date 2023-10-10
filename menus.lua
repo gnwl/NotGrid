@@ -854,4 +854,5 @@ function NotGridOptionChange()
 		NotGrid:UNIT_AURA(unitid)
 	end
 	NotGrid:PositionFrames()
+	NotGrid:BlizzFrameHandler()
 end

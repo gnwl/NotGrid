@@ -35,8 +35,11 @@ function NotGrid:OnEnable()
 	end
 	--
 	self:RegisterEvent("PLAYER_ENTERING_WORLD")
-	self:RegisterEvent("ZONE_CHANGED_NEW_AREA","UpdateProximityMapVars")
 	self:RegisterEvent("CHAT_MSG_ADDON")
+	self:RegisterEvent("ZONE_CHANGED_NEW_AREA","UpdateProximityMapVars")
+	self:RegisterEvent("PARTY_MEMBERS_CHANGED","BlizzFrameHandler")
+	self:RegisterEvent("RAID_ROSTER_UPDATE","BlizzFrameHandler")
+	self:RegisterEvent("UNIT_PET","BlizzFrameHandler")
 	--RosterLib
 	self:RegisterEvent("RosterLib_RosterChanged")
 	self:RegisterEvent("RosterLib_UnitChanged")
@@ -472,6 +475,7 @@ function NotGrid:PLAYER_ENTERING_WORLD() -- when they login,reloadui,or zone in/
 		end
 	end
 	self:UpdateProximityMapVars() -- zoning into an instance won't trigger a zonechange event if the outdoors name is the same name as the indoors. This ensures the vars update.
+	self:BlizzFrameHandler()
 end
 
 function NotGrid:CHAT_MSG_ADDON()
@@ -479,6 +483,18 @@ function NotGrid:CHAT_MSG_ADDON()
 		if tonumber(arg2) > self.o.version and not self.versionalreadyshown then
 			DEFAULT_CHAT_FRAME:AddMessage("|cff0ccca6NotGrid:|r A newer version may be available.")
 			self.versionalreadyshown = true
+		end
+	end
+end
+
+--have to handle the blizzframes seperately because rosterlib only fires if a member changed, wheras PARTY_MEMBERS_CHANGED fires for loot and other reasons as well
+function NotGrid:BlizzFrameHandler() -- called by PLAYER_ENTERING_WORLD,PARTY_MEMBER_CHANGED,RAID_ROSTER_UPDATE,UNIT_PET,and NotGridOptionChange()
+	DEFAULT_CHAT_FRAME:AddMessage("PARTY_MEMBERS_CHANGED")
+	for i=1,GetNumPartyMembers() do -- this isn't perfect because, for example, if partycount were at 0 it just wouldn't run and wouldn't hide any remaining frames. But blizz's code handles hiding it natively on member leave so I won't worry about it.
+		if self.o.showblizzframes then
+			getglobal("PartyMemberFrame"..i):Show();
+		else
+			getglobal("PartyMemberFrame"..i):Hide();
 		end
 	end
 end
