@@ -231,8 +231,7 @@ function NotGrid:UNIT_AURA(unitid)
 	local o = self.o
 	local f = self.UnitFrames[unitid]
 
-	local bufftable = self.Compost:Acquire() -- I only care about buffname for buffs -- reset every time
-	local debufftable = self.Compost:Acquire() -- spelltype only matters for debuffs -- could probably have these both in the same table
+	local auratable = self.Compost:Acquire() -- I only care about buffname for buffs -- reset every time
 
 	if f and UnitExists(unitid) then
 		--get buff info -- loop through every buff and adds info to table
@@ -241,7 +240,7 @@ function NotGrid:UNIT_AURA(unitid)
 			self.Gratuity:SetUnitBuff(unitid,bi)
 			local buffname = self.Gratuity:GetLine(1)
 			if buffname then
-				bufftable[buffname] = true
+				auratable[buffname] = true
 			end
 			bi = bi + 1;
 		end
@@ -253,30 +252,33 @@ function NotGrid:UNIT_AURA(unitid)
 			local debuffname = self.Gratuity:GetLine(1)
 			local _, _, spelltype =  UnitDebuff(unitid,di) -- texture, applications, type
 			if debuffname then
-				debufftable[debuffname] = true
+				auratable[debuffname] = true
 			end
 			if spelltype then
-				debufftable[spelltype] = true
+				auratable[spelltype] = true
 			end
 			di = di + 1;
 		end
 
 		for i=1,8 do
 			local f = f.healthbar["trackingicon"..i]
-			if self:CheckAura(i,bufftable,debufftable) then
+			if self:CheckAura(i,auratable) then
 				f:Show()
 			else
 				f:Hide()
 			end
 		end
 	end
-	self.Compost:Reclaim(bufftable)
-	self.Compost:Reclaim(debufftable)
+	self.Compost:Reclaim(auratable)
 end
 
-function NotGrid:CheckAura(i, bufftable, debufftable)
+function NotGrid:CheckAura(i, auratable)
 	for _,text in self.o["trackingicon"..i] do
-		if bufftable[text] or debufftable[text] then
+		if self.o["trackingicon"..i.."invert"] then
+			if not auratable[text] then
+				return true
+			end
+		elseif auratable[text] then
 			return true
 		end
 	end

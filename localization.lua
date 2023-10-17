@@ -91,6 +91,7 @@ L:RegisterTranslations("enUS", function() return {
 ["powercolor_tooltip"] = "Toggle for power color.",
 ["position_tooltip"] = "Shift+Ctrl = 100\nShift = 10",
 ["draggable_tooltip"] = "Note: Possible client crash bug\n           Smart Center disabled",
+["icon_tooltip"] = "Toggle to invert tracking.",
 
 
 } end)

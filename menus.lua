@@ -178,14 +178,17 @@ local menuarray = {
 		},
 	},
 	{text = L["Top Left Icon"],
+	toggle = "trackingicon1invert",
 	editbox = {
 		key = "trackingicon1",
 		},
 	color = {
 		key = "trackingicon1color",
 		},
+	tooltip = L["icon_tooltip"],
 	},
 	{text = L["Top Icon"],
+	toggle = "trackingicon2invert",
 	editbox = {
 		key = "trackingicon2",
 		},
@@ -194,6 +197,7 @@ local menuarray = {
 		},
 	},
 	{text = L["Top Right Icon"],
+	toggle = "trackingicon3invert",
 	editbox = {
 		key = "trackingicon3",
 		},
@@ -202,6 +206,7 @@ local menuarray = {
 		},
 	},
 	{text = L["Right Icon"],
+	toggle = "trackingicon4invert",
 	editbox = {
 		key = "trackingicon4",
 		},
@@ -210,6 +215,7 @@ local menuarray = {
 		},
 	},
 	{text = L["Bottom Right Icon"],
+	toggle = "trackingicon5invert",
 	editbox = {
 		key = "trackingicon5",
 		},
@@ -218,6 +224,7 @@ local menuarray = {
 		},
 	},
 	{text = L["Bottom Icon"],
+	toggle = "trackingicon6invert",
 	editbox = {
 		key = "trackingicon6",
 		},
@@ -226,6 +233,7 @@ local menuarray = {
 		},
 	},
 	{text = L["Bottom Left Icon"],
+	toggle = "trackingicon7invert",
 	editbox = {
 		key = "trackingicon7",
 		},
@@ -234,6 +242,7 @@ local menuarray = {
 		},
 	},
 	{text = L["Left Icon"],
+	toggle = "trackingicon8invert",
 	editbox = {
 		key = "trackingicon8",
 		},
