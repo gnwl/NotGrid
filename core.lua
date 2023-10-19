@@ -263,9 +263,17 @@ function NotGrid:UNIT_AURA(unitid)
 		for i=1,8 do
 			local f = f.healthbar["trackingicon"..i]
 			if self:CheckAura(i,auratable) then
-				f:Show()
+				if self.o["trackingicon"..i.."invert"] then
+					f:Hide()
+				else
+					f:Show()
+				end
 			else
-				f:Hide()
+				if self.o["trackingicon"..i.."invert"] then
+					f:Show()
+				else
+					f:Hide()
+				end
 			end
 		end
 	end
@@ -274,11 +282,7 @@ end
 
 function NotGrid:CheckAura(i, auratable)
 	for _,text in self.o["trackingicon"..i] do
-		if self.o["trackingicon"..i.."invert"] then
-			if not auratable[text] then
-				return true
-			end
-		elseif auratable[text] then
+		if auratable[text] then
 			return true
 		end
 	end

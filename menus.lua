@@ -195,6 +195,7 @@ local menuarray = {
 	color = {
 		key = "trackingicon2color",
 		},
+	tooltip = L["icon_tooltip"],
 	},
 	{text = L["Top Right Icon"],
 	toggle = "trackingicon3invert",
@@ -204,6 +205,7 @@ local menuarray = {
 	color = {
 		key = "trackingicon3color",
 		},
+	tooltip = L["icon_tooltip"],
 	},
 	{text = L["Right Icon"],
 	toggle = "trackingicon4invert",
@@ -213,6 +215,7 @@ local menuarray = {
 	color = {
 		key = "trackingicon4color",
 		},
+	tooltip = L["icon_tooltip"],
 	},
 	{text = L["Bottom Right Icon"],
 	toggle = "trackingicon5invert",
@@ -222,6 +225,7 @@ local menuarray = {
 	color = {
 		key = "trackingicon5color",
 		},
+	tooltip = L["icon_tooltip"],
 	},
 	{text = L["Bottom Icon"],
 	toggle = "trackingicon6invert",
@@ -231,6 +235,7 @@ local menuarray = {
 	color = {
 		key = "trackingicon6color",
 		},
+	tooltip = L["icon_tooltip"],
 	},
 	{text = L["Bottom Left Icon"],
 	toggle = "trackingicon7invert",
@@ -240,6 +245,7 @@ local menuarray = {
 	color = {
 		key = "trackingicon7color",
 		},
+	tooltip = L["icon_tooltip"],
 	},
 	{text = L["Left Icon"],
 	toggle = "trackingicon8invert",
@@ -249,6 +255,7 @@ local menuarray = {
 	color = {
 		key = "trackingicon8color",
 		},
+	tooltip = L["icon_tooltip"],
 	},
 	-- end of icons --
 	{text = "",},
