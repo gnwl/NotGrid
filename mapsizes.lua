@@ -208,7 +208,7 @@ local Turtle_WoW = {
 function NotGrid:GetMapSizes()
 	self.ProximityVars.MapSizes = Default
 	local RealmName = GetRealmName()
-	if RealmName == "Turtle WoW" then
+	if RealmName == "Turtle WoW" or RealmName == "Tel'Abim" or RealmName == "Nordanaar" then
 		self.ProximityVars.MapSizes = Turtle_WoW
 	end
 end
