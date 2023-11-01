@@ -1,7 +1,7 @@
 local L = AceLibrary("AceLocale-2.2"):new("NotGrid")
 
 local DefaultOptions = {
-	["version"] = 1.127, -- will be the commit number from now on.
+	["version"] = 1.129, -- will be the commit number from now on.
 	["versionchecking"] = true,
 
 	["unitwidth"] = 36,
@@ -34,20 +34,28 @@ local DefaultOptions = {
 	["unitpowerbarbgcolor"] = {0,0,0,0.1},
 
 	["trackingicon1"] = {"Rejuvenation","Regrowth","Renew",}, -- potentially be better to have the auraname/spelltype be the key, but that introduces other problems to work around
+	["trackingicon1invert"] = false,
 	["trackingicon1color"] = {0.37,0.83,0.38},
 	["trackingicon2"] = {"",},
+	["trackingicon2invert"] = false,
 	["trackingicon2color"] = {0.20,0.60,1.00},
 	["trackingicon3"] = {"Magic",},
+	["trackingicon3invert"] = false,
 	["trackingicon3color"] = {0.20,0.60,1.00},
 	["trackingicon4"] = {"Poison",},
+	["trackingicon4invert"] = false,
 	["trackingicon4color"] = {0.00,0.60,0},
 	["trackingicon5"] = {"Curse",},
+	["trackingicon5invert"] = false,
 	["trackingicon5color"] = {0.60,0.00,1.00},
 	["trackingicon6"] = {"Disease",},
+	["trackingicon6invert"] = false,
 	["trackingicon6color"] = {0.60,0.40,0},
 	["trackingicon7"] = {"Mortal Strike","Mortal Wound","Veil of Shadow","Curse of the Deadwood","Blood Fury","Wound Poison","Hex of Weakness",},
+	["trackingicon7invert"] = false,
 	["trackingicon7color"] = {0.80,0,0},
 	["trackingicon8"] = {"",},
+	["trackingicon8invert"] = false,
 	["trackingicon8color"] = {0.20,0.60,1.00},
 
 	["trackaggro"] = true,
@@ -105,6 +113,7 @@ local DefaultOptions = {
 	["borderartwork"] = false,
 
 	["draggable"] = false,
+	["showmenuhint"] = true,
 }
 
 function NotGrid:SetDefaultOptions() -- this will run on initialization and make sure everything is set. We can also use it if we wipe the NotGridOptions table and want to load it up with defaults

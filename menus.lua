@@ -26,6 +26,11 @@ local menuarray = {
 		ykey = "containeroffy",
 		},
 	},
+	{text = L["Draggable"],
+		toggle = "draggable",
+		conflict = {smartcenter = true,containeroffx = true,},
+		tooltip = L["draggable_tooltip"],
+	},
 
 	{text = "",},
 
@@ -374,6 +379,9 @@ local menuarray = {
 	{text = L["TBC Shaman Color"],
 	toggle = "useshamancolor",
 	},
+
+	{text = "",},
+
 	{text = L["Show Blizz Frames"], 
 	toggle = "showblizzframes",
 	},
@@ -385,10 +393,6 @@ local menuarray = {
 
 	{text = L["Version Checking"],
 	toggle = "versionchecking",
-	},
-	{text = L["Draggable"],
-		toggle = "draggable",
-		tooltip = L["draggable_tooltip"],
 	},
 	{text = L["Clique Hook"],
 	toggle = "cliquehook",
@@ -418,13 +422,21 @@ function NotGrid:InitializeMenu()
 	f:EnableMouseWheel()
 	f.offset = 0 -- for scrolling
 	f.fs = f:CreateFontString('$parentTitle', "ARTWORK", "GameFontNormalLarge")
-	f.fs:SetText(L["Scroll Me!"])
+	f.fs:SetText("NotGrid")
 	f.fs:SetPoint("TOPLEFT",12,-12)
+	f.fsv = f:CreateFontString('$parentVersion', "ARTWORK", "GameFontNormalSmall")
+	f.fsv:SetText("v" .. NotGridOptions.version)
+	f.fsv:SetPoint("TOPLEFT",80,-18)
 	--f.fs:SetTextColor(1,0.29,0.67,1)
+	if NotGridOptions["showmenuhint"] then
+		f.fs:SetText(L["Scroll Me!"])
+		f.fsv:Hide()
+	end
 	f:SetScript("OnMouseWheel", function()
-		if f.offset >= 5 then
-			--f.fs:Hide()
-			f.fs:SetText("Not Grid")
+		if f.offset >= 5 and NotGridOptions["showmenuhint"] then
+			f.fs:SetText("NotGrid")
+			f.fsv:Show()
+			NotGridOptions["showmenuhint"] = false -- so it wont show it again until a reset to defaults
 		end
 		self:ScrollHandler()
 	end)
@@ -504,7 +516,6 @@ function NotGrid:InitializeMenu()
 						NotGrid.o.unitpadding = 2
 						NotGrid.o.unitborder = 2
 					end
-					NotGridOptionChange()
 				else
 					NotGridOptions[this.toggle] = true
 					fb.chk.tex:SetTexture("Interface/Buttons/UI-CheckBox-Check")
@@ -513,8 +524,9 @@ function NotGrid:InitializeMenu()
 						NotGrid.o.unitpadding = -10
 						NotGrid.o.unitborder = 8
 					end
-					NotGridOptionChange()
 				end
+				NotGridOptionChange()
+				NotGridMenuConflictHandler()
 			end
 			if this.reloadui then
 				ReloadUI()
@@ -589,6 +601,7 @@ function NotGrid:InitializeMenu()
 			fb:Disable()
 		end
 	end
+	NotGridMenuConflictHandler()
 end
 
 ------------
@@ -856,6 +869,38 @@ function NotGrid:ScrollHandler() --arg1 is either -1 or 1 depending on scolling 
 		end
 	end
 	NotGridOptionsMenu.offset = offset -- record it into the frame variable for reference
+end
+
+----------------------
+-- Conflict Handler --
+----------------------
+
+function NotGridMenuConflictHandler()
+	--loop through the array to find conflict keys
+	--if we find conflict key, loop through the array again and update all the conflicting options
+	--we have to do it this way because we've named the buttons by array number for scroll functionality.
+	for key,val in menuarray do
+		if val.conflict then
+			for ckey,cval in menuarray do
+				if (cval.toggle and val.conflict[cval.toggle]) or (cval.position and val.conflict[cval.position.xkey]) then --possibly have to add other types of keys if other conflicts come up
+					local b = getglobal("NotGridOptionsMenubutton"..ckey)
+					if NotGridOptions[val.toggle] then -- if the val is toggled, disable the conflicting option
+						b:Disable()
+						b:SetDisabledTexture("Interface/Buttons/UI-Listbox-Highlight2","ADD")
+						b:SetAlpha(0.5)
+						if cval.toggle then -- if the conflicting has a toggle option then
+							NotGridOptions[cval.toggle] = false
+							b.chk.tex:SetTexture("Interface/Buttons/UI-CheckBox-Check-Disabled")
+						end
+					else
+						b:Enable()
+						b:SetDisabledTexture("","ADD")
+						b:SetAlpha(1)
+					end
+				end
+			end
+		end
+	end
 end
 
 -------------------------
