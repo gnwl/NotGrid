@@ -378,6 +378,13 @@ function NotGrid:PositionFrames()
 				self.Container:SetPoint(o.containerpoint,o.containeroffx-(o.unitwidth+powermodx+o.unitborder*2+o.unitpadding)/2*(TotalGroups-1),o.containeroffy)
 		elseif o.smartcenter == true and o.growthdirection == 2 then
 				self.Container:SetPoint(o.containerpoint,o.containeroffx+(o.unitwidth+powermodx+o.unitborder*2+o.unitpadding)/2*(TotalGroups-1),o.containeroffy)
+		elseif o.smartcenter == true and (o.growthdirection == 3 or o.growthdirection == 4) then
+				table.sort(SubGroupCounts)
+				self.Container:SetPoint(o.containerpoint,o.containeroffx-(o.unitwidth+powermodx+o.unitborder*2+o.unitpadding)/2*(SubGroupCounts[10]-1),o.containeroffy)
+		elseif o.smartcenter == true and o.growthdirection == 7 then
+			self.Container:SetPoint(o.containerpoint,o.containeroffx-(o.unitwidth+powermodx+o.unitborder*2+o.unitpadding)/2*(TotalUnits-1),o.containeroffy)
+		elseif o.smartcenter == true and o.growthdirection == 8 then
+			self.Container:SetPoint(o.containerpoint,o.containeroffx+(o.unitwidth+powermodx+o.unitborder*2+o.unitpadding)/2*(TotalUnits-1),o.containeroffy)
 		else
 			self.Container:SetPoint(o.containerpoint,o.containeroffx,o.containeroffy)
 		end

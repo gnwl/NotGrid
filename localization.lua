@@ -82,7 +82,7 @@ L:RegisterTranslations("enUS", function() return {
 
 ["pet_tooltip"] = "Note: Prone to visual errors.",
 ["classcolor_tooltip"] = "Toggle for class color.",
-["smartcenter_tooltip"] = "As your raid expands the frames stay centered on the original group placement. Currently only works for horizontal growth.",
+["smartcenter_tooltip"] = "As your group expands the frames stay horizontally centered on the original group placement.",
 ["healththreshold_tooltip"] = "Health percentage before name is replaced with health deficit.",
 ["manathreshhold_tooltip"] = "Mana percentage before border color changes.",
 ["proximityleeway_tooltip"] = "Amount of seconds to be considered \"In Range\" after a positive confirmation.",
@@ -178,7 +178,7 @@ L:RegisterTranslations("ruRU", function() return {
 
 ["pet_tooltip"] = "Примечание: подвержен визуальным ошибкам.",
 ["classcolor_tooltip"] = "Вкл.\\Выкл. цвет класса",
-["smartcenter_tooltip"] = "По мере того, как ваш рейд расширяет рамки, оставаться в центре исходного размещения группы. В настоящее время работает только для горизонтального роста.",
+["smartcenter_tooltip"] = true,
 ["healththreshold_tooltip"] = "Процент здоровья перед именем заменяется дефицитом здоровья.",
 ["manathreshhold_tooltip"] = "Процент маны до изменения цвета бордюра.",
 ["proximityleeway_tooltip"] = "Количество секунд, которое будет учитывать \"в пределах досягаемости\" после положительного заклинания или подтверждения боевого журнала.",
