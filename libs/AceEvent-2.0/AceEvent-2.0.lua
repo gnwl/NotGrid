@@ -1,6 +1,6 @@
 --[[
 Name: AceEvent-2.0
-Revision: $Rev: 17638 $
+Revision: $Rev: 17803 $
 Developed by: The Ace Development Team (http://www.wowace.com/index.php/The_Ace_Development_Team)
 Inspired By: Ace 1.x by Turan (turan@gryphon.com)
 Website: http://www.wowace.com/
@@ -12,7 +12,7 @@ Dependencies: AceLibrary, AceOO-2.0
 ]]
 
 local MAJOR_VERSION = "AceEvent-2.0"
-local MINOR_VERSION = "$Revision: 17638 $"
+local MINOR_VERSION = "$Revision: 17803 $"
 
 if not AceLibrary then error(MAJOR_VERSION .. " requires AceLibrary") end
 if not AceLibrary:IsNewVersion(MAJOR_VERSION, MINOR_VERSION) then return end
@@ -953,10 +953,13 @@ function AceEvent:activate(oldLib, oldDeactivate)
 		end)
 		self:RegisterEvent("LANGUAGE_LIST_CHANGED", function()
 			if self.registry["MEETINGSTONE_CHANGED"] and self.registry["MEETINGSTONE_CHANGED"][self] then
+				registeringFromAceEvent = true
 				self:UnregisterEvent("MEETINGSTONE_CHANGED")
 				self:RegisterEvent("MINIMAP_ZONE_CHANGED", f, true)
+				registeringFromAceEvent = nil
 			end
 		end)
+		self:ScheduleEvent("AceEvent_FullyInitialized", func, 10)
 		registeringFromAceEvent = nil
 	end
 
