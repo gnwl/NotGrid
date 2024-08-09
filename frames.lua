@@ -340,21 +340,29 @@ function NotGrid:PositionFrames()
 				--then do all the positioning
 				if subgroup == i then
 					f:ClearAllPoints()
-					if o.growthdirection == 1 then
+					if o.growthdirection == 1 then -- groups grow left to right, units grow top to bottom
 						f:SetPoint("CENTER",(o.unitwidth+powermodx+o.unitborder*2+o.unitpadding)*TotalGroups,-(o.unitheight+powermody+o.unitborder*2+o.unitpadding)*SubGroupCounts[i])
-					elseif o.growthdirection == 2 then
+					elseif o.growthdirection == 2 then -- groups grow left to right, units grow bottom to top
+						f:SetPoint("CENTER",(o.unitwidth+powermodx+o.unitborder*2+o.unitpadding)*TotalGroups,(o.unitheight+powermody+o.unitborder*2+o.unitpadding)*SubGroupCounts[i])
+					elseif o.growthdirection == 3 then -- groups grow right to left, units grow bottom to top
+						f:SetPoint("CENTER",-(o.unitwidth+powermodx+o.unitborder*2+o.unitpadding)*TotalGroups,(o.unitheight+powermody+o.unitborder*2+o.unitpadding)*SubGroupCounts[i])
+					elseif o.growthdirection == 4 then -- groups grow right to left, units grow top to bottom
 						f:SetPoint("CENTER",-(o.unitwidth+powermodx+o.unitborder*2+o.unitpadding)*TotalGroups,-(o.unitheight+powermody+o.unitborder*2+o.unitpadding)*SubGroupCounts[i]) -- i do subgroup -1 so group 1 will be 0 and be at 0 offset
-					elseif o.growthdirection == 3 then
+					elseif o.growthdirection == 5 then -- groups grow top to bottom, units grow left to right
 						f:SetPoint("CENTER",(o.unitwidth+powermodx+o.unitborder*2+o.unitpadding)*SubGroupCounts[i],-(o.unitheight+powermody+o.unitborder*2+o.unitpadding)*TotalGroups)
-					elseif o.growthdirection == 4 then
+					elseif o.growthdirection == 6 then -- groups grow bottom to top, units grow left to right
 						f:SetPoint("CENTER",(o.unitwidth+powermodx+o.unitborder*2+o.unitpadding)*SubGroupCounts[i],(o.unitheight+powermody+o.unitborder*2+o.unitpadding)*TotalGroups)
-					elseif o.growthdirection == 5 then -- single top to bottom
+					elseif o.growthdirection == 7 then -- groups grow bottom to top, units grow right to left
+						f:SetPoint("CENTER",-(o.unitwidth+powermodx+o.unitborder*2+o.unitpadding)*SubGroupCounts[i],(o.unitheight+powermody+o.unitborder*2+o.unitpadding)*TotalGroups)
+					elseif o.growthdirection == 8 then -- groups grow top to bottom, units grow right to left
+						f:SetPoint("CENTER",-(o.unitwidth+powermodx+o.unitborder*2+o.unitpadding)*SubGroupCounts[i],-(o.unitheight+powermody+o.unitborder*2+o.unitpadding)*TotalGroups)
+					elseif o.growthdirection == 9 then -- single top to bottom
 						f:SetPoint("CENTER",0,-(o.unitheight+powermody+o.unitborder*2+o.unitpadding)*TotalUnits)
-					elseif o.growthdirection == 6 then -- single bottom to top
+					elseif o.growthdirection == 10 then -- single bottom to top
 						f:SetPoint("CENTER",0,(o.unitheight+powermody+o.unitborder*2+o.unitpadding)*TotalUnits)
-					elseif o.growthdirection == 7 then -- single left to right
+					elseif o.growthdirection == 11 then -- single left to right
 						f:SetPoint("CENTER",(o.unitwidth+powermodx+o.unitborder*2+o.unitpadding)*TotalUnits,0)
-					elseif o.growthdirection == 8 then -- single right to left
+					elseif o.growthdirection == 12 then -- single right to left
 						f:SetPoint("CENTER",-(o.unitwidth+powermodx+o.unitborder*2+o.unitpadding)*TotalUnits,0)
 					end
 					f:Show()
@@ -374,16 +382,19 @@ function NotGrid:PositionFrames()
 	--handle the container frame
 	if not o.draggable then
 		self.Container:ClearAllPoints()
-		if o.smartcenter == true and o.growthdirection == 1 then
+		if o.smartcenter == true and (o.growthdirection == 1 or o.growthdirection == 2) then
 				self.Container:SetPoint(o.containerpoint,o.containeroffx-(o.unitwidth+powermodx+o.unitborder*2+o.unitpadding)/2*(TotalGroups-1),o.containeroffy)
-		elseif o.smartcenter == true and o.growthdirection == 2 then
-				self.Container:SetPoint(o.containerpoint,o.containeroffx+(o.unitwidth+powermodx+o.unitborder*2+o.unitpadding)/2*(TotalGroups-1),o.containeroffy)
 		elseif o.smartcenter == true and (o.growthdirection == 3 or o.growthdirection == 4) then
+				self.Container:SetPoint(o.containerpoint,o.containeroffx+(o.unitwidth+powermodx+o.unitborder*2+o.unitpadding)/2*(TotalGroups-1),o.containeroffy)
+		elseif o.smartcenter == true and (o.growthdirection == 5 or o.growthdirection == 6) then
 				table.sort(SubGroupCounts)
 				self.Container:SetPoint(o.containerpoint,o.containeroffx-(o.unitwidth+powermodx+o.unitborder*2+o.unitpadding)/2*(SubGroupCounts[10]-1),o.containeroffy)
-		elseif o.smartcenter == true and o.growthdirection == 7 then
+		elseif o.smartcenter == true and (o.growthdirection == 7 or o.growthdirection == 8) then
+				table.sort(SubGroupCounts)
+				self.Container:SetPoint(o.containerpoint,o.containeroffx+(o.unitwidth+powermodx+o.unitborder*2+o.unitpadding)/2*(SubGroupCounts[10]-1),o.containeroffy)
+		elseif o.smartcenter == true and o.growthdirection == 11 then
 			self.Container:SetPoint(o.containerpoint,o.containeroffx-(o.unitwidth+powermodx+o.unitborder*2+o.unitpadding)/2*(TotalUnits-1),o.containeroffy)
-		elseif o.smartcenter == true and o.growthdirection == 8 then
+		elseif o.smartcenter == true and o.growthdirection == 12 then
 			self.Container:SetPoint(o.containerpoint,o.containeroffx+(o.unitwidth+powermodx+o.unitborder*2+o.unitpadding)/2*(TotalUnits-1),o.containeroffy)
 		else
 			self.Container:SetPoint(o.containerpoint,o.containeroffx,o.containeroffy)

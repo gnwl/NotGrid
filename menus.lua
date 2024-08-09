@@ -351,7 +351,7 @@ local menuarray = {
 	slider = {
 		key = "growthdirection",
 		minval = 1,
-		maxval = 8,
+		maxval = 12,
 		},
 	},
 
