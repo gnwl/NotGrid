@@ -47,6 +47,8 @@ function NotGrid:CheckProximity(unitid) -- return 1=confirmed_true, 2=confirmed_
 		--check these scenarios first even if the player has check with map toggled
 		if UnitIsUnit(unitid, "player") then --unitisplayer, 0 yards
 			return 1
+		elseif UnitXP and not UnitXP("inSight", "player", unitid) then -- use UnitXP to check if unit is in sight
+			return 2
 		elseif CheckInteractDistance(unitid, 3) then -- duel range, 10 yards
 			return 1
 		elseif CheckInteractDistance(unitid, 2) then -- trade and inspect range (1 is the same as 2 with patch 1.12), 11.11 yards
