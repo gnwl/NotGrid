@@ -7,6 +7,10 @@ NotGrid is a party and raid frame addon for Vanilla World of Warcraft (1.12.1). 
 Use */notgrid* or */ng* to show the config menu.  
 Use */notgrid grid* to generate a style similar to the original grid.  
 Use */notgrid reset* to restore the default settings.  
+Use */notgrid profile save <profilename>* to save current settings as a profile (account-wide).  
+Use */notgrid profile load <profilename>* to load a saved profile (account-wide).  
+Use */notgrid profile delete <profilename>* to delete a saved profile (account-wide).  
+Use */notgrid profile list* to show all available profiles (account-wide).  
 Use / for separating multiple Buffs/Debuffs to track on one icon.  
 Use */ngcast spellname(Rank X)* in macros for mouseover casting.
 

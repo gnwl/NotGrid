@@ -1,5 +1,20 @@
 local L = AceLibrary("AceLocale-2.2"):new("NotGrid")
 
+local function deepcopy(orig)
+    local orig_type = type(orig)
+    local copy
+    if orig_type == 'table' then
+        copy = {}
+        for orig_key, orig_value in next, orig, nil do
+            copy[deepcopy(orig_key)] = deepcopy(orig_value)
+        end
+        setmetatable(copy, deepcopy(getmetatable(orig)))
+    else -- number, string, boolean, function
+        copy = orig
+    end
+    return copy
+end
+
 local DefaultOptions = {
 	["version"] = 1.132, -- will be the commit number from now on.
 	["versionchecking"] = true,
@@ -159,6 +174,91 @@ function SlashCmdList.NOTGRID(msg, editbox)
 		NotGrid.o.colorunithealthbarbyclass = false
 		NotGrid.o.colorunithealthbarbgbyclass = true
 		ReloadUI()
+	elseif type(msg) == "string" and string.find(msg, "^profile") then
+		local _, args = string.match(msg, "^(profile)%s*(.*)")
+		local action = "list"
+		local profileName = nil
+
+		if args and args ~= "" then
+			local words = {}
+			for word in string.gmatch(args, "%S+") do
+				table.insert(words, word)
+			end
+			
+			if words[1] then
+				action = words[1]
+				profileName = words[2]
+			end
+		end
+
+		if action == "save" then
+			if profileName then
+				-- Validate that profiles table exists before saving
+				if not NotGridProfiles then
+					DEFAULT_CHAT_FRAME:AddMessage("NotGrid: Error - Profile system not initialized!")
+					return
+				end
+				NotGridProfiles[profileName] = deepcopy(NotGrid.o)
+				DEFAULT_CHAT_FRAME:AddMessage("NotGrid profile '" .. profileName .. "' saved.")
+			else
+				DEFAULT_CHAT_FRAME:AddMessage("Usage: /ng profile save <profilename>")
+			end
+		elseif action == "load" then
+			if profileName then
+				-- Validate that profiles table exists before loading
+				if not NotGridProfiles then
+					DEFAULT_CHAT_FRAME:AddMessage("NotGrid: Error - Profile system not initialized!")
+					return
+				end
+				if NotGridProfiles[profileName] then
+					for k in pairs(NotGrid.o) do NotGrid.o[k] = nil end
+					for k, v in pairs(NotGridProfiles[profileName]) do NotGrid.o[k] = deepcopy(v) end
+					NotGrid:SetDefaultOptions()
+					ReloadUI()
+					DEFAULT_CHAT_FRAME:AddMessage("NotGrid profile '" .. profileName .. "' loaded.")
+				else
+					DEFAULT_CHAT_FRAME:AddMessage("NotGrid profile '" .. profileName .. "' not found.")
+				end
+			else
+				DEFAULT_CHAT_FRAME:AddMessage("Usage: /ng profile load <profilename>")
+			end
+		elseif action == "delete" then
+			if profileName then
+				-- Validate that profiles table exists before deleting
+				if not NotGridProfiles then
+					DEFAULT_CHAT_FRAME:AddMessage("NotGrid: Error - Profile system not initialized!")
+					return
+				end
+				if NotGridProfiles[profileName] then
+					NotGridProfiles[profileName] = nil
+					DEFAULT_CHAT_FRAME:AddMessage("NotGrid profile '" .. profileName .. "' deleted.")
+				else
+					DEFAULT_CHAT_FRAME:AddMessage("NotGrid profile '" .. profileName .. "' not found.")
+				end
+			else
+				DEFAULT_CHAT_FRAME:AddMessage("Usage: /ng profile delete <profilename>")
+			end
+		elseif action == "list" then
+			-- Validate that profiles table exists before listing
+			if not NotGridProfiles then
+				DEFAULT_CHAT_FRAME:AddMessage("NotGrid: Error - Profile system not initialized!")
+				return
+			end
+			local profileCount = 0
+			local profileList = ""
+			for name in pairs(NotGridProfiles) do
+				if profileList ~= "" then profileList = profileList .. ", " end
+				profileList = profileList .. name
+				profileCount = profileCount + 1
+			end
+			if profileCount > 0 then
+				DEFAULT_CHAT_FRAME:AddMessage("Available NotGrid profiles: " .. profileList)
+			else
+				DEFAULT_CHAT_FRAME:AddMessage("No NotGrid profiles saved.")
+			end
+		else
+			DEFAULT_CHAT_FRAME:AddMessage("Invalid profile action. Usage: /ng profile [save|load|delete <profilename>] or /ng profile list")
+		end
 	else
 		NotGridOptionsMenu:Show()
 	end

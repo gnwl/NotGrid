@@ -3,6 +3,7 @@
 ## Notes: It's Not Grid
 ## Notes-ruRU: Это не Grid
 ## SavedVariablesPerCharacter: NotGridOptions
+## SavedVariables: NotGridProfiles
 
 Libs\AceLibrary\AceLibrary.lua
 Libs\AceLocale-2.2\AceLocale-2.2.lua

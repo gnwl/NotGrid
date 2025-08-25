@@ -1,6 +1,7 @@
 local L = AceLibrary("AceLocale-2.2"):new("NotGrid")
 NotGrid = AceLibrary("AceAddon-2.0"):new("AceEvent-2.0")
 NotGridOptions = {} -- After the addon is fully initialized WoW will fill this up with its saved variables if any
+-- NotGridProfiles will be initialized safely in OnEnable after saved variables are loaded
 
 function NotGrid:OnInitialize()
 	self.HealComm = AceLibrary("HealComm-1.0")
@@ -20,6 +21,11 @@ function NotGrid:OnInitialize()
 end
 
 function NotGrid:OnEnable()
+	-- Initialize profiles after saved variables are loaded
+	if not NotGridProfiles then
+		NotGridProfiles = {}
+	end
+	
 	self.o = NotGridOptions -- Need to wait for addon to be fully initialized and saved variables loaded before I set this
 	self:SetDefaultOptions() -- if NotGridOptions is empty(no saved variables) this will fill it up with defaults
 	self:DoDropDown()
